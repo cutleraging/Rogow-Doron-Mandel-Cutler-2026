@@ -1,0 +1,1303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:cis="http://zlab.bu.edu/schema/cisml" xmlns:fimo="http://noble.gs.washington.edu/schema/cisml" xmlns:mem="http://noble.gs.washington.edu/meme">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>FIMO Results</title>
+<style type="text/css">
+td.left {text-align: left;}
+td.right {text-align: right; padding-right: 1cm;}
+</style>
+</head>
+<body color="#000000">
+<a name="top_buttons"></a>
+<hr>
+<table summary="buttons" align="left" cellspacing="0">
+<tr>
+<td bgcolor="#00FFFF"><a href="#database_and_motifs"><b>Database and Motifs</b></a></td>
+<td bgcolor="#DDFFDD"><a href="#sec_i"><b>High-scoring Motif Occurences</b></a></td>
+<td bgcolor="#DDDDFF"><a href="#debugging_information"><b>Debugging Information</b></a></td>
+<td bgcolor="#FFDD00"><a href="fimo.tsv""><b>Results in TSV Format</b></a></td>
+<td bgcolor="#FFDDFF"><a href="fimo.gff""><b>Results in GFF3 Format</b></a></td>
+<td bgcolor="#00FFFF" id="best_site"><a href="best_site.narrowPeak""><b>Best Site per Sequence</b></a></td>
+<script>
+var new_icon_src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAQCAMAAAAyEe/dAAAACVBMVEX//wAAAAD////s2cV/AAAAdUlEQVQYlXVRBxLAIAhL+P+jC2HZhXcBZEWEldDsZcLIcAhHWWnK8SDcWQhMFUHdAQ1CqQ5+CWPmlHojl+nCJNRtzu4qRc3IUzmTVpXYK0nox0z0PI1stgchdK7lEv7ekhvalw8WW547Gyzedt/2/gLx8WXjXF/1AYFriNAWAAAAAElFTkSuQmCC";
+var new_icon = document.createElement("img");
+new_icon.src = new_icon_src;
+new_icon.alt = "NEW";
+const elem = document.getElementById("best_site");
+elem.appendChild(document.createTextNode("  "));
+elem.appendChild(new_icon);
+</script>
+</tr>
+</table>
+<br/>
+<br/>
+<hr/>
+<center><big><b>FIMO - Motif search tool</b></big></center>
+<hr>
+<p>
+FIMO version 5.5.8, (Release date: Thu May 15 15:01:46 2025 -0700)
+</p>
+<p>
+For further information on how to interpret these results please access <a href="http://localhost:8080/meme_5.5.8/doc/fimo-output-format.html">http://localhost:8080/meme_5.5.8/doc/fimo-output-format.html</a>.<br>
+To get a copy of the FIMO software please access <a href="https://meme-suite.org">https://meme-suite.org</a>
+
+</p>
+<p>If you use FIMO in your research, please cite the following paper:<br>
+Charles E. Grant, Timothy L. Bailey, and William Stafford Noble,
+"FIMO: Scanning for occurrences of a given motif",
+<i>Bioinformatics</i>, <b>27</b>(7):1017-1018, 2011.
+<a href="http://bioinformatics.oxfordjournals.org/content/27/7/1017">[full text]</a></p>
+<hr>
+<center><big><b><a name="database_and_motifs">DATABASE AND MOTIFS</a></b></big></center>
+<hr>
+<div style="padding-left: 0.75in; line-height: 1em; font-family: monospace;">
+<p>
+  DATABASE /seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+  <br />
+  Database contains 69 sequences, 89643 residues
+</p>
+<p>
+  MOTIFS /motifs/motifs_deduplicated.meme (RNA)
+  <table>
+    <thead>
+      <tr>
+        <th style="border-bottom: 1px dashed;">MOTIF</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;">WIDTH</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;text-align:left;" >
+         BEST POSSIBLE MATCH
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:right;">GAUUUCAC</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">GAUUUCAC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CAAAAUCC</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">CAAAAUCC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">AUCAUAUG</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">AUCAUAUG</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">ACCUAAA</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">ACCUAAA</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CCAUGCC</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">CCAUGCC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UGAGGCC</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">UGAGGCC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">GACUCA</td>
+        <td style="text-align:right;padding-left: 1em;">6</td>
+        <td style="text-align:left;padding-left: 1em;">GACUCA</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UAAAGUU</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">UAAAGUU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UGACAAA</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">UGACAAA</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">GACAGCAGAU</td>
+        <td style="text-align:right;padding-left: 1em;">10</td>
+        <td style="text-align:left;padding-left: 1em;">GACAGCAGAU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UCAUGGAUU</td>
+        <td style="text-align:right;padding-left: 1em;">9</td>
+        <td style="text-align:left;padding-left: 1em;">UCAUGGAUU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CUAAUGAACC</td>
+        <td style="text-align:right;padding-left: 1em;">10</td>
+        <td style="text-align:left;padding-left: 1em;">CUAAUGAACC</td>
+       </tr>
+    </tbody>
+  </table>
+</p>
+<p>
+Random model letter frequencies (--motif--):
+<br/>
+
+A 0.266 C 0.218 G 0.222 U 0.294 </p>
+</div>
+<hr>
+<center><big><b><a name="sec_i">SECTION I: HIGH-SCORING MOTIF OCCURENCES</a></b></big></center>
+<hr>
+<ul>
+<li>
+There were 96 motif occurences with a p-value less than 0.0001.
+
+The full set of motif occurences can be seen in the
+TSV (tab-delimited values) output file
+<a href="fimo.tsv">fimo.tsv</a>, 
+the GFF3 file 
+<a href="fimo.gff">fimo.gff</a> 
+which may be suitable for uploading to the 
+<a href="http://genome.ucsc.edu/cgi-bin/hgTables">UCSC Genome Table Browser</a>
+(assuming the FASTA input sequences included genomic coordinates in UCSC or Galaxy format),
+or the XML file 
+<a href="fimo.xml">fimo.xml</a>.
+</li>
+<li>
+The <i>p</i>-value of a motif occurrence is defined as the
+probability of a random sequence of the same length as the motif
+matching that position of the sequence with as good or better a score.
+</li>
+<li>
+The score for the match of a position in a sequence to a motif
+is computed by summing the appropriate entries from each column of
+the position-dependent scoring matrix that represents the motif.
+</li>
+<li>
+The q-value of a motif occurrence is defined as the
+false discovery rate if the occurrence is accepted as significant.
+</li>
+<li>The table is sorted by increasing <i>p</i>-value.</li>
+</ul>
+<table border="1">
+<thead>
+<tr>
+<th>Motif ID</th>
+<th>Alt ID</th>
+<th>Sequence Name</th>
+<th>Strand</th>
+<th>Start</th>
+<th>End</th>
+<th>p-value</th>
+<th>q-value</th>
+<th>Matched Sequence</th>
+</tr>
+</thead>
+<tbody>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000022602|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">473</td>
+      <td style="text-align:left;">482</td>
+      <td style="text-align:left;">1.52e-06</td>
+      <td style="text-align:left;">0.134</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CACAGCAGAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2907</td>
+      <td style="text-align:left;">2915</td>
+      <td style="text-align:left;">5.68e-06</td>
+      <td style="text-align:left;">0.392</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATGGATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000056296|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1281</td>
+      <td style="text-align:left;">1290</td>
+      <td style="text-align:left;">9.21e-06</td>
+      <td style="text-align:left;">0.268</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCAGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000027624|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">137</td>
+      <td style="text-align:left;">146</td>
+      <td style="text-align:left;">1.04e-05</td>
+      <td style="text-align:left;">0.268</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCATAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000037572|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">26</td>
+      <td style="text-align:left;">34</td>
+      <td style="text-align:left;">1.32e-05</td>
+      <td style="text-align:left;">0.392</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATTGATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3503</td>
+      <td style="text-align:left;">3511</td>
+      <td style="text-align:left;">1.32e-05</td>
+      <td style="text-align:left;">0.392</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATTGATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000029504|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2643</td>
+      <td style="text-align:left;">2652</td>
+      <td style="text-align:left;">1.51e-05</td>
+      <td style="text-align:left;">0.268</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCATTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000027624|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">678</td>
+      <td style="text-align:left;">685</td>
+      <td style="text-align:left;">1.52e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAATCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000040473|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1100</td>
+      <td style="text-align:left;">1107</td>
+      <td style="text-align:left;">1.52e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAATCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000019850|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">667</td>
+      <td style="text-align:left;">676</td>
+      <td style="text-align:left;">1.82e-05</td>
+      <td style="text-align:left;">0.268</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGCAGAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2468</td>
+      <td style="text-align:left;">2477</td>
+      <td style="text-align:left;">1.82e-05</td>
+      <td style="text-align:left;">0.268</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGCAGAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">AUCAUAUG</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000032372|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">71</td>
+      <td style="text-align:left;">78</td>
+      <td style="text-align:left;">2.31e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATCATATG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">92</td>
+      <td style="text-align:left;">101</td>
+      <td style="text-align:left;">3.54e-05</td>
+      <td style="text-align:left;">0.39</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGAAGAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000037544|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1523</td>
+      <td style="text-align:left;">1532</td>
+      <td style="text-align:left;">3.54e-05</td>
+      <td style="text-align:left;">0.39</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGAAGAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000030406|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">91</td>
+      <td style="text-align:left;">100</td>
+      <td style="text-align:left;">3.67e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CGAAGGAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000030443|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">115</td>
+      <td style="text-align:left;">121</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000029151|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">123</td>
+      <td style="text-align:left;">129</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000020591|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">268</td>
+      <td style="text-align:left;">274</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000037544|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">291</td>
+      <td style="text-align:left;">297</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000002799|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">764</td>
+      <td style="text-align:left;">770</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">954</td>
+      <td style="text-align:left;">960</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000029442|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1151</td>
+      <td style="text-align:left;">1157</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000032782|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1243</td>
+      <td style="text-align:left;">1249</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000033491|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1383</td>
+      <td style="text-align:left;">1389</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000056296|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1881</td>
+      <td style="text-align:left;">1887</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000029468|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2803</td>
+      <td style="text-align:left;">2809</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3133</td>
+      <td style="text-align:left;">3139</td>
+      <td style="text-align:left;">3.92e-05</td>
+      <td style="text-align:left;">0.285</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000062031|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">86</td>
+      <td style="text-align:left;">92</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000032782|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">299</td>
+      <td style="text-align:left;">305</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000028476|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">374</td>
+      <td style="text-align:left;">380</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000010044|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">467</td>
+      <td style="text-align:left;">473</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000062031|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">800</td>
+      <td style="text-align:left;">806</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029468|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">861</td>
+      <td style="text-align:left;">867</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000001870|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1139</td>
+      <td style="text-align:left;">1145</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1155</td>
+      <td style="text-align:left;">1161</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1291</td>
+      <td style="text-align:left;">1297</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1628</td>
+      <td style="text-align:left;">1634</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000032782|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2118</td>
+      <td style="text-align:left;">2124</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2475</td>
+      <td style="text-align:left;">2481</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029468|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2726</td>
+      <td style="text-align:left;">2732</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3071</td>
+      <td style="text-align:left;">3077</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3518</td>
+      <td style="text-align:left;">3524</td>
+      <td style="text-align:left;">4.07e-05</td>
+      <td style="text-align:left;">0.237</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGAGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000040473|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1353</td>
+      <td style="text-align:left;">1362</td>
+      <td style="text-align:left;">4.31e-05</td>
+      <td style="text-align:left;">0.423</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGCATGT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000036533|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">71</td>
+      <td style="text-align:left;">80</td>
+      <td style="text-align:left;">5.11e-05</td>
+      <td style="text-align:left;">0.426</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CACAGCTGAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029151|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">110</td>
+      <td style="text-align:left;">117</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000001870|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">199</td>
+      <td style="text-align:left;">206</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000022602|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">385</td>
+      <td style="text-align:left;">392</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAACCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000002799|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">390</td>
+      <td style="text-align:left;">397</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000026875|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">599</td>
+      <td style="text-align:left;">606</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000030406|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1206</td>
+      <td style="text-align:left;">1213</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000022602|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1459</td>
+      <td style="text-align:left;">1466</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CAAAAUCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000027624|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1690</td>
+      <td style="text-align:left;">1697</td>
+      <td style="text-align:left;">5.19e-05</td>
+      <td style="text-align:left;">0.451</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAAAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3059</td>
+      <td style="text-align:left;">3068</td>
+      <td style="text-align:left;">5.32e-05</td>
+      <td style="text-align:left;">0.426</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACAGCAGTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000053647|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">167</td>
+      <td style="text-align:left;">175</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATGGATG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000062031|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">254</td>
+      <td style="text-align:left;">262</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCAAGGATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000002930|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">448</td>
+      <td style="text-align:left;">456</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATGGACT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1029</td>
+      <td style="text-align:left;">1037</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATGGAGT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2631</td>
+      <td style="text-align:left;">2639</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GCATGGATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UCAUGGAUU</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2819</td>
+      <td style="text-align:left;">2827</td>
+      <td style="text-align:left;">6.78e-05</td>
+      <td style="text-align:left;">0.671</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCATGGATG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">ACCUAAA</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000103092|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">221</td>
+      <td style="text-align:left;">227</td>
+      <td style="text-align:left;">6.99e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACCTAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">ACCUAAA</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000040473|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">558</td>
+      <td style="text-align:left;">564</td>
+      <td style="text-align:left;">6.99e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACCTAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">ACCUAAA</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000026875|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">695</td>
+      <td style="text-align:left;">701</td>
+      <td style="text-align:left;">6.99e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACCTAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">ACCUAAA</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3054</td>
+      <td style="text-align:left;">3060</td>
+      <td style="text-align:left;">6.99e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACCTAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000029442|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">81</td>
+      <td style="text-align:left;">87</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000014361|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">286</td>
+      <td style="text-align:left;">292</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000036777|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">297</td>
+      <td style="text-align:left;">303</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000053475|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">357</td>
+      <td style="text-align:left;">363</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000036634|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">525</td>
+      <td style="text-align:left;">531</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGACAAA</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000022969|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2204</td>
+      <td style="text-align:left;">2210</td>
+      <td style="text-align:left;">7.12e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGACAAA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000019850|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">320</td>
+      <td style="text-align:left;">329</td>
+      <td style="text-align:left;">7.27e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GGCAGCAGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000103092|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">688</td>
+      <td style="text-align:left;">697</td>
+      <td style="text-align:left;">7.27e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GCCAGCAGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000068874|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1025</td>
+      <td style="text-align:left;">1034</td>
+      <td style="text-align:left;">7.27e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GACTGCAGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000037544|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1603</td>
+      <td style="text-align:left;">1612</td>
+      <td style="text-align:left;">7.27e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCAGGT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000030310|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">281</td>
+      <td style="text-align:left;">287</td>
+      <td style="text-align:left;">7.4e-05</td>
+      <td style="text-align:left;">0.381</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGCGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UGAGGCC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000019850|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1535</td>
+      <td style="text-align:left;">1541</td>
+      <td style="text-align:left;">7.4e-05</td>
+      <td style="text-align:left;">0.381</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGCGGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000027360|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">153</td>
+      <td style="text-align:left;">162</td>
+      <td style="text-align:left;">8.61e-05</td>
+      <td style="text-align:left;">0.446</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CACAACAGAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000030310|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">114</td>
+      <td style="text-align:left;">120</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000019850|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">163</td>
+      <td style="text-align:left;">169</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000028476|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">438</td>
+      <td style="text-align:left;">444</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000037544|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">708</td>
+      <td style="text-align:left;">714</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000029468|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">733</td>
+      <td style="text-align:left;">739</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000030406|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">763</td>
+      <td style="text-align:left;">769</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000056296|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">823</td>
+      <td style="text-align:left;">829</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000022602|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1465</td>
+      <td style="text-align:left;">1471</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000046380|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2439</td>
+      <td style="text-align:left;">2445</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2912</td>
+      <td style="text-align:left;">2918</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAUGCC</td>
+      <td style="text-align:left;">STREME-5</td>
+      <td style="text-align:left;">ENSMUSG00000040936|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3165</td>
+      <td style="text-align:left;">3171</td>
+      <td style="text-align:left;">8.71e-05</td>
+      <td style="text-align:left;">0.33</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCATGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000056296|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">839</td>
+      <td style="text-align:left;">848</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCAATGACCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1658</td>
+      <td style="text-align:left;">1667</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CAAGTGAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029468|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1668</td>
+      <td style="text-align:left;">1677</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CACATGAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000028718|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1832</td>
+      <td style="text-align:left;">1841</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTAAGGAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2029</td>
+      <td style="text-align:left;">2038</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCAGTGAACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3073</td>
+      <td style="text-align:left;">3082</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTAACGTACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUAAUGAACC</td>
+      <td style="text-align:left;">STREME-3</td>
+      <td style="text-align:left;">ENSMUSG00000020387|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4092</td>
+      <td style="text-align:left;">4101</td>
+      <td style="text-align:left;">8.95e-05</td>
+      <td style="text-align:left;">0.991</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTAAGGAGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000019850|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">569</td>
+      <td style="text-align:left;">578</td>
+      <td style="text-align:left;">9.1e-05</td>
+      <td style="text-align:left;">0.446</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCAGAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GACAGCAGAU</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000026875|transcript</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1479</td>
+      <td style="text-align:left;">1488</td>
+      <td style="text-align:left;">9.1e-05</td>
+      <td style="text-align:left;">0.446</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GAAAGCAGAC</td>
+   </tr>
+</tbody>
+</table>
+
+<hr>
+<center><big><b><a name="debugging_information">DEBUGGING INFORMATION</a></b></big></center>
+<hr>
+<p>
+Command line:
+</p>
+<pre>
+fimo --verbosity 1 --oc /out --max-stored-scores 500000 --norc /motifs/motifs_deduplicated.meme /seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+</pre>
+<p>
+Settings:
+</p>
+<pre>
+<table>
+  <tr>
+    <td style="padding-right: 2em">output_directory = /out</td>
+    <td style="padding-left: 5em; padding-right: 2em">MEME file name = /motifs/motifs_deduplicated.meme</td>
+    <td style="padding-left: 5em; padding-right: 2em">sequence file name = /seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">background file name = --motif--</td>
+    <td style="padding-left: 5em; padding-right: 2em">alphabet = RNA</td>
+    <td style="padding-left: 5em; padding-right: 2em">max stored scores = 500000</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">allow clobber = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">compute q-values = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">parse genomic coord. = true</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">text only = false</td>
+    <td style="padding-left: 5em; padding-right: 2em">scan both strands = false</td>
+    <td style="padding-left: 5em; padding-right: 2em">max strand = false</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">threshold type = p-value</td>
+    <td style="padding-left: 5em; padding-right: 2em">output theshold = 0.0001</td>
+    <td style="padding-left: 5em; padding-right: 2em">pseudocount = 0.1</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">alpha = 1</td>
+    <td style="padding-left: 5em; padding-right: 2em">verbosity = 1</td>
+    <td style="padding-left: 5em; padding-right: 2em"></td>
+  </tr>
+
+</table>
+</pre>
+<p>
+This information can be useful in the event you wish to report a
+problem with the FIMO software.
+</p>
+<hr>
+<span style="background-color: #DDDDFF"><a href="#top_buttons"><b>Go to top</b></a></span>
+</body>
+</html>

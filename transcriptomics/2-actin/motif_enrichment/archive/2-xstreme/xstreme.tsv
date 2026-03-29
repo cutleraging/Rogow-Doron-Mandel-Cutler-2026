@@ -1,0 +1,12 @@
+RANK	SEED_MOTIF	CLUSTER	SOURCE	ID	ALT_ID	CONSENSUS	WIDTH	SITES	SEA_PVALUE	EVALUE	EVALUE_ACC	SIM_SOURCE	SIM_MOTIF	MOTIF_URL
+1	1	1	STREME	1-CUCACUAAGAAAUKU	STREME-1	CUCACUAAGAAAUKU	15	7	2.54e-013	1.92e-014	0	STREME	1-CUCACUAAGAAAUKU	 
+2	1	2	STREME	2-GGCUCAAURMUGGD	STREME-2	GGCUCAAURMUGGD	14	6	1.24e-012	6.22e-013	0	STREME	2-GGCUCAAURMUGGD	 
+3	1	3	STREME	3-GCUGCUGAGAAUCC	STREME-3	GCUGCUGAGAAUCC	14	6	4.95e-012	2.48e-012	0	STREME	3-GCUGCUGAGAAUCC	 
+4	0	2	STREME	4-AGCGAUAAUGUUW	STREME-4	AGCGAUAAUGUUW	13	5	8.97e-010	2.99e-010	0	STREME	4-AGCGAUAAUGUUW	 
+5	1	4	STREME	5-CUGAGUCUGUCUC	STREME-5	CUGAGUCUGUCUC	13	4	2.25e-009	2.25e-009	0	STREME	5-CUGAGUCUGUCUC	 
+6	1	5	MEME	CACACACACACACAC	MEME-1	CACACACACACACAC	15	14	2.13e-007	1.30e-016	1	MEME	CACACACACACACAC	 
+7	0	5	MEME	CACACACACACACAC	MEME-2	CACACACACACACAC	15	11	2.72e+000	8.20e-014	1	MEME	CACACACACACACAC	 
+
+# XSTREME (Motif Discovery and Enrichment Analysis): Version 5.5.8 released on Thu May 15 15:01:46 2025 -0700
+# The format of this file is described at https://meme-suite.org/meme/doc/xstreme-output-format.html
+# xstreme --dna2rna --p /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta --n /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta --minw 6 --maxw 15 --align right --evt 0.05 --oc xstreme_out

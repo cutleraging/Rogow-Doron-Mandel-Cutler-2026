@@ -1,0 +1,58 @@
+Invoking:
+  getsize "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta" 1> $metrics
+Finished invoke:
+  name: count_primary_seqs  status: 0  time: 0.016635
+Invoking:
+  getsize "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta" 1> $metrics
+Finished invoke:
+  name: count_control_seqs  status: 0  time: 0.272068
+Invoking:
+  fasta-get-markov -nostatus -nosummary -rna -m 2 -pseudo 1 "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta" xstreme_out/background
+Finished invoke:
+  name: bg  status: 0  time: 0.101167
+Invoking:
+  streme --verbosity 1 --oc xstreme_out/streme_out -rna --minw 6 --maxw 15 --order 2 --bfile xstreme_out/background --seed 0 --align right --evalue --thresh 0.05 --p "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta" --n "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta"
+Finished invoke:
+  name: streme  status: 0  time: 82.384555
+Invoking:
+  meme -oc xstreme_out/meme_out -mod zoops -minw 6 -maxw 15 -bfile xstreme_out/background -markov_order 2 -seed 0 -rna -evt 0.05 -nostatus "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: meme  status: 0  time: 67.771909
+Invoking:
+  sea --verbosity 1 --oc xstreme_out/sea_out --qvalue --thresh 1 --order 2 --bfile xstreme_out/background --seed 0 --align right --motif-pseudo 0.01 --noseqs --m xstreme_out/meme_out/meme.xml --m xstreme_out/streme_out/streme.xml --p "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta" --n "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta"
+Finished invoke:
+  name: sea_disc  status: 0  time: 1.135817
+Invoking:
+  sea --verbosity 1 --oc xstreme_out/distr_out --pvalue --thresh 1 --hofract 0 --order 2 --bfile xstreme_out/background --seed 0 --motif-pseudo 0.01 --no-pgc --p "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta" --m xstreme_out/combined.meme
+Finished invoke:
+  name: distr_sea  status: 0  time: 0.057501
+Invoking:
+  tomtom -verbosity 1 -text -thresh 0.1 xstreme_out/combined.meme xstreme_out/combined.meme 1> xstreme_out/motif_alignment.txt
+Finished invoke:
+  name: align_tomtom  status: 0  time: 0.038115
+Invoking:
+  fimo --verbosity 1 --oc xstreme_out/fimo_out_1 --bgfile xstreme_out/background --motif 1-CUCACUAAGAAAUKU xstreme_out/streme_out/streme.xml "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: fimo1  status: 0  time: 0.041261
+Invoking:
+  fimo --verbosity 1 --oc xstreme_out/fimo_out_2 --bgfile xstreme_out/background --motif 2-GGCUCAAURMUGGD xstreme_out/streme_out/streme.xml "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: fimo2  status: 0  time: 0.026851
+Invoking:
+  fimo --verbosity 1 --oc xstreme_out/fimo_out_3 --bgfile xstreme_out/background --motif 3-GCUGCUGAGAAUCC xstreme_out/streme_out/streme.xml "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: fimo3  status: 0  time: 0.027236
+Invoking:
+  fimo --verbosity 1 --oc xstreme_out/fimo_out_4 --bgfile xstreme_out/background --motif 5-CUGAGUCUGUCUC xstreme_out/streme_out/streme.xml "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: fimo4  status: 0  time: 0.027127
+Invoking:
+  fimo --verbosity 1 --oc xstreme_out/fimo_out_5 --bgfile xstreme_out/background --motif CACACACACACACAC xstreme_out/meme_out/meme.xml "/Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta"
+Finished invoke:
+  name: fimo5  status: 0  time: 0.040873
+Writing output
+Invoking:
+  xstreme_html_to_tsv xstreme_out/xstreme.html xstreme_out/xstreme.tsv "xstreme --dna2rna --p /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_padj_lessthan_0p05.fasta --n /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-arc-rep1-removed/motif_enrichment/1-extract-seq/log2fc_lessthan_0.fasta --minw 6 --maxw 15 --align right --evt 0.05 --oc xstreme_out" 5.5.8 "Thu May 15 15\:01\:46 2025 -0700"
+Finished invoke:
+  name: summary  status: 0  time: 0.062265
+Done

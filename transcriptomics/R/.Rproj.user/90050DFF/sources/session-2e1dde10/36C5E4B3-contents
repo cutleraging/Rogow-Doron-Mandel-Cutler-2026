@@ -1,0 +1,2009 @@
+---
+title: "EXOSC4 Exonic RNA-Seq Analysis"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TODO:
+- Finish interaction analysis
+- Functional enrichments of interactions
+- Biotype enrichments of interactions
+
+# Notes
+
+# Preparation
+
+## Set working directory
+```{r}
+working.dir <- "~/EinsteinMed Dropbox/Ronald Cutler/Sidoli-lab/Projects/EXOSC4/analysis/2025-RNA-Seq/1-gencode/"
+```
+
+## Load functions
+```{r}
+source(paste0(working.dir, "R/functions.R"))
+```
+
+## Load libraries
+```{r}
+library(biomaRt)
+library(msigdbr)
+library(org.Mm.eg.db)
+library(GSVA)
+library(GSEABase)
+library(GSVAdata)
+library(Biobase)
+
+library(limma)
+#library(sva)
+library(clusterProfiler)
+library(enrichplot)
+library(SummarizedExperiment)
+library(DESeq2)
+library(PCAtools)
+library(genefilter)
+library(zFPKM)
+
+library(ggplot2)
+library(cowplot)
+#library(PerformanceAnalytics)
+library(ggrepel)
+library(EnhancedVolcano)
+library(ComplexHeatmap)
+#library(UpSetR)
+library(ggpubr)
+library(ggcorrplot)
+library(ggvenn)
+
+library(data.table)
+library(tibble)
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(stringr)
+
+library(viridis)
+library(RColorBrewer)
+
+library(BiocParallel)
+library(parallel)
+num_cores <- detectCores() # Detect the number of cores
+```
+
+## Load data
+```{r}
+setwd(paste0(working.dir, "1-data"))
+
+se <- load_rsem_data(metadata_file = "sample_table.csv",
+                     tpm_file = "rsem.merged.gene_tpm.tsv",
+                     counts_file = "rsem.merged.gene_counts.tsv")
+```
+
+## Save
+```{r}
+setwd(paste0(working.dir, "1-data"))
+
+saveRDS(se, "se.RDS")
+```
+
+# Quality Control
+
+## Genes expressed
+```{r}
+dir.create(paste0(working.dir, "2-quality-control"))
+setwd(paste0(working.dir, "2-quality-control"))
+
+plot_genes_expressed(se,
+                     output_file = "genes_expressed.pdf",
+                     width = 6,
+                     height = 8)
+```
+
+## Count distribution
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+plot_count_distribution(se = se,
+                        count_assay = "counts",
+                        pseudocount = 1,
+                        output_file = "count_distribution.pdf",
+                        width = 6,
+                        height = 8)
+```
+
+## Filter for active genes
+- Uses zFPKM transformation with recommended threshold of -3
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+# filter
+se.filter <- filter_active_genes(se,
+                    group_cols = c("condition"),
+                    active_threshold = -3,
+                    output_file = "zFPKM_distribution.pdf",
+                    width = 10,
+                    height = 10)
+
+# plot
+plot_genes_expressed(se.filter,
+                     output_file = "genes_expressed_filtered.pdf",
+                     width = 6,
+                     height = 8)
+
+plot_count_distribution(se = se.filter,
+                        count_assay = "counts",
+                        pseudocount = 1,
+                        output_file = "count_distribution_filtered.pdf",
+                        width = 6,
+                        height = 8)
+```
+
+## Replicate Correlation
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+plot_replicate_correlations(se.filter,
+                            group_col = "condition")
+```
+
+## Gene expressed overlap
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+binary_expr <- as.data.frame(t(apply(assay(se.filter, "tpm"), 1, function(x) as.integer(x > 0)))) 
+colnames(binary_expr) <- se.filter$sample
+
+pdf("overlap_expressed_genes_top_10.pdf", 
+    width = 10, 
+    height = 7) 
+UpSetR::upset(binary_expr, 
+              sets = colnames(binary_expr), 
+              text.scale = 1.25, 
+              nintersects = 10, 
+              order.by = "freq", 
+              show.numbers = FALSE) 
+dev.off()
+```
+
+## Map gene IDs
+```{r}
+se.filter <- annotate_se_ensembl(se.filter,
+    ensemble_mart_species = "hsapiens",
+    ensembldb_species = "Homo sapiens",
+    biomart_attrs = c("ensembl_gene_id", "version", "external_gene_name", 
+                      "entrezgene_id", "gene_biotype", "description"))
+```
+
+## Save
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+      
+# counts
+export_se_assay_csv(se.filter,
+                    assay_name = "counts",
+                    file = "counts_filtered.csv")
+
+# tpm
+export_se_assay_csv(se.filter,
+                    assay_name = "tpm",
+                    file = "tpm_filtered.csv")
+
+# object
+saveRDS(se.filter, "se.filter.RDS")
+#se.filter <- readRDS("se.filter.RDS")
+```
+
+# Normalization
+
+## DeSeq2 normalization and modeling
+```{r}
+dir.create(paste0(working.dir, "3-normalization"))
+setwd(paste0(working.dir, "3-normalization"))
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~ condition)
+
+dds <- DESeq(dds)
+```
+
+### Save
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+# save object
+saveRDS(dds, "dds.RDS")
+#dds <- readRDS("dds.RDS")
+
+# normalized counts
+export_se_assay_csv(dds,
+                    assay_name = "counts",
+                    normalized = TRUE,
+                    file = "counts_filtered_noramlized.csv")
+```
+
+## DESeq2 model estimates
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+# Mean and variance relationship
+pdf("mean-variance.pdf",
+    width = 5,
+    height = 5)
+norm.counts <- counts(dds, normalized=TRUE) 
+mean.counts <- rowMeans(norm.counts)
+variance.counts <- apply(norm.counts, MARGIN = 1, var)
+mean.var.col <- densCols(x=log2(mean.counts), y=log2(variance.counts)) 
+plot(x=log2(mean.counts), y=log2(variance.counts), pch=16, cex=0.5,
+col=mean.var.col, main="Mean-variance relationship", xlab="Mean log2(normalized counts) per gene", ylab="Variance of log2(normalized counts)", panel.first = grid())
+abline(a=1, b=1, col="red") # a linear line to compare against 
+dev.off()
+
+# dispersion
+pdf("dispersion.pdf",
+    width = 5,
+    height = 5)
+plotDispEsts(dds)
+dev.off()
+```
+
+## Distribution of normalized counts
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+plot_count_distribution(dds = dds,
+                        count_assay = "counts",
+                        normalized = TRUE,
+                        pseudocount = 1,
+                        output_file = "count_distribution_normalized.pdf",
+                        width = 6,
+                        height = 8)
+```
+
+## Levels of genes knocked-down
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+plot_genes_barpdf(dds,
+    genes = c("EXOSC4",
+              "DICER1", "DICER1-AS1",
+              "MALT1" , "MALT1-AS1"),
+    gene_id_col = "gene_name",
+    transform = "log2p1",
+    fill_col = "group",
+    order_col = "group",
+    pdf_file = "target_gene_expression_levels.pdf",
+    width = 6,
+    height = 8)
+```
+
+## Principle component analysis
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+pca_with_reports(dds,
+                blind = TRUE,
+                removeVar = 0.1,
+                metavars = c("condition","type","group"),
+                colby = "type",
+                shape = "group")
+```
+
+## Batch effect correction
+```{r, eval = FALSE}
+dir.create(paste0(working.dir, "3.5-batch-correction"))
+setwd(paste0(working.dir, "3.5-batch-correction"))
+
+# ComBat method
+# mod <- model.matrix(~condition.cycle, data=colData(dds))
+# mod
+# 
+# counts <- counts(dds, normalized = FALSE)
+# # counts <- na.omit(counts)
+# # zero_var_genes <- apply(counts, 1, function(x) var(x) == 0)
+# # counts <- counts[!zero_var_genes,]
+# # head(counts)
+# 
+# dds$batch
+# 
+# param <- MulticoreParam(workers = num_cores - 1)
+# 
+# ComBat(dat = counts,
+#        batch = dds$batch,
+#        ref.batch = "1",
+#        mod = mod,
+#        par.prior = FALSE,
+#        mean.only = TRUE,
+#        BPPARAM = param)
+# 
+# assays(dds, withDimnames=FALSE)[["counts.batchCorrect"]] <- ComBat(dat = na.omit(counts(dds, normalized = FALSE)),
+#                                                                                  batch = dds$batch,
+#                                                                                  ref.batch = "2",
+#                                                                                  mod = mod)
+
+# Limma method
+# assays(dds, withDimnames=FALSE)[["counts.normalized.batchCorrect"]] <- removeBatchEffect(log2(counts(dds, normalized = TRUE) + 1),
+#                                                                               batch = dds$batch,
+#                                                                               group = dds$condition.cycle)
+```
+
+# Differential Expression
+```{r}
+dir.create(paste0(working.dir, "4-differential-expression"))
+
+resultsNames(dds)
+```
+
+## Dicer1
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+dicer_scramble_vs_dcas9 <- de_report(dds,
+                                    contrast = c("condition", "scramble_dicer", "dcas_dicer"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "dicer_scramble_vs_dcas9.csv",
+                                    plots_pdf   = "dicer_scramble_vs_dcas9.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(dicer_scramble_vs_dcas9$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          pdf_file = "dicer_scramble_vs_dcas9_biotype.pdf",
+                          csv_file = "dicer_scramble_vs_dcas9_biotype.csv")
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+dicer_guide2_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g2_dicer", "scramble_dicer"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "dicer_guide2_vs_scramble.csv",
+                                    plots_pdf   = "dicer_guide2_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(dicer_guide2_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "dicer_guide2_vs_scramble_biotype.csv",
+                          pdf_file = "dicer_guide2_vs_scramble_biotype.pdf")
+```
+
+### Guide3 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+dicer_guide3_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g3_dicer", "scramble_dicer"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "dicer_guide3_vs_scramble.csv",
+                                    plots_pdf   = "dicer_guide3_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(dicer_guide3_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "dicer_guide3_vs_scramble_biotype.csv",
+                          pdf_file = "dicer_guide3_vs_scramble_biotype.pdf")
+```
+
+
+## Malat1
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+malat_scramble_vs_dcas9 <- de_report(dds,
+                                    contrast = c("condition", "scramble_malt", "dcas_malt"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "malat_scramble_vs_dcas9.csv",
+                                    plots_pdf   = "malat_scramble_vs_dcas9.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(malat_scramble_vs_dcas9$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          pdf_file = "malat_scramble_vs_dcas9_biotype.pdf",
+                          csv_file = "malat_scramble_vs_dcas9_biotype.csv")
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+malat_guide2_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g2_malt", "scramble_malt"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "malat_guide2_vs_scramble.csv",
+                                    plots_pdf   = "malat_guide2_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(malat_guide2_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "malat_guide2_vs_scramble_biotype.csv",
+                          pdf_file = "malat_guide2_vs_scramble_biotype.pdf")
+```
+
+### Guide3 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+malat_guide3_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g3_malt", "scramble_malt"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "malat_guide3_vs_scramble.csv",
+                                    plots_pdf   = "malat_guide3_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(malat_guide3_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "malat_guide3_vs_scramble_biotype.csv",
+                          pdf_file = "malat_guide3_vs_scramble_biotype.pdf")
+```
+
+## Positive
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+pos_scramble_vs_dcas9 <- de_report(dds,
+                                    contrast = c("condition", "scramble_pos", "dcas_pos"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "pos_scramble_vs_dcas9.csv",
+                                    plots_pdf   = "pos_scramble_vs_dcas9.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(pos_scramble_vs_dcas9$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          pdf_file = "pos_scramble_vs_dcas9_biotype.pdf",
+                          csv_file = "pos_scramble_vs_dcas9_biotype.csv")
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+pos_guide2_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g2_pos", "scramble_pos"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "pos_guide2_vs_scramble.csv",
+                                    plots_pdf   = "pos_guide2_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(pos_guide2_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "pos_guide2_vs_scramble_biotype.csv",
+                          pdf_file = "pos_guide2_vs_scramble_biotype.pdf")
+```
+
+### Guide3 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+pos_guide3_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g3_pos", "scramble_pos"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "pos_guide3_vs_scramble.csv",
+                                    plots_pdf   = "pos_guide3_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(pos_guide3_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "pos_guide3_vs_scramble_biotype.csv",
+                          pdf_file = "pos_guide3_vs_scramble_biotype.pdf")
+```
+
+
+
+## Negative
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+neg_scramble_vs_dcas9 <- de_report(dds,
+                                    contrast = c("condition", "scramble_neg", "dcas_neg"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "neg_scramble_vs_dcas9.csv",
+                                    plots_pdf   = "neg_scramble_vs_dcas9.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(neg_scramble_vs_dcas9$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          pdf_file = "neg_scramble_vs_dcas9_biotype.pdf",
+                          csv_file = "neg_scramble_vs_dcas9_biotype.csv")
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+neg_guide2_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g2_neg", "scramble_neg"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "neg_guide2_vs_scramble.csv",
+                                    plots_pdf   = "neg_guide2_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(neg_guide2_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "neg_guide2_vs_scramble_biotype.csv",
+                          pdf_file = "neg_guide2_vs_scramble_biotype.pdf")
+```
+
+### Guide3 vs Scramble
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# differential expression
+neg_guide3_vs_scramble <- de_report(dds,
+                                    contrast = c("condition", "g3_neg", "scramble_neg"),
+                                    alpha = 0.05,
+                                    fc_cutoff = 2,
+                                    max_labels_per_direction = 10,
+                                    annot_cols = c("gene_name","entrezid","gene_biotype","description"),
+                                    label_col   = "gene_name",
+                                    top_annotation_cols = c("group","type"),
+                                    results_csv = "neg_guide3_vs_scramble.csv",
+                                    plots_pdf   = "neg_guide3_vs_scramble.pdf")
+
+# biotype dsitribution
+test_biotype_distribution(neg_guide3_vs_scramble$res_df,
+                          biotype_col = "gene_biotype",
+                          padj_col = "padj",
+                          lfc_col = "log2FoldChange",
+                          alpha = 0.05,
+                          fc_cutoff = 0,
+                          drop_biotypes = c(NA, "", "unknown", "Unknown"),
+                          min_biotype_count = 10,
+                          csv_file = "neg_guide3_vs_scramble_biotype.csv",
+                          pdf_file = "neg_guide3_vs_scramble_biotype.pdf")
+```
+
+
+## Interaction DICER1 and EXOSC4 KD
+- Tests whether sex alters the effect of the diet
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# set levels
+se.filter$group <- factor(se.filter$group, levels=c("neg", "dicer", "malt", "pos"))
+se.filter$type <- factor(se.filter$type, levels=c("scramble","dcas9", "guide2", "guide3"))
+
+# interaction design
+dds <- DESeqDataSet(se.filter, design = ~ group * type)
+
+dds <- DESeq(dds)
+
+resultsNames(dds)
+
+# get results
+dicer_vs_exosc4_interaction <- results(dds, 
+                  alpha = 0.05, 
+                  name = "groupdicer.typeguide2")
+
+# get a summary of the amount of significantly DEG 
+summary(dicer_vs_exosc4_interaction, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# dicer_vs_exosc4_interaction <- lfcShrink(dds = dds,
+#                               res = dicer_vs_exosc4_interaction,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+dicer_vs_exosc4_interaction <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(dicer_vs_exosc4_interaction),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+dicer_vs_exosc4_interaction <- merge(dicer_vs_exosc4_interaction, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+dicer_vs_exosc4_interaction$ensembl_gene_id <- NULL
+colnames(dicer_vs_exosc4_interaction)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(dicer_vs_exosc4_interaction, "dicer_vs_exosc4_interaction.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("dicer_vs_exosc4_interaction_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(dicer_vs_exosc4_interaction$pvalue, 
+     main = "Diet vs Sex Interaction", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+dicer_vs_exosc4_interaction <- dicer_vs_exosc4_interaction %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & dicer_vs_exosc4_interaction$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & dicer_vs_exosc4_interaction$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("dicer_vs_exosc4_interaction_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(dicer_vs_exosc4_interaction, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Diet vs Sex Interaction",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(dicer_vs_exosc4_interaction) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(dicer_vs_exosc4_interaction))
+names(keyvals) <- rownames(dicer_vs_exosc4_interaction)
+keyvals[dicer_vs_exosc4_interaction$log2FoldChange < -thresh & dicer_vs_exosc4_interaction$padj < 0.05] <- 'blue'
+keyvals[dicer_vs_exosc4_interaction$log2FoldChange > thresh & dicer_vs_exosc4_interaction$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("dicer_vs_exosc4_interaction_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(dicer_vs_exosc4_interaction,
+                lab = dicer_vs_exosc4_interaction$external_gene_name,
+                selectLab = top20,
+                title = "Diet vs Sex Interaction",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(dicer_vs_exosc4_interaction$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[dicer_vs_exosc4_interaction$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("dicer_vs_exosc4_interaction_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Diet vs Sex Interaction\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+### Scatter plot
+```{r}
+# merge tables
+dicer_vs_exosc4_interaction_merge <- merge(dicer_scramble_vs_dcas9$res_df,
+                        neg_guide2_vs_scramble$res_df[,c("ensembl_gene_id","log2FoldChange", "pvalue", "padj")],
+                        by = "ensembl_gene_id")
+
+# clean up columns
+dicer_vs_exosc4_interaction_merge <- dicer_vs_exosc4_interaction_merge[c("ensembl_gene_id", "gene_name",
+                                   "log2FoldChange.x", "pvalue.x", "padj.x",
+                                   "log2FoldChange.y", "pvalue.y", "padj.y")]
+
+# rename columns
+colnames(dicer_vs_exosc4_interaction_merge)[3:8] <- c(
+                                    "dicer_scramble_vs_dcas9.logFC",
+                                    "dicer_scramble_vs_dcas9.P.Value",
+                                    "dicer_scramble_vs_dcas9.adj.P.Val",
+                                    "neg_guide2_vs_scramble.logFC",
+                                    "neg_guide2_vs_scramble.P.Value",
+                                    "neg_guide2_vs_scramble.adj.P.Val")
+
+fc_thr    <- 1
+p_thr     <- 0.05
+delta_thr <- 0.1
+
+dicer_vs_exosc4_interaction_merge <- dicer_vs_exosc4_interaction_merge %>%
+  mutate(
+    x = dicer_scramble_vs_dcas9.logFC,
+    y = neg_guide2_vs_scramble.logFC,
+    #delta = dicer_vs_exosc4_interaction_merge.logFC,
+    quadrant = case_when(
+      x > 0 & y > 0 ~ "Concordant Up",
+      x < 0 & y < 0 ~ "Concordant Down",
+      x > 0 & y < 0 ~ "Negative Reversal: Up -> Down",
+      x < 0 & y > 0 ~ "Positive Reversal: Down -> Up",
+      TRUE ~ "Near Zero / Mixed"
+    ),
+    # modulation = case_when(
+    #   quadrant == "Concordant Up"   & delta >  delta_thr ~ "Amplified Up",
+    #   quadrant == "Concordant Up"   & delta < -delta_thr ~ "Attenuated Up",
+    #   quadrant == "Concordant Down" & delta < -delta_thr ~ "Amplified Down",
+    #   quadrant == "Concordant Down" & delta >  delta_thr ~ "Attenuated Down",
+    #   TRUE ~ NA_character_
+    # ),
+    # sig_int = !is.na(dicer_vs_exosc4_interaction_merge.adj.P.Val) &
+    #           dicer_vs_exosc4_interaction_merge.adj.P.Val < p_thr,
+    sig_simple = ((abs(x) > fc_thr) & !is.na(dicer_scramble_vs_dcas9.adj.P.Val) &
+                   dicer_scramble_vs_dcas9.adj.P.Val < p_thr) |
+                 ((abs(y) > fc_thr) & !is.na(neg_guide2_vs_scramble.adj.P.Val) &
+                   neg_guide2_vs_scramble.adj.P.Val < p_thr)
+    # Label = case_when(
+    #   sig_int    ~ if_else(!is.na(modulation), modulation, quadrant),
+    #   sig_simple ~ if_else(!is.na(modulation), modulation, quadrant),
+    #   TRUE       ~ "Not Significant"
+    )
+
+table(dicer_vs_exosc4_interaction_merge$sig_simple)
+
+# output
+write.csv(dicer_vs_exosc4_interaction_merge, "dicer_vs_exosc4_interaction_merge.csv", row.names = FALSE)
+
+## ---- plot ----
+
+# # only significant-interaction genes
+out <- dicer_vs_exosc4_interaction_merge
+sig <- out[out$sig_simple == TRUE,]
+# 
+# label top genes by interaction padj
+# highlight <- sig
+#   arrange(dicer_vs_exosc4_interaction_merge.adj.P.Val) %>%
+#   slice_head(n = 30)
+
+pdf("dicer_vs_exosc4_interaction_merge_log2fc_corr.pdf", height = 4, width = 6)
+ggplot() +
+  # background: nonsignificant interaction genes
+  geom_point(data = out, aes(x = x, y = y),
+             color = "grey40", alpha = 0.1, size = 1, show.legend = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # overlay: only significant interaction genes are colored
+ geom_point(data = sig, aes(x = x, y = y, color = quadrant), 
+             size = 2, alpha = 0.75) +
+ # geom_text_repel(
+ #    data = highlight,
+ #    aes(x = x, y = y, label = external_gene_name),
+ #    size = 2, fontface = "bold", colour = "black",
+ #    segment.color = "black", segment.size = 0.3,
+ #    box.padding = 0.4, point.padding = 0.3,
+ #    max.overlaps = Inf, min.segment.length = 0
+ #  ) +
+  lims(x = c(-10, 10), y = c(-10, 10)) +
+  scale_color_manual(
+    name = "Interaction class",
+    values = c(
+    "Amplified Up"       = "firebrick",
+    "Attenuated Up"      = "orange3",
+    "Amplified Down"     = "navy",
+    "Attenuated Down"    = "skyblue4",
+    "Negative Reversal: Up -> Down"   = "purple",
+    "Positive Reversal: Down -> Up"   = "darkgreen")
+  ) +
+  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_bw() + theme(panel.grid = element_blank()) +
+  labs(x = "DICER1 inhibition + EXOSC4 KD (log2FC)",
+       y = "EXOSC4 KD (log2FC)",
+       title = "DICER x EXOSC4: Significant Interactions")
+dev.off()
+```
+
+```{r}
+# merge tables
+dicer_vs_exosc4_interaction_merge <- merge(dicer_scramble_vs_dcas9$res_df,
+                        neg_guide2_vs_scramble$res_df[,c("ensembl_gene_id","log2FoldChange", "pvalue", "padj")],
+                        by = "ensembl_gene_id")
+
+dicer_vs_exosc4_interaction_merge <- merge(dicer_vs_exosc4_interaction_merge, 
+                        dicer_vs_exosc4_interaction[,c("ensembl_gene_id", "log2FoldChange", "pvalue", "padj")],
+                        by = "ensembl_gene_id")
+
+# clean up columns
+dicer_vs_exosc4_interaction_merge <- dicer_vs_exosc4_interaction_merge[c("ensembl_gene_id", "external_gene_name",
+                                   "log2FoldChange.x", "pvalue.x", "padj.x",
+                                   "log2FoldChange.y", "pvalue.y", "padj.y",
+                                   "log2FoldChange", "pvalue", "padj")]
+
+# rename columns
+colnames(dicer_vs_exosc4_interaction_merge)[3:11] <- c("dicer_scramble_vs_dcas9.logFC",
+                                    "dicer_scramble_vs_dcas9.P.Value",
+                                    "dicer_scramble_vs_dcas9.adj.P.Val",
+                                    "neg_guide2_vs_scramble.logFC",
+                                    "neg_guide2_vs_scramble.P.Value",
+                                    "neg_guide2_vs_scramble.adj.P.Val",
+                                    "dicer_vs_exosc4_interaction_merge.logFC",
+                                    "dicer_vs_exosc4_interaction_merge.P.Value",
+                                    "dicer_vs_exosc4_interaction_merge.adj.P.Val")
+
+fc_thr    <- 1
+p_thr     <- 0.05
+delta_thr <- 0.1
+
+dicer_vs_exosc4_interaction_merge <- dicer_vs_exosc4_interaction_merge %>%
+  mutate(
+    x = dicer_scramble_vs_dcas9.logFC,
+    y = neg_guide2_vs_scramble.logFC,
+    delta = dicer_vs_exosc4_interaction_merge.logFC,
+    quadrant = case_when(
+      x > 0 & y > 0 ~ "Concordant Up",
+      x < 0 & y < 0 ~ "Concordant Down",
+      x > 0 & y < 0 ~ "Negative Reversal: Up -> Down",
+      x < 0 & y > 0 ~ "Positive Reversal: Down -> Up",
+      TRUE ~ "Near Zero / Mixed"
+    ),
+    modulation = case_when(
+      quadrant == "Concordant Up"   & delta >  delta_thr ~ "Amplified Up",
+      quadrant == "Concordant Up"   & delta < -delta_thr ~ "Attenuated Up",
+      quadrant == "Concordant Down" & delta < -delta_thr ~ "Amplified Down",
+      quadrant == "Concordant Down" & delta >  delta_thr ~ "Attenuated Down",
+      TRUE ~ NA_character_
+    ),
+    sig_int = !is.na(dicer_vs_exosc4_interaction_merge.adj.P.Val) &
+              dicer_vs_exosc4_interaction_merge.adj.P.Val < p_thr,
+    sig_simple = ((abs(x) > fc_thr) & !is.na(dicer_scramble_vs_dcas9.adj.P.Val) &
+                   dicer_scramble_vs_dcas9.adj.P.Val < p_thr) |
+                 ((abs(y) > fc_thr) & !is.na(neg_guide2_vs_scramble.adj.P.Val) &
+                   neg_guide2_vs_scramble.adj.P.Val < p_thr),
+    Label = case_when(
+      sig_int    ~ if_else(!is.na(modulation), modulation, quadrant),
+      sig_simple ~ if_else(!is.na(modulation), modulation, quadrant),
+      TRUE       ~ "Not Significant"
+    )
+  )
+
+table(dicer_vs_exosc4_interaction_merge$modulation)
+
+# output
+write.csv(dicer_vs_exosc4_interaction_merge, "dicer_vs_exosc4_interaction_merge.csv", row.names = FALSE)
+
+## ---- plot ----
+
+# only significant-interaction genes
+out <- dicer_vs_exosc4_interaction_merge %>%
+  mutate(sig_int = !is.na(dicer_vs_exosc4_interaction_merge.adj.P.Val) &
+                   dicer_vs_exosc4_interaction_merge.adj.P.Val < p_thr)
+sig <- out %>% filter(sig_int)  
+
+# label top genes by interaction padj
+highlight <- out %>%
+  filter(sig_int) %>%
+  arrange(dicer_vs_exosc4_interaction_merge.adj.P.Val) %>%
+  slice_head(n = 30)
+
+pdf("dicer_vs_exosc4_interaction_merge_log2fc_corr.pdf", height = 4, width = 6)
+ggplot() +
+  # background: nonsignificant interaction genes
+  geom_point(data = out, aes(x = x, y = y),
+             color = "grey40", alpha = 0.1, size = 1, show.legend = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # overlay: only significant interaction genes are colored
+ geom_point(data = sig, aes(x = x, y = y, color = Label),
+             size = 2, alpha = 0.75) +
+ geom_text_repel(
+    data = highlight,
+    aes(x = x, y = y, label = external_gene_name),
+    size = 2, fontface = "bold", colour = "black",
+    segment.color = "black", segment.size = 0.3,
+    box.padding = 0.4, point.padding = 0.3,
+    max.overlaps = Inf, min.segment.length = 0
+  ) +
+  lims(x = c(-4, 4), y = c(-4, 4)) +
+  scale_color_manual(
+    name = "Interaction class",
+    values = c(
+    "Amplified Up"       = "firebrick",
+    "Attenuated Up"      = "orange3",
+    "Amplified Down"     = "navy",
+    "Attenuated Down"    = "skyblue4",
+    "Negative Reversal: Up -> Down"   = "purple",
+    "Positive Reversal: Down -> Up"   = "darkgreen"
+  ) # , drop = FALSE  # uncomment to keep all legend entries even if absent
+  ) +
+  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_bw() + theme(panel.grid = element_blank()) +
+  labs(x = "Effect of diet in males (log2FC)",
+       y = "Effect of diet in females (log2FC)",
+       title = "Diet × Sex: Significant Interactions")
+dev.off()
+```
+
+
+# Gene set enrichment analysis
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+```
+
+## DICER1
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(dicer_scramble_vs_dcas9$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "dicer_scramble_vs_dcas9",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(dicer_guide2_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "dicer_guide2_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(dicer_guide3_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "dicer_guide3_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+## MALAT1
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(malat_scramble_vs_dcas9$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "malat_scramble_vs_dcas9",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(malat_guide2_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "malat_guide2_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(malat_guide3_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "malat_guide3_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+
+
+
+## Positive
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(pos_scramble_vs_dcas9$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "pos_scramble_vs_dcas9",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(pos_guide2_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "pos_guide2_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(pos_guide3_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "pos_guide3_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+
+
+
+
+## Negative
+
+### Scramble vs dCAS9
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(neg_scramble_vs_dcas9$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "neg_scramble_vs_dcas9",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(neg_guide2_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "neg_guide2_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+### Guide2 vs Scramble
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+gsea_go_report(neg_guide3_vs_scramble$res_df,
+                id_col  = "entrezid",
+                OrgDb = "org.Hs.eg.db",
+                keyType = "ENTREZID",
+                file_prefix = "neg_guide3_vs_scramble",
+                plot_title = "GSEA GO",
+                pvalueCutoff = 0.05,
+                minGSSize = 10,
+                maxGSSize = 500,
+                simplify_go = TRUE,
+                n_show = 10,
+                width = 6,
+                height = 5)
+```
+
+
+
+
+# Gene set variation analysis
+
+## Get gene sets
+- Using M2 CP collection of gene sets from MSigDB
+- This is different depending on the package used - old one on Mac?
+```{r}
+dir.create(paste0(working.dir, "6-differential-expression-pathway"))
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+# Download the full M2 (mouse‑specific curated) collection
+m2_all <- msigdbr(species = "Mus musculus", category = "C2")
+
+# Keep only the canonical pathways
+m2_canonical <- m2_all %>%
+  filter(gs_subcat %in% c("CP:KEGG", "CP:REACTOME", "CP:BIOCARTA"))
+
+# Convert to a list that matches with row names of expression matrix
+m2_gene_sets <- split(m2_canonical$ensembl_gene,
+                      m2_canonical$gs_name)
+```
+
+## Calcaulte GSVA enrichment score
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+exprData <- counts(dds, normalized = TRUE)
+rownames(exprData) <- rowData(dds)$ensembl_gene_id
+exprData <- exprData[!is.na(rownames(exprData)), ]
+
+se.filter.param <- gsvaParam(exprData = exprData,
+                         geneSets = m2_gene_sets, 
+                         minSize=5, 
+                         maxSize=500,
+                         kcdf="Gaussian")
+
+se.filter.gsva <- gsva(se.filter.param,
+                           verbose = TRUE)
+
+write.csv(se.filter.gsva, "se.filter.gsva.csv")
+```
+
+## Differential abundance
+
+### Fit linear model
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+# Create the design matrix
+design <- model.matrix(~ sex * diet, data = colData(dds))
+
+# make names in correct format=
+colnames(design) <- make.names(colnames(design))
+
+# Fit the linear model
+fit <- lmFit(se.filter.gsva, design)
+
+# Compute empirical Bayes statistics
+fit.eb <- eBayes(fit, robust=TRUE)
+
+gssizes <- sapply(se.filter.param@geneSets, length)
+gssizes <- gssizes[rownames(se.filter.gsva)]
+all(names(gssizes) == names(fit.eb$sigma))
+
+pdf("gene_set_size_vs_precision.pdf",
+    width = 5,
+    height = 5)
+plot(sqrt(gssizes), sqrt(fit.eb$sigma), xlab="Sqrt(gene sets sizes)",
+          ylab="Sqrt(standard deviation)", las=1, pch=".", cex=4)
+lines(lowess(sqrt(gssizes), sqrt(fit.eb$sigma)), col="red", lwd=2)
+dev.off()
+
+# account for increased precision of larger gene sets using limma trend
+fit.eb.trend <- eBayes(fit, robust=TRUE, trend=gssizes)
+
+# set up contrasts
+contrasts <- makeContrasts(
+  # Diet effect in males: (MHF - MNC) = diethigh.fat coefficient
+  Diet_Male       = diethigh.fat,
+
+  # Diet effect in females: (FHF - FNC) = diethigh.fat + interaction
+  Diet_Female     = diethigh.fat + sexfemale.diethigh.fat,
+
+  # Sex effect in normal chow: (FNC - MNC) = sexfemale coefficient
+  Sex_NC          = sexfemale,
+
+  # Sex effect in high fat: (FHF - MHF) = sexfemale + interaction
+  Sex_HF          = sexfemale + sexfemale.diethigh.fat,
+
+  # Interaction: (Diet_Female - Diet_Male) = interaction coefficient
+  Interaction     = sexfemale.diethigh.fat,
+
+  levels = colnames(design)
+)
+
+# Apply the contrasts to the fit object
+fit.eb.trend <- contrasts.fit(fit.eb.trend, contrasts)
+
+# Re-compute the empirical Bayes statistics for this specific contrast
+fit.eb.trend <- eBayes(fit.eb.trend, robust=TRUE, trend=gssizes)
+
+results.adjusted <- summary(decideTests(fit.eb.trend,
+                    adjust.method = 'BH',
+                    p.value = 0.05,
+                    lfc = 0.5))
+write.csv(results.adjusted, "summary_expression_abundance_pathway_lfc1_pvalue0.05.csv")
+```
+
+### Male High-Fat vs Male Normal
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+dicer_scramble_vs_dcas9_gsva <- topTable(fit.eb.trend, coef="Diet_Male", number = Inf)
+
+# make pathways easier to read
+dicer_scramble_vs_dcas9_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(dicer_scramble_vs_dcas9_gsva))), width = 50)))
+dicer_scramble_vs_dcas9_gsva$database <- sub("_.*", "", rownames(dicer_scramble_vs_dcas9_gsva))
+
+# save
+write.csv(dicer_scramble_vs_dcas9_gsva, "dicer_scramble_vs_dcas9_gsva.csv")
+
+# p-value distribution histogram
+pdf("dicer_scramble_vs_dcas9_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(dicer_scramble_vs_dcas9_gsva$P.Value, 
+     main = "Male High-Fat vs Male Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+dicer_scramble_vs_dcas9_gsva <- dicer_scramble_vs_dcas9_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & dicer_scramble_vs_dcas9_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & dicer_scramble_vs_dcas9_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("dicer_scramble_vs_dcas9_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(dicer_scramble_vs_dcas9_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Male High-Fat vs Male Normal",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(dicer_scramble_vs_dcas9_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:20]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(dicer_scramble_vs_dcas9_gsva))
+names(keyvals) <- rownames(dicer_scramble_vs_dcas9_gsva)
+keyvals[dicer_scramble_vs_dcas9_gsva$logFC < -thresh & dicer_scramble_vs_dcas9_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[dicer_scramble_vs_dcas9_gsva$logFC > thresh & dicer_scramble_vs_dcas9_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("dicer_scramble_vs_dcas9_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(dicer_scramble_vs_dcas9_gsva,
+                lab = dicer_scramble_vs_dcas9_gsva$pathway,
+                selectLab = top20,
+                title = "Male High-Fat vs Male Normal",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 8),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(dicer_scramble_vs_dcas9_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[dicer_scramble_vs_dcas9_gsva$adj.P.Val < 0.05 & abs(dicer_scramble_vs_dcas9_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ")
+  #str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "CIMSS Infected vs CIMSS Mock\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("dicer_scramble_vs_dcas9_gsva_sig_heatmap.pdf",
+    width = 20, height = 50)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 200), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+### Female High-Fat vs Female Normal
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+neg_guide2_vs_scramble_gsva <- topTable(fit.eb.trend, coef="Diet_Female", number = Inf)
+
+# make pathways easier to read
+neg_guide2_vs_scramble_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(neg_guide2_vs_scramble_gsva))), width = 50)))
+neg_guide2_vs_scramble_gsva$database <- sub("_.*", "", rownames(neg_guide2_vs_scramble_gsva))
+
+# save
+write.csv(neg_guide2_vs_scramble_gsva, "neg_guide2_vs_scramble_gsva.csv")
+
+# p-value distribution histogram
+pdf("neg_guide2_vs_scramble_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(neg_guide2_vs_scramble_gsva$P.Value, 
+     main = "Female High-Fat vs Female Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+neg_guide2_vs_scramble_gsva <- neg_guide2_vs_scramble_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & neg_guide2_vs_scramble_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & neg_guide2_vs_scramble_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("neg_guide2_vs_scramble_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(neg_guide2_vs_scramble_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Female High-Fat vs Female Normal",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(neg_guide2_vs_scramble_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:20]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(neg_guide2_vs_scramble_gsva))
+names(keyvals) <- rownames(neg_guide2_vs_scramble_gsva)
+keyvals[neg_guide2_vs_scramble_gsva$logFC < -thresh & neg_guide2_vs_scramble_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[neg_guide2_vs_scramble_gsva$logFC > thresh & neg_guide2_vs_scramble_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("neg_guide2_vs_scramble_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(neg_guide2_vs_scramble_gsva,
+                lab = neg_guide2_vs_scramble_gsva$pathway,
+                selectLab = top20,
+                title = "Female High-Fat vs Female Normal",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 8),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(neg_guide2_vs_scramble_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[neg_guide2_vs_scramble_gsva$adj.P.Val < 0.05 & abs(neg_guide2_vs_scramble_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ")
+  #str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "CIMSS Infected vs CIMSS Mock\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("neg_guide2_vs_scramble_gsva_sig_heatmap.pdf",
+    width = 20, height = 50)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 200), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+### Interaction between diet and sex
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+diet_sex_interaction_gsva <- topTable(fit.eb.trend, coef="Interaction", number = Inf)
+
+# make pathways easier to read
+diet_sex_interaction_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(diet_sex_interaction_gsva))), width = 30)))
+diet_sex_interaction_gsva$database <- sub("_.*", "", rownames(diet_sex_interaction_gsva))
+
+# save
+write.csv(diet_sex_interaction_gsva, "diet_sex_interaction_gsva.csv")
+
+# p-value distribution histogram
+pdf("diet_sex_interaction_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(diet_sex_interaction_gsva$P.Value, 
+     main = "Interaction between drug and infection", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+diet_sex_interaction_gsva <- diet_sex_interaction_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & diet_sex_interaction_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & diet_sex_interaction_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("diet_sex_interaction_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(diet_sex_interaction_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Interaction between drug and infection",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(diet_sex_interaction_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:10]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(diet_sex_interaction_gsva))
+names(keyvals) <- rownames(diet_sex_interaction_gsva)
+keyvals[diet_sex_interaction_gsva$logFC < -thresh & diet_sex_interaction_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[diet_sex_interaction_gsva$logFC > thresh & diet_sex_interaction_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("diet_sex_interaction_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(diet_sex_interaction_gsva,
+                lab = diet_sex_interaction_gsva$pathway,
+                selectLab = top20,
+                title = "Interaction between drug and infection",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 5),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(diet_sex_interaction_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[diet_sex_interaction_gsva$adj.P.Val < 0.05 & abs(diet_sex_interaction_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ") %>%
+  str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "Interaction between drug and infection\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("diet_sex_interaction_gsva_sig_heatmap.pdf",
+    width = 10, height = 10)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 100), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+#### Scatter plot
+```{r}
+# merge tables
+diet_sex_interaction_gsva_merge <- merge(dicer_scramble_vs_dcas9_gsva,
+                        neg_guide2_vs_scramble_gsva[,c("logFC", "P.Value", "adj.P.Val")],
+                        by = "row.names")
+rownames(diet_sex_interaction_gsva_merge) <- diet_sex_interaction_gsva_merge$Row.names
+
+diet_sex_interaction_gsva_merge <- merge(diet_sex_interaction_gsva_merge, 
+                        diet_sex_interaction_gsva[,c("logFC", "P.Value", "adj.P.Val")],
+                        by = "row.names")
+rownames(diet_sex_interaction_gsva_merge) <- diet_sex_interaction_gsva_merge$Row.names
+diet_sex_interaction_gsva_merge$Row.names <- NULL
+
+# clean up columns
+diet_sex_interaction_gsva_merge <- diet_sex_interaction_gsva_merge[c("pathway", "database",
+                                   "logFC.x", "P.Value.x", "adj.P.Val.x",
+                                   "logFC.y", "P.Value.y", "adj.P.Val.y",
+                                   "logFC", "P.Value", "adj.P.Val")]
+
+# rename columns
+colnames(diet_sex_interaction_gsva_merge)[3:11] <- c("dicer_scramble_vs_dcas9_gsva.logFC",
+                                    "dicer_scramble_vs_dcas9_gsva.P.Value",
+                                    "dicer_scramble_vs_dcas9_gsva.adj.P.Val",
+                                    "neg_guide2_vs_scramble_gsva.logFC",
+                                    "neg_guide2_vs_scramble_gsva.P.Value",
+                                    "neg_guide2_vs_scramble_gsva.adj.P.Val",
+                                    "diet_sex_interaction_gsva_merge.logFC",
+                                    "diet_sex_interaction_gsva_merge.P.Value",
+                                    "diet_sex_interaction_gsva_merge.adj.P.Val")
+
+fc_thr    <- 0.5
+p_thr     <- 0.05
+delta_thr <- 0.1
+
+diet_sex_interaction_gsva_merge <- diet_sex_interaction_gsva_merge %>%
+  mutate(
+    x = dicer_scramble_vs_dcas9_gsva.logFC,
+    y = neg_guide2_vs_scramble_gsva.logFC,
+    delta = diet_sex_interaction_gsva_merge.logFC,
+    quadrant = case_when(
+      x > 0 & y > 0 ~ "Concordant Up",
+      x < 0 & y < 0 ~ "Concordant Down",
+      x > 0 & y < 0 ~ "Negative Reversal: Up -> Down",
+      x < 0 & y > 0 ~ "Positive Reversal: Down -> Up",
+      TRUE ~ "Near Zero / Mixed"
+    ),
+    modulation = case_when(
+      quadrant == "Concordant Up"   & delta >  delta_thr ~ "Amplified Up",
+      quadrant == "Concordant Up"   & delta < -delta_thr ~ "Attenuated Up",
+      quadrant == "Concordant Down" & delta < -delta_thr ~ "Amplified Down",
+      quadrant == "Concordant Down" & delta >  delta_thr ~ "Attenuated Down",
+      TRUE ~ NA_character_
+    ),
+    sig_int = !is.na(diet_sex_interaction_gsva_merge.adj.P.Val) &
+              diet_sex_interaction_gsva_merge.adj.P.Val < p_thr,
+    sig_simple = ((abs(x) > fc_thr) & !is.na(dicer_scramble_vs_dcas9_gsva.adj.P.Val) &
+                   dicer_scramble_vs_dcas9_gsva.adj.P.Val < p_thr) |
+                 ((abs(y) > fc_thr) & !is.na(neg_guide2_vs_scramble_gsva.adj.P.Val) &
+                   neg_guide2_vs_scramble_gsva.adj.P.Val < p_thr),
+    Label = case_when(
+      sig_int    ~ if_else(!is.na(modulation), modulation, quadrant),
+      sig_simple ~ if_else(!is.na(modulation), modulation, quadrant),
+      TRUE       ~ "Not Significant"
+    )
+  )
+
+table(diet_sex_interaction_gsva_merge$modulation)
+
+# output
+write.csv(diet_sex_interaction_gsva_merge, "diet_sex_interaction_gsva_merge.csv", row.names = FALSE)
+
+## ---- plot ----
+
+# only significant-interaction genes
+out <- diet_sex_interaction_gsva_merge %>%
+  mutate(sig_int = !is.na(diet_sex_interaction_gsva_merge.adj.P.Val) &
+                   diet_sex_interaction_gsva_merge.adj.P.Val < p_thr)
+sig <- out %>% filter(sig_int)  
+
+# label top genes by interaction padj
+highlight <- out %>%
+  filter(sig_int) %>%
+  arrange(diet_sex_interaction_gsva_merge.adj.P.Val) %>%
+  slice_head(n = 20)
+
+pdf("diet_sex_interaction_gsva_merge_log2fc_corr.pdf", height = 4, width = 6)
+ggplot() +
+  # background: nonsignificant interaction genes
+  geom_point(data = out, aes(x = x, y = y),
+             color = "grey40", alpha = 0.1, size = 1, show.legend = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # overlay: only significant interaction genes are colored
+ geom_point(data = sig, aes(x = x, y = y, color = Label),
+             size = 2, alpha = 0.75) +
+ geom_text_repel(
+    data = highlight,
+    aes(x = x, y = y, label = pathway),
+    size = 2, fontface = "bold", colour = "black",
+    segment.color = "black", segment.size = 0.3,
+    box.padding = 0.4, point.padding = 0.3,
+    max.overlaps = Inf, min.segment.length = 0
+  ) +
+  lims(x = c(-2, 2), y = c(-2, 2)) +
+  scale_color_manual(
+    name = "Interaction class",
+    values = c(
+    "Amplified Up"       = "firebrick",
+    "Attenuated Up"      = "orange3",
+    "Amplified Down"     = "navy",
+    "Attenuated Down"    = "skyblue4",
+    "Negative Reversal: Up -> Down"   = "purple",
+    "Positive Reversal: Down -> Up"   = "darkgreen"
+  ) # , drop = FALSE  # uncomment to keep all legend entries even if absent
+  ) +
+  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_bw() + theme(panel.grid = element_blank()) +
+  labs(x = "Effect of infection with DMSO (log2FC)",
+       y = "Effect of infection with CIMSS (log2FC)",
+       title = "Drug × Infection: Significant Interactions",
+       subtitle = "Log2FC > 0.5; padj < 0.5",)
+dev.off()
+```

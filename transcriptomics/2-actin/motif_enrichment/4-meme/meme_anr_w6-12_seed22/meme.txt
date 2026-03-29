@@ -1,0 +1,72 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.5.8 (Release date: Thu May 15 15:01:46 2025 -0700)
+
+For further information on how to interpret these results please access http://localhost:8080/meme_5.5.8.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to
+discover motifs in biopolymers",
+Proceedings of the Second International Conference on Intelligent Systems
+for Molecular Biology, pp. 28-36, AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+CONTROL SEQUENCES= --none--
+ALPHABET= ACGU
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+ENSMUSG00000031133|trans 1.0000   2026  ENSMUSG00000029580|trans 1.0000    683  
+ENSMUSG00000049791|trans 1.0000   4774  ENSMUSG00000030725|trans 1.0000    962  
+ENSMUSG00000032567|trans 1.0000   1574  ENSMUSG00000034379|trans 1.0000   1429  
+ENSMUSG00000023963|trans 1.0000   1456  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod anr -nmotifs 8 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order2.meme -evt 0.02 -seed 22 -oc /data/meme_anr_w6-12_seed22 
+
+model:  mod=           anr    nmotifs=      1000    evt=          0.02
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+width:  minw=            6    maxw=           12
+nsites: minsites=        2    maxsites=       35    wnsites=       0.8
+theta:  spmap=         uni    spfuzz=        0.5
+em:     prior=   dirichlet    b=            0.01    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=           12904    N=               7
+sample: seed=           22    hsfrac=          0
+        searchsize=  12904    norand=         no    csites=       1000
+Letter frequencies in dataset:
+A 0.283 C 0.214 G 0.214 U 0.289 
+Background letter frequencies (from file /data/background_models/bfile_order2.meme):
+A 0.266 C 0.218 G 0.222 U 0.294 
+Background model order: 2
+********************************************************************************
+
+********************************************************************************
+Stopped because the next motif E-value > 2.00e-02.
+********************************************************************************
+
+CPU: 4568f618dd85
+
+********************************************************************************

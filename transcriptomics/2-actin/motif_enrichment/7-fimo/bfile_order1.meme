@@ -1,0 +1,24 @@
+# 1-order Markov frequencies from file /data/actin_vs_no_infect_scramble_nonSig_negEnrich_3pSeqs.fasta
+# seqs: 3600    min: 10    max: 39397    avg: 2057.5    sum: 7407052    alph: RNA
+# order 0
+A 2.660e-01
+C 2.180e-01
+G 2.219e-01
+U 2.940e-01
+# order 1
+AA 8.045e-02
+AC 5.075e-02
+AG 7.165e-02
+AU 6.302e-02
+CA 6.971e-02
+CC 5.898e-02
+CG 1.239e-02
+CU 7.698e-02
+GA 5.885e-02
+GC 4.832e-02
+GG 5.593e-02
+GU 5.887e-02
+UA 5.700e-02
+UC 5.997e-02
+UG 8.192e-02
+UU 9.523e-02

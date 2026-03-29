@@ -1,0 +1,68 @@
+********************************************************************************
+STREME - Sensitive, Thorough, Rapid, Enriched Motif Elicitation
+********************************************************************************
+MEME version 5.5.8 (Release date: Thu May 15 15:01:46 2025 -0700)
+
+For further information on how to interpret these results please access http://localhost:8080/meme_5.5.8.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey,
+"STREME: accurate and versatile sequence motif discovery",
+Bioinformatics, Mar. 24, 2021.
+********************************************************************************
+
+
+ALPHABET= ACGU
+
+strands: +
+
+Background letter frequencies
+A 0.265 C 0.221 G 0.224 U 0.29 
+
+MOTIF 1-AAAUAA STREME-1
+letter-probability matrix: alength= 4 w= 6 nsites= 66 E= 1.9e+000
+ 0.787374 0.171025 0.005030 0.036571
+ 0.978799 0.004972 0.005030 0.011199
+ 0.929599 0.009746 0.044102 0.016553
+ 0.005969 0.004972 0.005030 0.984029
+ 0.983462 0.004972 0.005030 0.006536
+ 0.983462 0.004972 0.005030 0.006536
+
+MOTIF 2-AUCCAGCG STREME-2
+letter-probability matrix: alength= 4 w= 8 nsites= 17 E= 3.0e+000
+ 0.838064 0.082242 0.040176 0.039517
+ 0.001036 0.085013 0.109095 0.804857
+ 0.001036 0.968084 0.029746 0.001134
+ 0.154928 0.643866 0.106782 0.094424
+ 0.997130 0.000863 0.000873 0.001134
+ 0.001036 0.106772 0.891058 0.001134
+ 0.001036 0.996957 0.000873 0.001134
+ 0.001036 0.000863 0.996967 0.001134
+
+MOTIF 3-CAAUYCG STREME-3
+letter-probability matrix: alength= 4 w= 7 nsites= 8 E= 3.0e+000
+ 0.002260 0.993360 0.001905 0.002475
+ 0.993738 0.001883 0.001905 0.002475
+ 0.993738 0.001883 0.001905 0.002475
+ 0.002260 0.001883 0.001905 0.993952
+ 0.002260 0.644577 0.001905 0.351258
+ 0.002260 0.993360 0.001905 0.002475
+ 0.002260 0.001883 0.993382 0.002475
+
+********************************************************************************
+Stopped because 3 consecutive motifs exceeded the p-value threshold (0.05).
+********************************************************************************
+COMMAND:	streme --dna --p /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta --n /data/arc_vs_no_infect_scramble_nonSig_negEnrich_3pSeqs.fasta --minw 4 --maxw 8 --nmotifs 10 --thresh 0.05 --seed 42 --oc /data/streme_w4-8_seed42 --rna
+********************************************************************************
+CPU:		b93cda107259
+********************************************************************************
+FINALTIME:	17.00 seconds
+********************************************************************************

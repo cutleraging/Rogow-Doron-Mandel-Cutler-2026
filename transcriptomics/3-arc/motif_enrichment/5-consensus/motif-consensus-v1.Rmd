@@ -1,0 +1,288 @@
+---
+title: "motif-consensus-v1"
+output: html_document
+date: "2025-11-09"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preparation
+
+## Directory
+```{r}
+working.dir <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-arc-rep1-removed/motif_enrichment/5-consensus/"
+```
+
+## Libraries
+```{r}
+library(universalmotif)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(tibble)
+library(ggplot2)
+library(pheatmap)
+```
+
+## Functions
+```{r}
+#' Cluster motifs from MEME/DREME/STREME and create consensus PWMs
+#'
+#' @param meme_files Character vector of paths to motif files (MEME format; DREME/STREME outputs are fine).
+#' @param ic_floor Numeric. Drop motifs with mean information content below this (bits/position). Default 0.5.
+#' @param min_overlap Integer. Minimum aligned overlap used for similarity. Default 6.
+#' @param dist_method Character. Similarity metric for compare_motifs() ("PCC","EUCL","KL","ALLR"). Default "PCC".
+#' @param linkage Character. Linkage for hierarchical clustering ("average","complete","single","ward.D2"). Default "average".
+#' @param height Numeric. Dendrogram cut height on 1 - similarity (0–1). Smaller = tighter clusters. Default 0.35.
+#' @param pseudocount Numeric. Pseudocount added when averaging PWMs. Default 0.1.
+#' @param trim Logical. If TRUE, trim low-IC flanks before comparisons. Default TRUE.
+#' @param out_prefix Character. Prefix for outputs (MEME file + CSV). Default "motif_consensus".
+#'
+#' @return A list with:
+#' \itemize{
+#'   \item consensus_motifs: list of universalmotif objects (cluster consensuses)
+#'   \item cluster_table: data.frame mapping input motifs to cluster IDs and consensus IDs
+#'   \item hc: hclust object used for clustering
+#' }
+#' @examples
+#' # consensus <- cluster_motifs(c("meme.txt","streme.txt","dreme.txt"),
+#' #                             height = 0.30, ic_floor = 0.6, out_prefix = "utr3_motifs")
+#' @export
+cluster_motifs <- function(meme_files,
+                           ic_floor   = 0.5,
+                           min_overlap= 6,
+                           dist_method= "PCC",      # "PCC","EUCL","KL","ALLR" (universalmotif)
+                           linkage    = "average",
+                           height     = 0.35,       # dendrogram cut on distance
+                           trim       = TRUE,
+                           out_prefix = "motif_consensus") {
+  # -- deps --
+  pkgs <- c("universalmotif","dplyr","purrr","tibble")
+  miss <- setdiff(pkgs, rownames(installed.packages()))
+  if (length(miss)) install.packages(miss, repos="https://cloud.r-project.org")
+  suppressPackageStartupMessages({
+    library(universalmotif); library(dplyr); library(purrr); library(tibble)
+  })
+
+  # -- helpers --
+  mean_ic <- function(m) {
+    # universalmotif stores PPM in m@motif; max IC per pos is log2(|alphabet|). For DNA/RNA = 2.
+    ppm <- as.matrix(m@motif)
+    ppm <- sweep(ppm, 2, pmax(colSums(ppm), 1e-12), "/")
+    H   <- -colSums(ppm * log2(pmax(ppm, 1e-12)))
+    mean(2 - H)
+  }
+
+  # -- read & pool --
+  all_motifs <- meme_files %>%
+    map(~ read_meme(.x)) %>%  # list(list(universalmotif))
+    flatten()
+
+  if (length(all_motifs) < 2) stop("Need ≥2 motifs total.")
+
+  # optional trimming of weak flanks (supported call signature)
+  if (trim) all_motifs <- map(all_motifs, trim_motifs)
+
+  # convert to PPM for consistent comparison
+  all_motifs <- convert_motifs(all_motifs, "PPM")
+
+  # filter by IC
+  ic_vals <- vapply(all_motifs, mean_ic, numeric(1))
+  kept <- all_motifs[ic_vals >= ic_floor]
+  if (length(kept) < 2) stop("After IC filtering, fewer than 2 motifs remain.")
+
+  # -- similarity + clustering --
+  # compare_motifs returns a similarity matrix for the given method
+  sim <- compare_motifs(kept, method = dist_method, min.overlap = min_overlap, tryRC = TRUE)
+
+  # ensure full numeric matrix
+  sim <- as.matrix(sim); diag(sim) <- 1
+
+  # convert to distance
+  dist_mat <- switch(
+    dist_method,
+    "PCC"  = 1 - abs(sim),
+    "EUCL" = { m <- sim; maxv <- max(m[is.finite(m) & !is.na(m)]);  # EUCL is a distance already
+               m[!is.finite(m)] <- maxv; diag(m) <- 0; m },
+    # For KL/ALLR, larger = more similar per docs -> invert to distance
+    "KL"   = { m <- sim; m <- max(m, na.rm=TRUE) - m; diag(m) <- 0; m },
+    "ALLR" = { m <- sim; m <- max(m, na.rm=TRUE) - m; diag(m) <- 0; m },
+    { stop("Unsupported dist_method for conversion: ", dist_method) }
+  )
+
+  dist_obj <- as.dist(dist_mat)
+  hc <- hclust(dist_obj, method = linkage)
+
+  clusters <- cutree(hc, h = height)
+  cl_df <- tibble(idx = seq_along(kept),
+                  motif_name = vapply(kept, function(m) ifelse(isTRUE(nzchar(m@name)), m@name, "unnamed"), character(1)),
+                  cluster = clusters)
+
+  # -- build consensus per cluster using merge_motifs() --
+  consensus_list <- cl_df %>%
+    group_split(cluster, .keep = TRUE) %>%
+    map(function(df) {
+      ms <- kept[df$idx]
+      # merge_motifs handles strand/orientation and alignment internally
+      cons <- merge_motifs(ms, method = "PCC", tryRC = TRUE)
+      # set informative names
+      cons@name    <- paste0("Cluster_", df$cluster[1], "_n", length(ms))
+      cons@altname <- paste0("consensus_", df$cluster[1])
+      cons
+    })
+
+  # -- export --
+  write_meme(consensus_list, file = paste0(out_prefix, "_consensus.meme"))
+  map_table <- cl_df %>% arrange(cluster) %>% mutate(consensus_id = paste0("Cluster_", cluster))
+  write.csv(map_table, file = paste0(out_prefix, "_mapping.csv"), row.names = FALSE)
+  saveRDS(list(consensus_motifs = consensus_list,
+               cluster_table = map_table,
+               hc = hc,
+               kept = kept,
+               ic = ic_vals[ic_vals >= ic_floor],
+               dist = dist_mat),
+          file = paste0(out_prefix, "_objects.rds"))
+
+  list(consensus_motifs = consensus_list,
+       cluster_table = map_table,
+       hc = hc)
+}
+```
+
+# Deduplicate motifs
+```{r}
+setwd(working.dir)
+
+meme_files <- c("meme_anr_w6-12_seed22.txt",
+                "streme_w4-8_seed42.txt",
+                "streme_w5-7_stringent_seed44.txt",
+                "streme_w6-10_seed43.txt")
+out_prefix  <- "motifs"
+ic_floor    <- 0.5       # drop weak/degenerate motifs
+min_overlap <- 6
+dup_cut     <- 0.05      # distance cutoff for duplicates (PCC distance = 1 - |r|) -> 0.05 ~ PCC ≥ 0.95
+e_value <- 0.05
+
+## =========================
+## 1) Read + normalize
+## =========================
+read_safe <- function(f) tryCatch(read_meme(f), error = function(e) list())
+motifs <- meme_files %>% map(read_safe) %>% flatten()
+
+# keep only valid objects
+motifs <- motifs[vapply(motifs, inherits, logical(1), "universalmotif")]
+
+## strip numeric prefixes in names (cosmetic)
+for (i in seq_along(motifs)) {
+  nm <- motifs[[i]]@name
+  if (nzchar(nm)) motifs[[i]]@name <- str_remove(nm, "^[0-9]+[-_]*")
+}
+
+# keep only motifs with E ≤ 1e-3
+# motifs <- Filter(function(m) {
+#   val <- tryCatch(slot(m, "eval"), error = function(e) NA_real_)
+#   !is.na(val) && val <= 1e-3
+# }, motifs)
+
+
+## =========================
+## 2) Filter by mean IC
+## =========================
+mean_ic <- function(m){
+  ppm <- sweep(as.matrix(m@motif), 2, pmax(colSums(m@motif), 1e-12), "/")
+  H   <- -colSums(ppm * log2(pmax(ppm, 1e-12)))
+  mean(2 - H)
+}
+IC <- vapply(motifs, mean_ic, numeric(1))
+motifs <- motifs[IC >= ic_floor]
+IC     <- IC[IC >= ic_floor]
+stopifnot(length(motifs) >= 2)
+
+# IC plot
+df_ic <- tibble(mean_IC = IC)
+print(ggplot(df_ic, aes(mean_IC)) + geom_histogram(bins=40) +
+        geom_vline(xintercept = ic_floor, linetype=2) +
+        labs(title="Mean IC after filtering", x="bits/pos", y="count"))
+
+## =========================
+## 3) Fast exact-duplicate removal (hashing)
+##    (helps when tools output identical PWMs)
+## =========================
+hash_pwm <- function(m){
+  mat <- round(as.matrix(m@motif), 4)         # round to avoid minor float noise
+  paste(c(dim(mat), as.vector(mat)), collapse="|")
+}
+hashes <- vapply(motifs, hash_pwm, character(1))
+first_idx <- !duplicated(hashes)
+motifs_exact <- motifs[first_idx]
+IC_exact     <- IC[first_idx]
+
+cat(sprintf("[Exact dedup] Removed %d perfect duplicates\n", sum(!first_idx)))
+
+## =========================
+## 4) Near-duplicate clustering (PCC)
+##    Treat motifs with PCC ≥ 0.95 as duplicates; keep top-IC representative
+## =========================
+sim <- compare_motifs(motifs_exact, method = "PCC", min.overlap = min_overlap, tryRC = TRUE)
+sim <- as.matrix(sim); diag(sim) <- 1
+dist_mat <- 1 - abs(sim)
+
+# heatmap to inspect redundancy
+rownames(dist_mat) <- colnames(dist_mat) <-
+  vapply(motifs_exact, function(m) ifelse(nzchar(m@name), m@name, "motif"), character(1))
+pheatmap(1 - dist_mat, cluster_rows = TRUE, cluster_cols = TRUE,
+         main = "Similarity (PCC) before near-duplicate collapse")
+
+hc <- hclust(as.dist(dist_mat), method = "average")
+plot(hc, main = "Dendrogram (duplicates = tight branches)", xlab = "", sub = "")
+
+dup_clusters <- cutree(hc, h = dup_cut)  # e.g., 0.05 -> PCC >= 0.95
+tbl <- tibble(idx = seq_along(motifs_exact),
+              name = rownames(dist_mat),
+              cluster = dup_clusters,
+              IC = IC_exact)
+
+sizes <- count(tbl, cluster, name="size") %>% arrange(desc(size))
+print(ggplot(sizes, aes(factor(cluster), size)) + geom_col() +
+        labs(title="Near-duplicate cluster sizes", x="Cluster", y="# motifs"))
+
+## Representative selection (highest IC per cluster; tie -> first by name)
+rep_idx <- tbl %>%
+  group_by(cluster) %>%
+  slice_max(order_by = IC, n = 1, with_ties = TRUE) %>%
+  arrange(cluster, name) %>%
+  slice_head(n = 1) %>%
+  pull(idx)
+
+motifs_dedup <- motifs_exact[rep_idx]
+cat(sprintf("[Near-duplicate collapse] Representatives kept: %d (from %d)\n",
+            length(motifs_dedup), length(motifs_exact)))
+
+## =========================
+## 5) Save outputs + mapping
+## =========================
+# mapping table: every original -> representative
+rep_map <- tbl %>%
+  mutate(rep_idx = match(cluster, tbl$cluster[rep_idx]),
+         representative = tbl$name[rep_idx[match(cluster, tbl$cluster[rep_idx])]]) %>%
+  arrange(cluster, desc(IC))
+
+write.csv(rep_map, paste0(out_prefix, "_duplicate_mapping.csv"), row.names = FALSE)
+write_meme(motifs_dedup, file = paste0(out_prefix, "_deduplicated.meme"), overwrite = TRUE)
+
+saveRDS(list(
+  motifs_dedup = motifs_dedup,
+  mapping      = rep_map,
+  sim          = sim,
+  dist_mat     = dist_mat,
+  hc           = hc,
+  IC_kept      = IC_exact
+), file = paste0(out_prefix, "_dedup_objects.rds"))
+
+cat(sprintf("\n[Done] Wrote %s_deduplicated.meme and %s_duplicate_mapping.csv\n",
+            out_prefix, out_prefix))
+```

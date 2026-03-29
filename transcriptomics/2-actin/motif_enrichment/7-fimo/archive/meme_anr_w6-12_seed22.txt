@@ -1,0 +1,806 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.5.8 (Release date: Thu May 15 15:01:46 2025 -0700)
+
+For further information on how to interpret these results please access http://localhost:8080/meme_5.5.8.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to
+discover motifs in biopolymers",
+Proceedings of the Second International Conference on Intelligent Systems
+for Molecular Biology, pp. 28-36, AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+CONTROL SEQUENCES= --none--
+ALPHABET= ACGU
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+ENSMUSG00000031133       1.0000   2097  ENSMUSG00000049791       1.0000   4774  
+ENSMUSG00000030725       1.0000   1398  ENSMUSG00000032567       1.0000   3694  
+ENSMUSG00000034379       1.0000   1429  ENSMUSG00000023963       1.0000   3685  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod anr -nmotifs 8 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order2.meme -evt 0.02 -seed 22 -oc /data/meme_anr_w6-12_seed22 
+
+model:  mod=           anr    nmotifs=      1000    evt=          0.02
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+width:  minw=            6    maxw=           12
+nsites: minsites=        2    maxsites=       30    wnsites=       0.8
+theta:  spmap=         uni    spfuzz=        0.5
+em:     prior=   dirichlet    b=            0.01    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=           17077    N=               6
+sample: seed=           22    hsfrac=          0
+        searchsize=  17077    norand=         no    csites=       1000
+Letter frequencies in dataset:
+A 0.286 C 0.214 G 0.215 U 0.285 
+Background letter frequencies (from file /data/background_models/bfile_order2.meme):
+A 0.279 C 0.221 G 0.221 U 0.279 
+Background model order: 2
+********************************************************************************
+
+
+********************************************************************************
+MOTIF CUDAGUBCCCAG MEME-1	width =  12  sites =  20  llr = 224  E-value = 3.0e-008
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 Description
+--------------------------------------------------------------------------------
+Simplified        A  ::37::1:::a:
+pos.-specific     C  a::21:3a8a::
+probability       G  12519:4::::8
+matrix            U  :9311a3:31:2
+
+         bits    2.2        *    
+                 2.0 *      * *  
+                 1.7 *    * * ** 
+                 1.5 *    * * ** 
+Relative         1.3 **  ** *****
+Entropy          1.1 **  ** *****
+(16.2 bits)      0.9 **  ** *****
+                 0.7 **  ** *****
+                 0.4 ****** *****
+                 0.2 ************
+                 0.0 ------------
+
+Multilevel           CUGAGUGCCCAG
+consensus              AC  C U  U
+sequence               U   U     
+                                 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value                Site  
+-------------             ----- ---------            ------------
+ENSMUSG00000030725          561  6.90e-08 GCTAGTCTGA CTGAGTCCCCAG AACTACTCTG
+ENSMUSG00000030725          498  6.90e-08 TCTAGTCTGA CTGAGTCCCCAG AACTACTCTG
+ENSMUSG00000030725          310  6.90e-08 GCTAGTCTGA CTGAGTCCCCAG AACTACTCTG
+ENSMUSG00000030725          247  6.90e-08 TCTAGTCTGA CTGAGTCCCCAG AACTACTCTG
+ENSMUSG00000023963         2527  6.43e-07 AGGAGTGAAG CTACGTGCCCAG CTACTATCCT
+ENSMUSG00000023963         1071  6.43e-07 AGGAGTGAAG CTACGTGCCCAG CTACTATCCT
+ENSMUSG00000023963          156  6.43e-07 AGGAGTGAAG CTACGTGCCCAG CTACTATCCT
+ENSMUSG00000023963         2990  1.36e-06 ATTGGTGGGG CTGAGTTCCCAT GCCGCGGTCA
+ENSMUSG00000023963         1534  1.36e-06 ATTGGTGGGG CTGAGTTCCCAT GCCGCGGTCA
+ENSMUSG00000023963          619  1.36e-06 ATTGGTGGGG CTGAGTTCCCAT GCCGCGGTCA
+ENSMUSG00000049791         3218  3.70e-06 GCTTAGCTGG CTTGGTGCCCAG AGGCCTGAAA
+ENSMUSG00000023963         2941  5.97e-06 TGCAGACATG CGTAGTGCTCAG AAATGTAGAT
+ENSMUSG00000023963         1485  5.97e-06 TGCAGACATG CGTAGTGCTCAG AAATGTAGAT
+ENSMUSG00000023963          570  5.97e-06 TGCAGACATG CGTAGTGCTCAG AAATGTAGAT
+ENSMUSG00000034379          662  9.12e-06 GTGCGTCTCC GTAAGTTCCCAG ACAGTGGCAC
+ENSMUSG00000049791         1997  1.31e-05 TTTATGCAGC CTGAGTACCTAG ACTGGACTAG
+ENSMUSG00000049791         3381  1.45e-05 ACTCTTCCAG CTGTGTACTCAG CCCTGCACGC
+ENSMUSG00000049791         2465  2.00e-05 GACAATTTTT CTATCTTCCCAG GCAATTTGCC
+ENSMUSG00000031133          470  2.00e-05 ACTTTAAGAA CTTATTGCCCAT GTTGTCTGTT
+ENSMUSG00000031133         1209  2.25e-05 CAGCTCTCAC CTACCTCCTCAG ATGACAGCAC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000030725                6.9e-08  246_[1]_51_[1]_176_[1]_51_[1]_826
+ENSMUSG00000023963                1.4e-06  155_[1]_402_[1]_37_[1]_440_[1]_
+                                           402_[1]_37_[1]_981_[1]_402_[1]_
+                                           37_[1]_684
+ENSMUSG00000049791                  2e-05  1996_[1]_456_[1]_741_[1]_151_[1]_1382
+ENSMUSG00000034379                9.1e-06  661_[1]_756
+ENSMUSG00000031133                2.2e-05  469_[1]_727_[1]_877
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF CUDAGUBCCCAG width=12 seqs=20
+ENSMUSG00000030725       (  561) CUGAGUCCCCAG  1 
+ENSMUSG00000030725       (  498) CUGAGUCCCCAG  1 
+ENSMUSG00000030725       (  310) CUGAGUCCCCAG  1 
+ENSMUSG00000030725       (  247) CUGAGUCCCCAG  1 
+ENSMUSG00000023963       ( 2527) CUACGUGCCCAG  1 
+ENSMUSG00000023963       ( 1071) CUACGUGCCCAG  1 
+ENSMUSG00000023963       (  156) CUACGUGCCCAG  1 
+ENSMUSG00000023963       ( 2990) CUGAGUUCCCAU  1 
+ENSMUSG00000023963       ( 1534) CUGAGUUCCCAU  1 
+ENSMUSG00000023963       (  619) CUGAGUUCCCAU  1 
+ENSMUSG00000049791       ( 3218) CUUGGUGCCCAG  1 
+ENSMUSG00000023963       ( 2941) CGUAGUGCUCAG  1 
+ENSMUSG00000023963       ( 1485) CGUAGUGCUCAG  1 
+ENSMUSG00000023963       (  570) CGUAGUGCUCAG  1 
+ENSMUSG00000034379       (  662) GUAAGUUCCCAG  1 
+ENSMUSG00000049791       ( 1997) CUGAGUACCUAG  1 
+ENSMUSG00000049791       ( 3381) CUGUGUACUCAG  1 
+ENSMUSG00000049791       ( 2465) CUAUCUUCCCAG  1 
+ENSMUSG00000031133       (  470) CUUAUUGCCCAU  1 
+ENSMUSG00000031133       ( 1209) CUACCUCCUCAG  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 12 n= 17011 bayes= 9.98237 E= 3.0e-008 
+ -1097    210   -214  -1097 
+ -1097  -1097    -56    161 
+    11  -1097    102    -16 
+   122    -15   -214   -148 
+ -1097   -115    194   -248 
+ -1097  -1097  -1097    184 
+  -148     18     85    -16 
+ -1097    218  -1097  -1097 
+ -1097    176  -1097    -16 
+ -1097    210  -1097   -248 
+   184  -1097  -1097  -1097 
+ -1097  -1097    185    -48 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 12 nsites= 20 E= 3.0e-008 
+ 0.000000  0.950000  0.050000  0.000000 
+ 0.000000  0.000000  0.150000  0.850000 
+ 0.300000  0.000000  0.450000  0.250000 
+ 0.650000  0.200000  0.050000  0.100000 
+ 0.000000  0.100000  0.850000  0.050000 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.100000  0.250000  0.400000  0.250000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.750000  0.000000  0.250000 
+ 0.000000  0.950000  0.000000  0.050000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.800000  0.200000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUDAGUBCCCAG MEME-1 regular expression
+--------------------------------------------------------------------------------
+CU[GAU][AC]GU[GCU]C[CU]CA[GU]
+--------------------------------------------------------------------------------
+
+
+
+
+Time  5.85 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF UUCACUGWSMA MEME-2	width =  11  sites =  21  llr = 228  E-value = 4.6e-008
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 Description
+--------------------------------------------------------------------------------
+Simplified        A  11:a:::4:47
+pos.-specific     C  2:a:a:::66:
+probability       G  ::::::a:4:3
+matrix            U  79:::a:6:::
+
+         bits    2.2   * *      
+                 2.0   * * *    
+                 1.7   *** *    
+                 1.5   *****    
+Relative         1.3  ****** *  
+Entropy          1.1  ****** ** 
+(15.6 bits)      0.9  **********
+                 0.7 ***********
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           UUCACUGUCCA
+consensus            C      AGAG
+sequence                        
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000030725          584  4.97e-07 ACTACTCTGA TTCACTGACCA TGACAGGCCC
+ENSMUSG00000030725          521  4.97e-07 ACTACTCTGA TTCACTGACCA TGACAGGCCC
+ENSMUSG00000030725          333  4.97e-07 ACTACTCTGA TTCACTGACCA TGACAGGCCC
+ENSMUSG00000030725          270  4.97e-07 ACTACTCTGA TTCACTGACCA TGACAGGCCC
+ENSMUSG00000031133          133  7.46e-07 GCTGAATGGT TTCACTGTGCA TTTGAGCTTT
+ENSMUSG00000023963         2775  2.92e-06 GTATGTTAAA TTCACTGTGAA GGCAACATAC
+ENSMUSG00000023963         1319  2.92e-06 GTATGTTAAA TTCACTGTGAA GGCAACATAC
+ENSMUSG00000023963          404  2.92e-06 GTATGTTAAA TTCACTGTGAA GGCAACATAC
+ENSMUSG00000023963         2617  3.37e-06 TGCACCAGAT TTCACTGTCAG AAACATAGAC
+ENSMUSG00000023963         1161  3.37e-06 TGCACCAGAT TTCACTGTCAG AAACATAGAC
+ENSMUSG00000023963          246  3.37e-06 TGCACCAGAT TTCACTGTCAG AAACATAGAC
+ENSMUSG00000023963         3388  5.38e-06 TCTCCTTTTC CTCACTGACAA GGACACAGGT
+ENSMUSG00000023963         2183  5.38e-06 TCTCCTTTTC CTCACTGACAA GGACACAGGT
+ENSMUSG00000031133           74  8.72e-06 CACTGTGCCC ATCACTGTGCA GCTGAGCACA
+ENSMUSG00000031133            3  8.72e-06         CC ATCACTGTGCA GCTGAGCACA
+ENSMUSG00000031133           62  1.22e-05 GCTGAATGGT TTCACTGTGCC CATCACTGTG
+ENSMUSG00000030725         1287  1.50e-05 TATGCTGGAG TTCACTTTCCA AGATGGCTCA
+ENSMUSG00000049791         3898  1.58e-05 GTTCCTGCCT TTCACCGTGCA GCCTGTGCAA
+ENSMUSG00000023963         3070  1.92e-05 CTAATCAGTG CACACTGACCG AGGCATTGGC
+ENSMUSG00000023963         1614  1.92e-05 CTAATCAGTG CACACTGACCG AGGCATTGGC
+ENSMUSG00000023963          699  1.92e-05 CTAATCAGTG CACACTGACCG AGGCATTGGC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000030725                1.5e-05  269_[2]_52_[2]_177_[2]_52_[2]_692_
+                                           [2]_101
+ENSMUSG00000031133                1.2e-05  2_[2]_48_[2]_1_[2]_48_[2]_1954
+ENSMUSG00000023963                1.9e-05  245_[2]_147_[2]_284_[2]_451_[2]_
+                                           147_[2]_284_[2]_558_[2]_423_[2]_
+                                           147_[2]_284_[2]_307_[2]_287
+ENSMUSG00000049791                1.6e-05  3897_[2]_866
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF UUCACUGWSMA width=11 seqs=21
+ENSMUSG00000030725       (  584) UUCACUGACCA  1 
+ENSMUSG00000030725       (  521) UUCACUGACCA  1 
+ENSMUSG00000030725       (  333) UUCACUGACCA  1 
+ENSMUSG00000030725       (  270) UUCACUGACCA  1 
+ENSMUSG00000031133       (  133) UUCACUGUGCA  1 
+ENSMUSG00000023963       ( 2775) UUCACUGUGAA  1 
+ENSMUSG00000023963       ( 1319) UUCACUGUGAA  1 
+ENSMUSG00000023963       (  404) UUCACUGUGAA  1 
+ENSMUSG00000023963       ( 2617) UUCACUGUCAG  1 
+ENSMUSG00000023963       ( 1161) UUCACUGUCAG  1 
+ENSMUSG00000023963       (  246) UUCACUGUCAG  1 
+ENSMUSG00000023963       ( 3388) CUCACUGACAA  1 
+ENSMUSG00000023963       ( 2183) CUCACUGACAA  1 
+ENSMUSG00000031133       (   74) AUCACUGUGCA  1 
+ENSMUSG00000031133       (    3) AUCACUGUGCA  1 
+ENSMUSG00000031133       (   62) UUCACUGUGCC  1 
+ENSMUSG00000030725       ( 1287) UUCACUUUCCA  1 
+ENSMUSG00000049791       ( 3898) UUCACCGUGCA  1 
+ENSMUSG00000023963       ( 3070) CACACUGACCG  1 
+ENSMUSG00000023963       ( 1614) CACACUGACCG  1 
+ENSMUSG00000023963       (  699) CACACUGACCG  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 17017 bayes= 9.96578 E= 4.6e-008 
+  -155     11  -1104    126 
+   -96  -1104  -1104    162 
+ -1104    218  -1104  -1104 
+   184  -1104  -1104  -1104 
+ -1104    218  -1104  -1104 
+ -1104   -221  -1104    177 
+ -1104  -1104    211   -255 
+    62  -1104  -1104    104 
+ -1104    148     78  -1104 
+    45    148  -1104  -1104 
+   126   -221     37  -1104 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 21 E= 4.6e-008 
+ 0.095238  0.238095  0.000000  0.666667 
+ 0.142857  0.000000  0.000000  0.857143 
+ 0.000000  1.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.047619  0.000000  0.952381 
+ 0.000000  0.000000  0.952381  0.047619 
+ 0.428571  0.000000  0.000000  0.571429 
+ 0.000000  0.619048  0.380952  0.000000 
+ 0.380952  0.619048  0.000000  0.000000 
+ 0.666667  0.047619  0.285714  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUCACUGWSMA MEME-2 regular expression
+--------------------------------------------------------------------------------
+[UC]UCACUG[UA][CG][CA][AG]
+--------------------------------------------------------------------------------
+
+
+
+
+Time 11.54 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF UGVCARSCVCUG MEME-3	width =  12  sites =  17  llr = 201  E-value = 1.5e-007
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 Description
+--------------------------------------------------------------------------------
+Simplified        A  1:2:a5:142::
+pos.-specific     C  ::59::5948::
+probability       G  :a31:55:2::a
+matrix            U  9:::::1:::a:
+
+         bits    2.2  *         *
+                 2.0  *         *
+                 1.7  * **     **
+                 1.5  * **  * ***
+Relative         1.3 ** **  * ***
+Entropy          1.1 ** *** * ***
+(17.0 bits)      0.9 ** ***** ***
+                 0.7 ******** ***
+                 0.4 ************
+                 0.2 ************
+                 0.0 ------------
+
+Multilevel           UGCCAACCACUG
+consensus              G  GG C   
+sequence               A     G   
+                                 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value                Site  
+-------------             ----- ---------            ------------
+ENSMUSG00000032567         1391  2.80e-07 CCACTGCAGA TGCCAAGCACTG AAAGCCTCCT
+ENSMUSG00000032567         1061  2.80e-07 CCACTGCAGA TGCCAAGCACTG GTATGACAGA
+ENSMUSG00000023963         2921  4.58e-07 GGCTTATTGA TGCCAACCGCTG CAGACATGCG
+ENSMUSG00000023963         1465  4.58e-07 GGCTTATTGA TGCCAACCGCTG CAGACATGCG
+ENSMUSG00000023963          550  4.58e-07 GGCTTATTGA TGCCAACCGCTG CAGACATGCG
+ENSMUSG00000030725          595  8.06e-07 TCACTGACCA TGACAGGCCCTG AGCAATTGCT
+ENSMUSG00000030725          532  8.06e-07 TCACTGACCA TGACAGGCCCTG AGCAATTGCT
+ENSMUSG00000030725          344  8.06e-07 TCACTGACCA TGACAGGCCCTG AGCAATTGCT
+ENSMUSG00000030725          281  8.06e-07 TCACTGACCA TGACAGGCCCTG AGCAATTGCT
+ENSMUSG00000032567         1197  2.70e-06 CCACAGACTC TGCCAGCAACTG CCAGCATCTA
+ENSMUSG00000032567          867  2.70e-06 CCACAGACTC TGCCAGCAACTG CCAGCATCTA
+ENSMUSG00000049791          666  3.33e-06 CCCTAATTCT AGGCAGCCCCTG TTTTCTTCAC
+ENSMUSG00000034379            7  4.00e-06     AGTCTC TGGCAGGCGATG AGGAAAGCCA
+ENSMUSG00000032567         1375  4.90e-06 GTTGCCAGCC TGGGAACCACTG CAGATGCCAA
+ENSMUSG00000032567         1045  4.90e-06 GTTGCCAGCC TGGGAACCACTG CAGATGCCAA
+ENSMUSG00000034379          955  8.50e-06 ACTGATTGGG AGCCAAGCCATG AACTAGGAGG
+ENSMUSG00000031133         1671  1.54e-05 GGTCAATAGT TGGCAATCAATG TGCAAAATTT
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000032567                2.7e-06  866_[3]_166_[3]_4_[3]_124_[3]_166_
+                                           [3]_4_[3]_2292
+ENSMUSG00000023963                4.6e-07  549_[3]_903_[3]_1444_[3]_753
+ENSMUSG00000030725                8.1e-07  280_[3]_51_[3]_176_[3]_51_[3]_792
+ENSMUSG00000049791                3.3e-06  665_[3]_4097
+ENSMUSG00000034379                8.5e-06  6_[3]_936_[3]_463
+ENSMUSG00000031133                1.5e-05  1670_[3]_415
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF UGVCARSCVCUG width=12 seqs=17
+ENSMUSG00000032567       ( 1391) UGCCAAGCACUG  1 
+ENSMUSG00000032567       ( 1061) UGCCAAGCACUG  1 
+ENSMUSG00000023963       ( 2921) UGCCAACCGCUG  1 
+ENSMUSG00000023963       ( 1465) UGCCAACCGCUG  1 
+ENSMUSG00000023963       (  550) UGCCAACCGCUG  1 
+ENSMUSG00000030725       (  595) UGACAGGCCCUG  1 
+ENSMUSG00000030725       (  532) UGACAGGCCCUG  1 
+ENSMUSG00000030725       (  344) UGACAGGCCCUG  1 
+ENSMUSG00000030725       (  281) UGACAGGCCCUG  1 
+ENSMUSG00000032567       ( 1197) UGCCAGCAACUG  1 
+ENSMUSG00000032567       (  867) UGCCAGCAACUG  1 
+ENSMUSG00000049791       (  666) AGGCAGCCCCUG  1 
+ENSMUSG00000034379       (    7) UGGCAGGCGAUG  1 
+ENSMUSG00000032567       ( 1375) UGGGAACCACUG  1 
+ENSMUSG00000032567       ( 1045) UGGGAACCACUG  1 
+ENSMUSG00000034379       (  955) AGCCAAGCCAUG  1 
+ENSMUSG00000031133       ( 1671) UGGCAAUCAAUG  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 12 n= 17011 bayes= 10.7606 E= 1.5e-007 
+  -124  -1073  -1073    166 
+ -1073  -1073    218  -1073 
+   -24    109     41  -1073 
+ -1073    199    -91  -1073 
+   184  -1073  -1073  -1073 
+    93  -1073    109  -1073 
+ -1073    109    109   -224 
+  -124    199  -1073  -1073 
+    56     67      9  -1073 
+   -66    190  -1073  -1073 
+ -1073  -1073  -1073    184 
+ -1073  -1073    218  -1073 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 12 nsites= 17 E= 1.5e-007 
+ 0.117647  0.000000  0.000000  0.882353 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.235294  0.470588  0.294118  0.000000 
+ 0.000000  0.882353  0.117647  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.529412  0.000000  0.470588  0.000000 
+ 0.000000  0.470588  0.470588  0.058824 
+ 0.117647  0.882353  0.000000  0.000000 
+ 0.411765  0.352941  0.235294  0.000000 
+ 0.176471  0.823529  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UGVCARSCVCUG MEME-3 regular expression
+--------------------------------------------------------------------------------
+UG[CGA]CA[AG][CG]C[ACG]CUG
+--------------------------------------------------------------------------------
+
+
+
+
+Time 17.23 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF SCCAGSUGAAKK MEME-4	width =  12  sites =  11  llr = 148  E-value = 7.2e-005
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 Description
+--------------------------------------------------------------------------------
+Simplified        A  :::a:::2aa:2
+pos.-specific     C  4aa::5::::::
+probability       G  6:::a5:8::45
+matrix            U  ::::::a:::63
+
+         bits    2.2  ** *       
+                 2.0  ** *       
+                 1.7  **** * **  
+                 1.5  **** ****  
+Relative         1.3 ***** ****  
+Entropy          1.1 *********** 
+(19.4 bits)      0.9 *********** 
+                 0.7 ************
+                 0.4 ************
+                 0.2 ************
+                 0.0 ------------
+
+Multilevel           GCCAGCUGAAUG
+consensus            C    G    GU
+sequence                         
+                                 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value                Site  
+-------------             ----- ---------            ------------
+ENSMUSG00000031133          119  4.35e-08 CCTTAAAGTG GCCAGCTGAATG GTTTCACTGT
+ENSMUSG00000031133           48  4.35e-08 CCTTAAAGTG GCCAGCTGAATG GTTTCACTGT
+ENSMUSG00000032567          686  1.56e-07 GAAGAATTAT GCCAGGTGAAGG CACCCATGCG
+ENSMUSG00000032567          490  1.56e-07 GAAGAATTAT GCCAGGTGAAGG CACCCATGCG
+ENSMUSG00000032567          294  1.56e-07 GAAGAATTAT GCCAGGTGAAGG CACCCATGCG
+ENSMUSG00000030725          177  3.32e-07 TGAGGACAGC CCCAGCTGAAGG ACATTCATTC
+ENSMUSG00000032567         1476  6.74e-07 AATCATATGC CCCAGCTGAATT GTTCTTACCA
+ENSMUSG00000032567         1301  6.74e-07 AATCATATGC CCCAGCTGAATT GTTCTTACCA
+ENSMUSG00000032567          971  6.74e-07 AATCATATGC CCCAGCTGAATT GTTCTTACCA
+ENSMUSG00000023963         1922  1.95e-06 CTGGTTTTGT GCCAGGTAAATA ACTGCACATG
+ENSMUSG00000023963         1007  1.95e-06 CTGGTTTTGT GCCAGGTAAATA ACTGCACTTT
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000031133                4.4e-08  47_[4]_59_[4]_1967
+ENSMUSG00000032567                6.7e-07  293_[4]_184_[4]_184_[4]_273_[4]_
+                                           318_[4]_163_[4]_2207
+ENSMUSG00000030725                3.3e-07  176_[4]_1210
+ENSMUSG00000023963                  2e-06  1006_[4]_903_[4]_1752
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF SCCAGSUGAAKK width=12 seqs=11
+ENSMUSG00000031133       (  119) GCCAGCUGAAUG  1 
+ENSMUSG00000031133       (   48) GCCAGCUGAAUG  1 
+ENSMUSG00000032567       (  686) GCCAGGUGAAGG  1 
+ENSMUSG00000032567       (  490) GCCAGGUGAAGG  1 
+ENSMUSG00000032567       (  294) GCCAGGUGAAGG  1 
+ENSMUSG00000030725       (  177) CCCAGCUGAAGG  1 
+ENSMUSG00000032567       ( 1476) CCCAGCUGAAUU  1 
+ENSMUSG00000032567       ( 1301) CCCAGCUGAAUU  1 
+ENSMUSG00000032567       (  971) CCCAGCUGAAUU  1 
+ENSMUSG00000023963       ( 1922) GCCAGGUAAAUA  1 
+ENSMUSG00000023963       ( 1007) GCCAGGUAAAUA  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 12 n= 17011 bayes= 10.9491 E= 7.2e-005 
+ -1010     72    152  -1010 
+ -1010    217  -1010  -1010 
+ -1010    217  -1010  -1010 
+   184  -1010  -1010  -1010 
+ -1010  -1010    217  -1010 
+ -1010    130    104  -1010 
+ -1010  -1010  -1010    184 
+   -62  -1010    189  -1010 
+   184  -1010  -1010  -1010 
+   184  -1010  -1010  -1010 
+ -1010  -1010     72    119 
+   -62  -1010    130     -3 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 12 nsites= 11 E= 7.2e-005 
+ 0.000000  0.363636  0.636364  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.000000  0.545455  0.454545  0.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.181818  0.000000  0.818182  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.363636  0.636364 
+ 0.181818  0.000000  0.545455  0.272727 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCAGSUGAAKK MEME-4 regular expression
+--------------------------------------------------------------------------------
+[GC]CCAG[CG]UGAA[UG][GU]
+--------------------------------------------------------------------------------
+
+
+
+
+Time 22.79 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF AAGAUYUACAG MEME-5	width =  11  sites =  12  llr = 151  E-value = 1.8e-004
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 Description
+--------------------------------------------------------------------------------
+Simplified        A  aa:83::a:a:
+pos.-specific     C  :::::53:a::
+probability       G  ::a3::::::a
+matrix            U  ::::858::::
+
+         bits    2.2   *     * *
+                 2.0   *     * *
+                 1.7 ***    ****
+                 1.5 ***    ****
+Relative         1.3 ***    ****
+Entropy          1.1 ***********
+(18.2 bits)      0.9 ***********
+                 0.7 ***********
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           AAGAUCUACAG
+consensus               GAUC    
+sequence                        
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000032567         2129  7.10e-07 TGTAGTACAC AAGATTTACAG TTCTAGCTTG
+ENSMUSG00000032567         1976  7.10e-07 TGTAGTACAC AAGATTTACAG TTCTAGCTTG
+ENSMUSG00000032567         1532  7.10e-07 TGTAGTACAC AAGATTTACAG TTCTAGCTTG
+ENSMUSG00000032567          641  1.21e-06 CTTGGCACTG AAGATCCACAG AGAGGTGGTG
+ENSMUSG00000032567          445  1.21e-06 CTTGGCACTG AAGATCCACAG AGAGGTGGTG
+ENSMUSG00000032567          249  1.21e-06 GAAGGCACTG AAGATCCACAG AGAGGTGGTG
+ENSMUSG00000023963         2818  2.15e-06 CTTTTTGCAA AAGAACTACAG TGGAGGACAC
+ENSMUSG00000023963         2648  2.15e-06 ACCCCAATTC AAGGTTTACAG AAAGGGTTCA
+ENSMUSG00000023963         1362  2.15e-06 CTTTTTGCAA AAGAACTACAG TGGAGGACAC
+ENSMUSG00000023963         1192  2.15e-06 ACCCCAATTC AAGGTTTACAG AAAGGGTTCA
+ENSMUSG00000023963          447  2.15e-06 CTTTTTGCAA AAGAACTACAG TGGAGGACAC
+ENSMUSG00000023963          277  2.15e-06 ACCCCAATTC AAGGTTTACAG AAAGGGTTCA
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000032567                7.1e-07  248_[5]_185_[5]_185_[5]_880_[5]_
+                                           433_[5]_142_[5]_1555
+ENSMUSG00000023963                2.1e-06  276_[5]_159_[5]_734_[5]_159_[5]_
+                                           1275_[5]_159_[5]_857
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF AAGAUYUACAG width=11 seqs=12
+ENSMUSG00000032567       ( 2129) AAGAUUUACAG  1 
+ENSMUSG00000032567       ( 1976) AAGAUUUACAG  1 
+ENSMUSG00000032567       ( 1532) AAGAUUUACAG  1 
+ENSMUSG00000032567       (  641) AAGAUCCACAG  1 
+ENSMUSG00000032567       (  445) AAGAUCCACAG  1 
+ENSMUSG00000032567       (  249) AAGAUCCACAG  1 
+ENSMUSG00000023963       ( 2818) AAGAACUACAG  1 
+ENSMUSG00000023963       ( 2648) AAGGUUUACAG  1 
+ENSMUSG00000023963       ( 1362) AAGAACUACAG  1 
+ENSMUSG00000023963       ( 1192) AAGGUUUACAG  1 
+ENSMUSG00000023963       (  447) AAGAACUACAG  1 
+ENSMUSG00000023963       (  277) AAGGUUUACAG  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 17017 bayes= 10.1274 E= 1.8e-004 
+   184  -1023  -1023  -1023 
+   184  -1023  -1023  -1023 
+ -1023  -1023    217  -1023 
+   143  -1023     18  -1023 
+   -16  -1023  -1023    143 
+ -1023    118  -1023     84 
+ -1023     18  -1023    143 
+   184  -1023  -1023  -1023 
+ -1023    217  -1023  -1023 
+   184  -1023  -1023  -1023 
+ -1023  -1023    217  -1023 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 12 E= 1.8e-004 
+ 1.000000  0.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.750000  0.000000  0.250000  0.000000 
+ 0.250000  0.000000  0.000000  0.750000 
+ 0.000000  0.500000  0.000000  0.500000 
+ 0.000000  0.250000  0.000000  0.750000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif AAGAUYUACAG MEME-5 regular expression
+--------------------------------------------------------------------------------
+AAG[AG][UA][CU][UC]ACAG
+--------------------------------------------------------------------------------
+
+
+
+
+Time 28.34 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+SUMMARY OF MOTIFS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+	Combined block diagrams: non-overlapping sites with p-value < 0.0001
+--------------------------------------------------------------------------------
+SEQUENCE NAME            COMBINED P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000031133               9.75e-07  2_[2(8.72e-06)]_34_[4(4.35e-08)]_2_\
+    [2(1.22e-05)]_1_[2(8.72e-06)]_34_[4(4.35e-08)]_2_[2(7.46e-07)]_326_\
+    [1(2.00e-05)]_409_[2(8.84e-05)]_307_[1(2.25e-05)]_450_[3(1.54e-05)]_415
+ENSMUSG00000049791               1.04e-02  665_[3(3.33e-06)]_1319_\
+    [1(1.31e-05)]_456_[1(2.00e-05)]_741_[1(3.70e-06)]_151_[1(1.45e-05)]_505_\
+    [2(1.58e-05)]_866
+ENSMUSG00000030725               6.81e-10  176_[4(3.32e-07)]_58_[1(6.90e-08)]_\
+    11_[2(4.97e-07)]_[3(8.06e-07)]_17_[1(6.90e-08)]_11_[2(4.97e-07)]_\
+    [3(8.06e-07)]_142_[1(6.90e-08)]_11_[2(4.97e-07)]_[3(8.06e-07)]_17_\
+    [1(6.90e-08)]_11_[2(4.97e-07)]_[3(8.06e-07)]_680_[2(1.50e-05)]_101
+ENSMUSG00000032567               9.18e-06  248_[5(1.21e-06)]_34_[4(1.56e-07)]_\
+    139_[5(1.21e-06)]_34_[4(1.56e-07)]_139_[5(1.21e-06)]_34_[4(1.56e-07)]_169_\
+    [3(2.70e-06)]_92_[4(6.74e-07)]_62_[3(4.90e-06)]_4_[3(2.80e-07)]_124_\
+    [3(2.70e-06)]_92_[4(6.74e-07)]_62_[3(4.90e-06)]_4_[3(2.80e-07)]_73_\
+    [4(6.74e-07)]_21_[5(5.21e-05)]_12_[5(7.10e-07)]_433_[5(7.10e-07)]_142_\
+    [5(7.10e-07)]_1555
+ENSMUSG00000034379               3.50e-03  6_[3(4.00e-06)]_324_[3(2.46e-05)]_\
+    307_[1(9.12e-06)]_281_[3(8.50e-06)]_463
+ENSMUSG00000023963               5.94e-08  155_[1(6.43e-07)]_78_[2(3.37e-06)]_\
+    20_[5(2.15e-06)]_116_[2(2.92e-06)]_32_[5(2.15e-06)]_92_[3(4.58e-07)]_8_\
+    [1(5.97e-06)]_37_[1(1.36e-06)]_68_[2(1.92e-05)]_297_[4(1.95e-06)]_52_\
+    [1(6.43e-07)]_78_[2(3.37e-06)]_20_[5(2.15e-06)]_116_[2(2.92e-06)]_32_\
+    [5(2.15e-06)]_92_[3(4.58e-07)]_8_[1(5.97e-06)]_37_[1(1.36e-06)]_68_\
+    [2(1.92e-05)]_297_[4(1.95e-06)]_249_[2(5.38e-06)]_229_[5(6.69e-05)]_93_\
+    [1(6.43e-07)]_78_[2(3.37e-06)]_20_[5(2.15e-06)]_116_[2(2.92e-06)]_32_\
+    [5(2.15e-06)]_92_[3(4.58e-07)]_8_[1(5.97e-06)]_37_[1(1.36e-06)]_68_\
+    [2(1.92e-05)]_307_[2(5.38e-06)]_229_[5(6.69e-05)]_47
+--------------------------------------------------------------------------------
+
+********************************************************************************
+
+
+********************************************************************************
+Stopped because the next motif E-value > 2.00e-02.
+********************************************************************************
+
+CPU: bbdf998a3efe
+
+********************************************************************************

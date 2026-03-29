@@ -1,0 +1,10 @@
+sample ID,novogene ID,sample description,condition,extraction,replicate,virus,background,sample code,sample code description,batch,sample name,
+A8,CKDL240006773-1A_H2TM2DSXC_L4,cntrl no infection,no infect,pull down,1,none,Actb+Arc,UD3,uninfected double mouse 3,2,Apex- Cntrl Rep. 1,Ctrl 3
+A9,CKDL240006774-1A_H2TM2DSXC_L4,exp - Actb,Actb,pull down,1,MCP,Actb+Arc,7D2,"MCP Virus, double mouse 2",2,Actb Rep. 1,Actb 2
+A11,CKDL240006776-1A_H2TM2DSXC_L4,scramble - cntrl,scramble,pull down,1,MCP,Arc,7P2,"MCP Virus, Arc PP7 mouse 2",2,Scramble Cntrl Rep. 1,
+A12,CKDL240006777-1A_H2TM2DSXC_L4,scramble - cntrl,scramble,pull down,2,PCP,Actb,8M2,"PCP Virus, Actb MS2 mouse 2",2,Scramble Cntrl Rep. 2,
+A13,CKDL240006778-1A_H2TM2DSXC_L4,exp - Actb,Actb,pull down,2,MCP,Actb,7M1,"MCP Virus, Actb MS2 mouse 1",2,Actb Rep. 2,
+A14,CKDL240006779-1A_H2TM2DSXC_L4,exp - arc,arc,pull down,2,PCP,Arc,8P1,"PCP Virus, Arc PP7 mouse 1",2,Arc Rep. 2,
+A15,CKDL240006780-1A_H2TM2DSXC_L4,exp - arc,arc,pull down,3,PCP,Arc,8P2,"PCP Virus, Arc PP7 mouse 2",2,Arc Rep. 3,
+A16,CKDL240006781-1A_H2TM2DSXC_L4,ref transcriptome,Total RNA,whole cell,1,MCP,Actb+Arc,7D1 total RNA,"MCP Virus, double mouse 1, total RNA",2,Total RNA Cntrl Rep. 1,
+A17,CKDL240006782-1A_H2TM2DSXC_L4,ref transcriptome,Total RNA,whole cell,2,none,Actb+Arc,UD1 total RNA ,"uninfected double mouse 1, total RNA",2,Total RNA Cntrl Rep. 2,

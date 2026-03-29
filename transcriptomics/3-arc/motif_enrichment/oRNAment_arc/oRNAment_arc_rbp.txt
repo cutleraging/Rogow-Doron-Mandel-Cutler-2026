@@ -1,0 +1,6 @@
+YBX2
+YB1_(2)
+YB1_(1)
+PCBP2_(7)
+SRSF5_(1)
+TRNAU1AP_(1)

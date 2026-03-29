@@ -1,0 +1,439 @@
+---
+title: "Spectral library output filtering"
+output: html_document
+date: "2025-05-11"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preparation
+
+This takes the output of fragpipe when using any of the variants of the histonePTM_specLib workflow. This workflow performs a search with histone PTMs set as variable modifications. Importantly, it does not apply any filtering. The MSFragger output and spectral library are used as input to this filtering pipeline. It then outputs a filtered spectral library. 
+
+## Load libraries
+```{r}
+library(dplyr)
+library(stringr)
+library(xml2)
+library(tidyr)
+library(ggplot2)
+```
+
+## Set working directory
+```{r}
+working.dir <- "~/EinsteinMed Dropbox/Ronald Cutler/Sidoli-lab/Projects/epiprofile3.0/spectral-library-generation/msfragger-speclib-diaPASEF"
+working.dir <- paste0(working.dir, "/")
+```
+
+## Load unimod database
+```{r}
+setwd(paste0(working.dir, "filtering"))
+
+moddb <- read_xml("unimod.xml")
+
+# mod58 <- xml_find_first(moddb, "//umod:mod[@record_id='58']", ns)
+# mass  <- xml_attr(xml_find_first(mod58, ".//umod:delta", ns), "mono_delta")
+```
+
+## Load data
+- Have it so that only the directory needs to be provided and the correct files are automatically found and then combined
+```{r}
+setwd(working.dir)
+
+# MSFragger output
+searchRes1 <- read.table("BM20230623_Ultra_IO25_200nl_30min2_diaPASEF_230620_P4_100_C4_Slot1-1_1_1298_diatracer.tsv", 
+                   sep = "\t", 
+                   header = TRUE, 
+                   fill = TRUE, 
+                   quote = "", 
+                   comment.char = "")
+
+searchRes2 <- read.table("BM20230624_Ultra_IO25_200nl_30min2_diaPASEF_230620_P4_100_C2_Slot1-1_1_1339_diatracer.tsv", 
+                   sep = "\t", 
+                   header = TRUE, 
+                   fill = TRUE, 
+                   quote = "", 
+                   comment.char = "")
+
+searchRes3 <- read.table("BM20230624_Ultra_IO25_200nl_30min2_diaPASEF_230620_P4_100_C3_Slot1-1_1_1319_diatracer.tsv", 
+                   sep = "\t", 
+                   header = TRUE, 
+                   fill = TRUE, 
+                   quote = "", 
+                   comment.char = "")
+
+searchRes <- rbind(searchRes1,
+                   searchRes2,
+                   searchRes3)
+
+specLib <- read.table("library.tsv", 
+                   sep = "\t", 
+                   header = TRUE, 
+                   fill = TRUE, 
+                   quote = "", 
+                   comment.char = "")
+```
+
+## Pre-process
+- Update to change all masses to modification annotation, e.g. ac, me, etc.
+- Update to change the placement of N-term mods to be after the first AA
+
+### Create modified peptide column
+- This is used to match the MSFragger results to the spectral library
+- Round the modification massess to the 2nd decimal place
+```{r}
+searchRes <- searchRes %>%
+  rowwise() %>%
+  mutate(
+    ModifiedPeptideSequence = {
+      chars <- str_split(peptide, "", simplify = FALSE)[[1]]
+      mods  <- str_split(modification_info, ",\\s*", simplify = FALSE)[[1]]
+      for (m in mods) {
+        # internal site
+        if (str_detect(m, "^\\d+")) {
+          parts <- str_match(m, "(\\d+)[A-Za-z]\\(([^)]+)\\)")
+          pos  <- as.integer(parts[2])
+          mass <- round(as.numeric(parts[3]), 2)
+          chars[pos] <- paste0(chars[pos], "(", mass, ")")
+        }
+        # N-terminus
+        else if (str_detect(m, "^N-term")) {
+          mass <- round(
+            as.numeric(str_match(m, "N-term\\(([^)]+)\\)")[2]),
+            2
+          )
+          chars[1] <- paste0("(", mass, ")", chars[1])
+        }
+        # C-terminus
+        else if (str_detect(m, "^C-term")) {
+          mass <- round(
+            as.numeric(str_match(m, "C-term\\(([^)]+)\\)")[2]),
+            2
+          )
+          last_pos <- length(chars)
+          chars[last_pos] <- paste0(chars[last_pos], "(", mass, ")")
+        }
+      }
+      paste0(chars, collapse = "")
+    }
+  ) %>%
+  ungroup() %>%
+  mutate(ModifiedPeptideSequence = str_replace(ModifiedPeptideSequence, "^\\.", "")) # remove any leading dot
+```
+
+### Replace Unimod ID with monoisotopic mass
+```{r, eval = TRUE}
+# define the XML namespace (inspect the root node to get its prefix/URI)
+ns <- xml_ns(moddb)
+
+# mass lookup
+get_unimod_mass <- function(ids, xml, ns) {
+  recs <- str_replace(ids, ".*?(\\d+).*", "\\1")
+  sapply(recs, function(r) {
+    mod_node   <- xml_find_first(xml, sprintf("//umod:mod[@record_id='%s']", r), ns)
+    delta_node <- xml_find_first(mod_node, ".//umod:delta", ns)
+    as.numeric(xml_attr(delta_node, "mono_mass"))
+  }, USE.NAMES = FALSE)
+}
+
+# rowwise replace all tags
+specLib <- specLib %>%
+  rowwise() %>%
+  mutate(
+    ModifiedPeptideSequence = {
+      seq0 <- ModifiedPeptideSequence
+      # extract every "(UniMod:123)" occurrence
+      tags <- str_extract_all(seq0, "\\(UniMod:\\d+\\)")[[1]]
+      # for each tag, lookup & replace
+      for(tag in unique(tags)) {
+        id   <- str_extract(tag, "\\d+")
+        mass <- round(get_unimod_mass(id, moddb, ns), 2)
+        seq0 <- str_replace_all(seq0, fixed(tag), paste0("(", mass, ")"))
+      }
+      seq0
+    }
+  ) %>%
+  ungroup()
+
+# formating for modifications that were not converted to unimod
+specLib <- specLib %>%
+  mutate(
+    ModifiedPeptideSequence = str_replace_all(
+      ModifiedPeptideSequence,
+      # match bracketed mass, e.g. “[126.06806]”
+      "\\[([^\\]]+)\\]",
+      # function(x) gets the full match “[126.06806]”
+      function(x) {
+        # remove brackets
+        num <- as.numeric(str_remove_all(x, "\\[|\\]"))
+        # round to 2 dp
+        mass <- round(num, 2)
+        # rebuild with parentheses
+        paste0("(", mass, ")")
+      }
+    ) %>%
+      str_replace("^\\.", "")  # then drop leading dot
+  )
+```
+
+### Add charges to modified peptide sequence
+```{r}
+searchRes$ModifiedPeptideSequenceCharge <- paste0(searchRes$ModifiedPeptideSequence, searchRes$charge)
+
+specLib$ModifiedPeptideSequenceCharge <- paste0(specLib$ModifiedPeptideSequence, specLib$PrecursorCharge)
+```
+
+### Replace modification masses with names
+- This should be done at a later time so for now the N-term mods can still be distinguished 
+```{r, eval = FALSE}
+# 1) original high-precision map
+orig_map <- c(
+  "112.05243" = "n-term-pr",
+  "98.036779" = "n-term-ac",
+  "126.06808" = "n-term-me",
+  "84.057515" = "n-term-me2",
+  "98.073165" = "n-term-me3",
+  "56.026215" = "pr",
+  "42.010565" = "ac",
+  "70.041865" = "me",
+  "28.0313"   = "me2",
+  "42.04695"  = "me3"
+)
+
+# 2) round the keys to 2 dp (they stay unique)
+rounded_map <- setNames(
+  orig_map,
+  sprintf("%.2f", round(as.numeric(names(orig_map)), 2))
+)
+
+# 3) perform replacement with a lookup function
+searchRes <- searchRes %>%
+  mutate(
+    ModifiedPeptideSequenceCharge = str_replace_all(
+      ModifiedPeptideSequenceCharge,
+      "\\(([0-9]+\\.?[0-9]*)\\)",
+      function(match) {
+        m   <- as.numeric(str_remove_all(match, "[()]"))
+        key <- sprintf("%.2f", round(m, 2))
+        if (key %in% names(rounded_map)) {
+          paste0("[", rounded_map[[key]], "]")
+        } else {
+          paste0("(", key, ")")
+        }
+      }
+    )
+  ) 
+
+specLib <- specLib %>%
+  mutate(
+    ModifiedPeptideSequenceCharge = str_replace_all(
+      ModifiedPeptideSequenceCharge,
+      "\\(([0-9]+\\.?[0-9]*)\\)",
+      function(match) {
+        m   <- as.numeric(str_remove_all(match, "[()]"))
+        key <- sprintf("%.2f", round(m, 2))
+        if (key %in% names(rounded_map)) {
+          paste0("[", rounded_map[[key]], "]")
+        } else {
+          paste0("(", key, ")")
+        }
+      }
+    )
+  )
+```
+
+### Output
+```{r}
+write.table(searchRes, "msfragger_out.tsv",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE)
+
+write.table(specLib, "specLib_out.tsv",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE)
+```
+
+
+## Overlap of MSFragger and Spectral library
+- Figure out why not all of the PSMs in the MSFragger output are not in the spectral library and vice versa
+```{r}
+u1 <- unique(searchRes$ModifiedPeptideSequenceCharge)
+length(u1)
+
+u2 <- unique(specLib$ModifiedPeptideSequenceCharge)
+length(u2)
+
+# common to both
+length(intersect(u1, u2))
+
+# unique to searchRes
+uniq1 <- setdiff(u1, u2)
+length(uniq1)
+# and see them
+uniq1
+
+# unique to specLib
+uniq2 <- setdiff(u2, u1)
+length(uniq2)
+uniq2
+```
+
+# Filtering
+- Update to filter based on expected modifcations - propionyl at N-term and K, etc.
+
+## CHiMA filter
+
+### MSFragger
+This filters peptides based on the number of match fragments. It keeps those that have at least 50% matched fragments out of the theoretical total
+- This might be improved as it may not be reasonable to only consider the theoretical total and more like the empirical
+- Remove duplicate PSMs and keep the one that has more fragment matches
+```{r}
+searchRes.chimaFilter <-  searchRes %>%
+  mutate(prop_ions_matched = num_matched_ions / tot_num_ions) %>%
+  filter(prop_ions_matched >= 0.5) %>%
+  group_by(ModifiedPeptideSequenceCharge) %>%
+  arrange(desc(prop_ions_matched), .by_group = TRUE) %>%
+  slice(1) %>%
+  ungroup()
+
+# summary
+n_before <- nrow(searchRes)
+n_after <- nrow(searchRes.chimaFilter)
+percent_filtered <- (n_before - n_after) / n_before * 100
+
+cat("Peptides before filtering:", n_before, "\n")
+cat("Peptides after filtering:", n_after, "\n")
+cat("Percent filtered out:", round(percent_filtered, 2), "%\n")
+```
+
+### Spectral library
+```{r}
+specLib.chimaFilter <- specLib %>%
+  filter(ModifiedPeptideSequenceCharge %in% searchRes.chimaFilter$ModifiedPeptideSequenceCharge)
+
+# summary
+n_before <- length(unique(specLib$ModifiedPeptideSequenceCharge))
+n_after <- length(unique(specLib.chimaFilter$ModifiedPeptideSequenceCharge))
+percent_filtered <- (n_before - n_after) / n_before * 100
+
+cat("Peptides before filtering:", n_before, "\n")
+cat("Peptides after filtering:", n_after, "\n")
+cat("Percent filtered out:", round(percent_filtered, 2), "%\n")
+
+# output
+write.table(specLib.chimaFilter, "specLib_filtered.tsv",
+            sep = "\t",
+            quote = FALSE,
+            row.names = FALSE)
+```
+
+# Summary
+```{r}
+setwd(paste0(working.dir, "filtering"))
+
+mass2mod <- c(
+  `98.04`  = "ac",
+  `126.07` = "me",
+  `84.06`  = "me2",
+  `98.07`  = "me3",
+  `56.03`  = "prop",
+  `112.05` = "prop",
+  `42.01`  = "ac",
+  `70.04`  = "me",
+  `28.03`  = "me2",
+  `42.05`  = "me3"
+)
+
+peptides_per_protein <- specLib.chimaFilter %>%
+  distinct(GeneName, ModifiedPeptideSequenceCharge) %>%
+  count(GeneName, name = "n_peptides")
+write.csv(peptides_per_protein, "peptides_per_protein.csv",
+          row.names = FALSE)
+
+modification_proportion <- specLib.chimaFilter %>%
+  # 1) extract & unnest all mass tags
+  mutate(masses = str_extract_all(
+           ModifiedPeptideSequence,
+           "(?<=\\()[0-9]+\\.?[0-9]*(?=\\))"
+         )) %>%
+  unnest(masses) %>%
+  # 2) drop the unwanted masses
+  filter(! masses %in% c("56.03", "112.05")) %>%
+  # 3) map each mass to its modification name
+  mutate(modification = recode(masses, !!!mass2mod)) %>%
+  # 4) count how many times each modification occurs
+  count(modification, name = "n_total") %>%
+  # 5) compute proportions of the grand total
+  mutate(prop = n_total / sum(n_total)) %>%
+  arrange(desc(n_total))
+
+write.csv(modification_proportion, "modification_proportion.csv",
+          row.names = FALSE)
+
+precursor_charges <- specLib.chimaFilter %>%
+  count(PrecursorCharge) %>%
+  mutate(prop = n / sum(n))
+
+write.csv(precursor_charges, "precursor_charges.csv",
+          row.names = FALSE)
+
+# specLib.chimaFilter %>%
+#   group_by(GeneName) %>%
+#   summarize(
+#     median_intensity = median(LibraryIntensity),
+#     iqr_intensity    = IQR(LibraryIntensity)
+#   )
+# 
+# specLib.chimaFilter %>%
+#   group_by(GeneName) %>%
+#   summarize(
+#     rt_min = min(NormalizedRetentionTime),
+#     rt_max = max(NormalizedRetentionTime)
+#   )
+
+# fragment summary
+frag_summary <- specLib.chimaFilter %>%
+  group_by(ModifiedPeptideSequence) %>%
+  summarize(
+    n_fragments = n(),
+    .groups = "drop"
+  )
+frag_summary
+
+# 2. Look at the distribution of fragment counts
+frag_summary %>%
+  count(n_fragments, name = "n_peptides") %>%
+  mutate(prop = n_peptides / sum(n_peptides)) %>%
+  arrange(n_fragments)
+
+# 3. Overall stats
+frag_summary %>%
+  summarize(
+    min_frag = min(n_fragments),
+    median_frag = median(n_fragments),
+    mean_frag = mean(n_fragments),
+    max_frag = max(n_fragments)
+  )
+
+pdf("fragment_distribution.pdf",
+    width = 5,
+    height = 5)
+ggplot(frag_summary, aes(x = n_fragments)) +
+  geom_histogram(binwidth = 1, boundary = 0, closed = "left") +
+  scale_x_continuous(breaks = seq(min(frag_summary$n_fragments),
+                                  max(frag_summary$n_fragments), by = 1)) +
+  labs(
+    x = "Number of fragments per peptide",
+    y = "Count of peptides",
+    title = "Histogram of fragment counts per peptide"
+  ) +
+  theme_minimal()
+dev.off()
+```
+

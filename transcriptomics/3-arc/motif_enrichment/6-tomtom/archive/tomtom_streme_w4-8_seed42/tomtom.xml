@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<tomtom version="5.5.8" release="Thu May 15 15:01:46 2025 -0700">
+  <model>
+    <command_line>tomtom -no-ssc -dist ed -thresh 0.05 --norc -oc /out /q/streme_w4-8_seed42.txt /db/cisbp_rna_db.meme</command_line>
+    <distance_measure value="ed"/>
+    <threshold type="qvalue">0.05</threshold>
+    <alphabet name="RNA" like="rna">
+      <letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
+      <letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>
+      <letter id="G" symbol="G" name="Guanine" colour="FFB300"/>
+      <letter id="U" symbol="U" aliases="T" name="Uracil" colour="008000"/>
+      <letter id="N" symbol="N" aliases="X." equals="ACGU" name="Any base"/>
+      <letter id="V" symbol="V" equals="ACG" name="Not U"/>
+      <letter id="H" symbol="H" equals="ACU" name="Not G"/>
+      <letter id="D" symbol="D" equals="AGU" name="Not C"/>
+      <letter id="B" symbol="B" equals="CGU" name="Not A"/>
+      <letter id="M" symbol="M" equals="AC" name="Amino"/>
+      <letter id="R" symbol="R" equals="AG" name="Purine"/>
+      <letter id="W" symbol="W" equals="AU" name="Weak"/>
+      <letter id="S" symbol="S" equals="CG" name="Strong"/>
+      <letter id="Y" symbol="Y" equals="CU" name="Pyrimidine"/>
+      <letter id="K" symbol="K" equals="GU" name="Keto"/>
+    </alphabet>
+    <strands>none</strands>
+    <background from="--query--" A="0.265" C="0.221" G="0.224" U="0.29"/>
+    <host>d383bd553e23</host>
+    <when>Tue Oct 28 23:01:54 2025</when>
+  </model>
+  <query_dbs>
+    <db source="/q/streme_w4-8_seed42.txt" name="streme_w4-8_seed42.txt" loaded="3" excluded="0" last_mod_date="Tue Oct 28 18:46:38 2025"/>
+  </query_dbs>
+  <target_dbs>
+    <db source="/db/cisbp_rna_db.meme" name="cisbp_rna_db" loaded="599" excluded="0" last_mod_date="Tue Oct 28 23:00:13 2025"/>
+  </target_dbs>
+  <queries>
+    <motif db="0" id="1-AAAUAA" alt="STREME-1" length="6" nsites="66" evalue="1.9e+000">
+      <pos A="0.786584" C="0.171101" G="0.00536127" U="0.0369544"/>
+      <pos A="0.977719" C="0.00529882" G="0.00536127" U="0.0116208"/>
+      <pos A="0.928594" C="0.0100656" G="0.0443742" U="0.0169667"/>
+      <pos A="0.00636088" C="0.00529882" G="0.00536127" U="0.982979"/>
+      <pos A="0.982375" C="0.00529882" G="0.00536127" U="0.00696484"/>
+      <pos A="0.982375" C="0.00529882" G="0.00536127" U="0.00696484"/>
+    </motif>
+    <motif db="0" id="2-AUCCAGCG" alt="STREME-2" length="8" nsites="17" evalue="3.0e+000">
+      <pos A="0.834713" C="0.0830535" G="0.041251" U="0.0409818"/>
+      <pos A="0.00257965" C="0.0858082" G="0.109767" U="0.801846"/>
+      <pos A="0.00257965" C="0.963715" G="0.030882" U="0.00282327"/>
+      <pos A="0.155572" C="0.641393" G="0.107467" U="0.0955677"/>
+      <pos A="0.992849" C="0.00215035" G="0.00217784" U="0.00282327"/>
+      <pos A="0.00257965" C="0.10744" G="0.887157" U="0.00282327"/>
+      <pos A="0.00257965" C="0.992419" G="0.00217784" U="0.00282327"/>
+      <pos A="0.00257965" C="0.00215035" G="0.992447" U="0.00282327"/>
+    </motif>
+    <motif db="0" id="3-CAAUYCG" alt="STREME-3" length="7" nsites="8" evalue="3.0e+000">
+      <pos A="0.0055037" C="0.983825" G="0.00464691" U="0.00602469"/>
+      <pos A="0.984741" C="0.00458815" G="0.00464691" U="0.00602469"/>
+      <pos A="0.984741" C="0.00458815" G="0.00464691" U="0.00602469"/>
+      <pos A="0.0055037" C="0.00458815" G="0.00464691" U="0.985261"/>
+      <pos A="0.0055037" C="0.639348" G="0.00464691" U="0.350502"/>
+      <pos A="0.0055037" C="0.983825" G="0.00464691" U="0.00602469"/>
+      <pos A="0.0055037" C="0.00458815" G="0.983883" U="0.00602469"/>
+    </motif>
+  </queries>
+  <targets>
+  </targets>
+  <matches>
+  </matches>
+  <runtime cycles="121145" seconds="0.121"/>
+</tomtom>

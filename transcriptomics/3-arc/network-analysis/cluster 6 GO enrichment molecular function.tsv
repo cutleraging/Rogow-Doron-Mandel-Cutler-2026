@@ -1,0 +1,4 @@
+#term ID	term description	observed gene count	background gene count	strength	signal	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
+GO:0022836	Gated channel activity	3	331	1.82	1.3	0.0174	10090.ENSMUSP00000015484,10090.ENSMUSP00000062638,10090.ENSMUSP00000098303	Cybb,Gabra3,P2rx7
+GO:0005231	Excitatory extracellular ligand-gated ion channel activity	2	57	2.41	1.3	0.0272	10090.ENSMUSP00000062638,10090.ENSMUSP00000098303	Gabra3,P2rx7
+GO:0015075	Ion transmembrane transporter activity	3	832	1.42	0.88	0.0455	10090.ENSMUSP00000015484,10090.ENSMUSP00000062638,10090.ENSMUSP00000098303	Cybb,Gabra3,P2rx7

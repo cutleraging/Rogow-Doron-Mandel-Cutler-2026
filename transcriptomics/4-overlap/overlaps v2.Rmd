@@ -1,0 +1,243 @@
+---
+title: "Overlaps between analyses"
+output: html_document
+date: "2024-08-06"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preparation
+
+## Libraries
+```{r}
+library(eulerr)
+```
+
+## Functions
+```{r}
+venn_analysis <- function(x, output_file = "venn_analysis_results.csv") {
+  # Function to get all combinations of a vector
+  get_combinations <- function(vec) {
+    unlist(lapply(seq_along(vec), function(i) combn(vec, i, simplify = FALSE)), 
+           recursive = FALSE)
+  }
+  
+  # Get all possible combinations of set names
+  set_names <- names(x)
+  combinations <- get_combinations(set_names)
+  
+  # Function to get the overlap of specific sets
+  get_overlap <- function(sets) {
+    Reduce(intersect, x[sets])
+  }
+  
+  # Get overlaps
+  overlaps <- lapply(combinations, get_overlap)
+  
+  # Name the overlaps
+  names(overlaps) <- sapply(combinations, paste, collapse = " & ")
+  
+  # Get unique elements in each set
+  unique_elements <- lapply(set_names, function(set) setdiff(x[[set]], unlist(x[set_names != set])))
+  names(unique_elements) <- paste("Unique to", set_names)
+  
+  # Combine all results
+  all_results <- c(overlaps, unique_elements)
+  
+  # Remove empty sets
+  all_results <- all_results[sapply(all_results, length) > 0]
+  
+  # Create a data frame
+  result_df <- data.frame(
+    Category = names(all_results),
+    Elements = sapply(all_results, paste, collapse = ", "),
+    Count = sapply(all_results, length)
+  )
+  
+  # Add columns for each original set
+  for (set_name in set_names) {
+    result_df[[set_name]] <- sapply(all_results, function(elements) {
+      sum(elements %in% x[[set_name]])
+    })
+  }
+  
+  # Write to CSV
+  write.csv(result_df, file = output_file, row.names = FALSE)
+  
+  cat("Results have been written to", output_file, "\n")
+  
+  return(result_df)
+}
+
+#' Plot a 2-set Euler diagram from gene vectors and save as PDF
+#'
+#' @param genes1 character. Genes in set 1.
+#' @param genes2 character. Genes in set 2.
+#' @param filename character. Output PDF path (e.g., "actb_arc_euler.pdf").
+#' @param label1 character. Name for set 1.
+#' @param label2 character. Name for set 2.
+#' @param col1,col2 character. Hex fill colors.
+#' @param alpha numeric. Fill transparency.
+#' @param pct_mode "set" or "union". See details below.
+#' @param width,height numeric. PDF size in inches.
+#' @return Invisibly returns a list of counts and the fitted object.
+plot_euler_2sets <- function(
+  genes1, genes2, filename,
+  label1 = "Set 1", label2 = "Set 2",
+  col1 = "#63E6BE", col2 = "#FF41C3",
+  alpha = 1,
+  pct_mode = c("set","union"),
+  width = 5, height = 5, margin_inch = 0
+){
+  stopifnot(is.character(genes1), is.character(genes2),
+            is.character(filename), length(filename) == 1)
+  pct_mode <- match.arg(pct_mode)
+
+  A <- unique(genes1); B <- unique(genes2)
+  Aonly <- length(setdiff(A, B))
+  Bonly <- length(setdiff(B, A))
+  AB    <- length(intersect(A, B))
+  nA <- length(A); nB <- length(B); nUnion <- length(union(A, B))
+
+  safe_div <- function(num, den) if (den == 0) 0 else num/den
+  pct_str  <- function(p) sprintf("(%.0f%%)", 100 * p)
+
+  if (pct_mode == "set") {
+    lab_Aonly <- sprintf("%d\n%s", Aonly, pct_str(safe_div(Aonly, nA)))
+    lab_Bonly <- sprintf("%d\n%s", Bonly, pct_str(safe_div(Bonly, nB)))
+    lab_AB    <- sprintf("%d\n%s", AB,    pct_str(safe_div(AB, nUnion)))
+  } else {
+    lab_Aonly <- sprintf("%d\n%s", Aonly, pct_str(safe_div(Aonly, nUnion)))
+    lab_Bonly <- sprintf("%d\n%s", Bonly, pct_str(safe_div(Bonly, nUnion)))
+    lab_AB    <- sprintf("%d\n%s", AB,    pct_str(safe_div(AB,    nUnion)))
+  }
+
+  library(eulerr)
+  fit <- euler(c(
+    setNames(Aonly, label1),
+    setNames(Bonly, label2),
+    setNames(AB,    paste(label1, label2, sep = "&"))
+  ))
+
+  qlabs <- c(lab_Aonly, lab_Bonly, lab_AB)
+
+  p <- plot(
+    fit,
+    fills  = list(fill = c(col1, col2), alpha = alpha),
+    edges  = list(colour = "grey20", lwd = 1),
+    labels = list(col = c(col1, col2), cex = 1.2, font = 2),
+    quantities = list(labels = qlabs, cex = 1.0, font = 2, col = "black")
+  )
+
+  # add padding
+  # p <- p + ggplot2::theme(plot.margin = ggplot2::unit(rep(margin_inch, 4), "in"))
+
+  # Save to PDF
+  ggplot2::ggsave(filename, plot = p, width = width, height = height,
+                  device = grDevices::cairo_pdf)
+
+  invisible(list(
+    n_A_only = Aonly, n_B_only = Bonly, n_overlap = AB,
+    n_A = nA, n_B = nB, n_union = nUnion, fit = fit, plot = p,
+    file = normalizePath(filename, mustWork = FALSE)
+  ))
+}
+```
+
+## Working Directory
+```{r}
+working.dir <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps"
+```
+
+## Data
+```{r}
+actin_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression/actin_vs_no_infect_scramble.csv")
+
+arc_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-arc-rep1-removed/differential_expression/arc_vs_no_infect_scramble.csv")
+
+actin_vs_control_prot <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/protein/20250522_act_vs_control_onlyD.csv")
+
+arc_vs_control_prot <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/protein/20250522_arc_vs_control_onlyD.csv")
+```
+
+# Overlaps
+
+## Genes detected in actin and arc analyses
+```{r}
+setwd(working.dir)
+
+plot_euler_2sets(genes1 = actin_vs_control$ensembl_gene_id,
+                 genes2 = arc_vs_control$ensembl_gene_id,
+                 filename = "actin_arc_genes_detected.pdf",
+                 label1 = "Actb", 
+                 label2 = "Arc",
+                 col1 = "#63E6BE", 
+                 col2 = "#FF41C3")
+
+venn_analysis(list(
+              "Actb" = actin_vs_control$ensembl_gene_id,
+              "Arc" = arc_vs_control$ensembl_gene_id),
+              "actin_arc_genes_detected.csv")
+```
+
+## Significant enriched genes between actin and arc analyses
+```{r}
+setwd(working.dir)
+
+plot_euler_2sets(genes1 = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$ensembl_gene_id,
+                 genes2 = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$ensembl_gene_id,
+                 filename = "actin_vs_control_and_arc_vs_control.pdf",
+                 label1 = "Actb", 
+                 label2 = "Arc",
+                 col1 = "#63E6BE", 
+                 col2 = "#FF41C3")
+
+x <- list(
+  "Arc enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name)
+
+venn_analysis(x, "actin_vs_control_and_arc_vs_control.csv")
+```
+
+## Significant enriched genes between actin rna and protein analyses
+```{r}
+setwd(working.dir)
+
+plot_euler_2sets(genes1 = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+                 genes2 = subset(actin_vs_control_prot, logFC > 0 & adj.P.Val < 0.1)$label_filtered,
+                 filename = "actin_vs_control_RNA_and_protein.pdf",
+                 label1 = "Actb RNA", 
+                 label2 = "Actb Protein",
+                 col1 = "red", 
+                 col2 = "blue")
+
+x <- list(
+  "Actb RNA" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+  "Actb Protein" = subset(actin_vs_control_prot, logFC > 0 & adj.P.Val < 0.05)$label_filtered)
+
+venn_analysis(x, "actin_vs_control_RNA_and_protein.csv")
+```
+
+## Significant enriched genes between arc rna and protein analyses
+```{r}
+setwd(working.dir)
+
+plot_euler_2sets(genes1 = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+                 genes2 = subset(arc_vs_control_prot, logFC > 0 & adj.P.Val < 0.05)$PG.Genes,
+                 filename = "arc_vs_control_RNA_and_protein.pdf",
+                 label1 = "Arc RNA", 
+                 label2 = "Arc Protein",
+                 col1 = "red", 
+                 col2 = "blue")
+
+x <- list(
+  "Arc RNA" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+  "Arc Protein" = subset(arc_vs_control_prot, logFC > 0 & adj.P.Val < 0.05)$PG.Genes)
+
+venn_analysis(x, "arc_vs_control_RNA_and_protein.csv")
+```
+

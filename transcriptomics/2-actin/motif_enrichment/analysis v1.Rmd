@@ -1,0 +1,670 @@
+---
+title: "Fimo results plotting"
+output: html_document
+date: "2025-11-05"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preparation
+
+## Working directory
+```{r}
+working.dir <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment"
+
+setwd(working.dir)
+```
+
+## Libraries
+```{r}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(rtracklayer)
+  library(Biostrings)    
+  library(biomaRt)
+  library(universalmotif)
+  library(tidyverse)
+  library(gridExtra)
+})
+```
+
+# Fimo results
+
+## De novo motifs
+
+### Load data
+```{r}
+
+gff_file <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/7-fimo/fimo_motifs_deduplicated__on__actin_vs_no_infect_scramble_sig_enrich_3pSeqs/fimo.gff"
+fa_file  <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/7-fimo/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta"
+
+gr <- rtracklayer::import(gff_file)
+
+fa <- tryCatch(Biostrings::readDNAStringSet(fa_file), error = function(e) NULL)
+if (is.null(fa)) fa <- Biostrings::readAAStringSet(fa_file)
+```
+
+### Plot results
+```{r}
+# GFF -> tidy
+gff <- as_tibble(gr) %>%
+  transmute(
+    seq_id = as.character(sub("\\|.*", "", seqnames)),
+    start  = start,
+    end    = end,
+    strand = as.character(strand),
+    motif  = if ("Name" %in% names(mcols(gr))) as.character(sub("\\_.*", "", Name)) else type,
+    score  = if ("score" %in% colnames(.)) score else NA_real_
+  )
+
+hdr <- names(fa)
+
+seq_lengths <- tibble(
+  seq_id = sub("\\|.*", "", hdr),
+  transcript_id = sub("^[^|]*\\|(?:transcript:)?([^|]+).*", "\\1", hdr, perl = TRUE),
+  strand = sub(".*\\|strand:([+-]).*", "\\1", hdr),
+  seqlen = width(fa)
+)
+
+# get gene symbol
+mart <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+gene_map <- getBM(
+  attributes = c("ensembl_gene_id", "mgi_symbol"),
+  filters = "ensembl_gene_id",
+  values = unique(sub("\\|.*", "", names(fa))),
+  mart = mart
+) %>%
+  rename(seq_id = ensembl_gene_id, gene_symbol = mgi_symbol)
+
+seq_lengths <- seq_lengths %>%
+  left_join(gene_map,
+            by = "seq_id")
+
+# Order: longest first, promote target to top, then reverse for plotting (so first is at top)
+target <- "ENSMUSG00000029580"
+lvl_by_len <- seq_lengths %>% arrange(desc(seqlen)) %>% pull(seq_id)
+lvl <- rev(c(target, setdiff(lvl_by_len, target)))
+
+# Shared factor + numeric y for all layers
+seq_levels <- factor(seq_lengths$seq_id, levels = lvl)
+y_lookup <- tibble(seq_id = levels(seq_levels)) %>% mutate(y = row_number())
+
+# Join lengths + y to hits; expand width for visibility
+expand_width <- 20
+hits <- gff %>%
+  inner_join(seq_lengths, by = "seq_id") %>%
+  inner_join(y_lookup, by = "seq_id") %>%
+  mutate(
+    xmin = pmax(1L, start - expand_width/2),
+    xmax = pmin(seqlen, end   + expand_width/2)
+  )
+
+# Baselines in same tibble
+baselines <- seq_lengths %>%
+  inner_join(y_lookup, by = "seq_id") %>%
+  transmute(
+    type = "baseline",
+    seq_id, seqlen, y,
+    x0 = 1L, x1 = seqlen,
+    xmin = NA_real_, xmax = NA_real_, motif = NA_character_
+  )
+
+# Motifs present in the target sequence
+target_motifs <- hits %>%
+  filter(seq_id == target) %>%
+  pull(motif) %>%
+  unique()
+
+# Keep only hits whose motif is among target motifs
+hits <- hits %>%
+  filter(motif %in% target_motifs)
+
+# (Optional) drop sequences with no remaining hits
+seq_with_hits <- hits %>% distinct(seq_id)
+baselines <- baselines %>%
+  semi_join(seq_with_hits, by = "seq_id")
+
+# Hits in same tibble
+hits_df <- hits %>%
+  transmute(
+    type = "hit",
+    seq_id, seqlen, y, x0 = NA_real_, x1 = NA_real_,
+    xmin, xmax, motif, transcript_id, gene_symbol
+  )
+
+df_plot <- bind_rows(baselines, hits_df)
+
+# Give motif names
+motif_ids <- unique(df_plot$motif[!is.na(df_plot$motif)])
+motif_labels <- paste0("Motif ", seq_along(motif_ids), " (", motif_ids, ")")
+names(motif_labels) <- motif_ids
+df_plot$motif <- factor(df_plot$motif,
+                        levels = motif_ids)
+
+# build labels from df_plot (use first non-NA from any hit; fallback to seq_id)
+spacing_factor <- 0.5   # smaller = tighter spacing (try 0.5–0.7)
+df_plot <- df_plot %>%
+  mutate(y = y * spacing_factor)
+
+# Then regenerate y_breaks/y_labels using the updated df_plot
+lab_tbl <- df_plot %>%
+  group_by(seq_id, y) %>%
+  summarise(
+    gene_symbol   = first(na.omit(gene_symbol)),
+    transcript_id = first(na.omit(transcript_id)),
+    .groups = "drop"
+  ) %>%
+  mutate(label = paste0(gene_symbol, " (", transcript_id, ")")) %>%
+  arrange(y)
+
+y_breaks <- lab_tbl$y
+y_labels <- lab_tbl$label
+
+# ---- color mapping -------------------------------------------------------
+# If you have exactly 3 motifs and want cyan/blue/red like the example:
+named_cols <- c("#6DE1E8", "#1F4BE3", "#D34A3A")
+motifs_unique <- unique(hits$motif)
+pal <- setNames(
+  if (length(motifs_unique) <= 3) named_cols[seq_along(motifs_unique)]
+  else scales::hue_pal()(length(motifs_unique)),
+  motifs_unique
+)
+
+# Keep only seqs that are actually present (hit or baseline) and re-densify y
+y_map <- df_plot %>%
+  distinct(seq_id) %>%                     # only what’s left
+  arrange(factor(seq_id, levels = unique(df_plot$seq_id[order(df_plot$y)]))) %>%
+  mutate(y_dense = row_number())
+
+# Apply compact y to everything
+df_plot <- df_plot %>% select(-y) %>% left_join(y_map, by = "seq_id") %>% rename(y = y_dense)
+
+# Rebuild axis labels from your metadata
+lab_tbl <- df_plot %>%
+  group_by(seq_id, y) %>%
+  summarise(
+    gene_symbol   = first(na.omit(gene_symbol)),
+    transcript_id = first(na.omit(transcript_id)),
+    .groups = "drop"
+  ) %>%
+  mutate(label = ifelse(is.na(transcript_id),
+                        gene_symbol,
+                        paste0(gene_symbol, " (", transcript_id, ")"))) %>%
+  arrange(y)
+
+y_breaks <- lab_tbl$y
+y_labels <- lab_tbl$label
+
+# Plot (both layers from the same df)
+box_half_height <- 0.3
+
+pdf("motif_mapping.pdf",
+    width = 7,
+    height = 3)
+ggplot() +
+  geom_segment(
+    data = df_plot %>% filter(type=="baseline"),
+    aes(x = x0, xend = x1, y = y, yend = y),
+    color = "grey80", linewidth = 1, lineend = "round"
+  ) +
+  geom_rect(
+    data = df_plot %>% filter(type == "hit"),
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = y - box_half_height, ymax = y + box_half_height,
+      fill = motif
+    ),
+    color = NA
+  ) +
+  scale_fill_manual(values = pal, name = NULL, labels = motif_labels) +
+  scale_y_continuous(breaks = y_breaks, labels = y_labels) +
+  scale_x_continuous(
+    labels = scales::label_scientific(),
+    expand = c(0, 0)
+  ) +
+  coord_cartesian(xlim = c(0, max(df_plot$seqlen, na.rm = TRUE))) +
+  labs(x = "Position in 3'UTR (bp)", y = NULL) +
+  theme_minimal(base_size = 12) +
+theme(
+  text = element_text(color = "black"),
+  axis.text = element_text(color = "black"),
+  axis.title = element_text(color = "black"),
+  legend.text = element_text(color = "black"),
+  legend.title = element_text(color = "black"),
+  panel.grid = element_blank(),
+  axis.ticks.y = element_blank(),
+  legend.position = "none",
+  axis.line.x = element_line(color = "black", linewidth = 0.4)
+)
+dev.off()
+
+pdf("motif_mapping_legend.pdf",
+    width = 7,
+    height = 3)
+ggplot() +
+  geom_segment(
+    data = df_plot %>% filter(type=="baseline"),
+    aes(x = x0, xend = x1, y = y, yend = y),
+    color = "grey80", linewidth = 1, lineend = "round"
+  ) +
+  geom_rect(
+    data = df_plot %>% filter(type == "hit"),
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = y - box_half_height, ymax = y + box_half_height,
+      fill = motif
+    ),
+    color = NA
+  ) +
+  scale_fill_manual(values = pal, name = NULL, labels = motif_labels) +
+  scale_y_continuous(breaks = y_breaks, labels = y_labels) +
+  scale_x_continuous(
+    labels = scales::label_scientific(),
+    expand = c(0, 0)
+  ) +
+  coord_cartesian(xlim = c(0, max(df_plot$seqlen, na.rm = TRUE))) +
+  labs(x = "Position in 3'UTR (bp)", y = NULL) +
+  theme_minimal(base_size = 12) +
+theme(
+  text = element_text(color = "black"),
+  axis.text = element_text(color = "black"),
+  axis.title = element_text(color = "black"),
+  legend.text = element_text(color = "black"),
+  legend.title = element_text(color = "black"),
+  panel.grid = element_blank(),
+  axis.ticks.y = element_blank(),
+  legend.position = "right"
+)
+dev.off()
+```
+
+
+## oRNAment motfis
+### Load data
+```{r}
+
+gff_file <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/7-fimo/fimo_oRNAment_actb_rbp__on__actin_vs_no_infect_scramble_sig_enrich_3pSeqs/fimo.gff"
+fa_file  <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/7-fimo/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta"
+
+gr <- rtracklayer::import(gff_file)
+
+fa <- tryCatch(Biostrings::readDNAStringSet(fa_file), error = function(e) NULL)
+if (is.null(fa)) fa <- Biostrings::readAAStringSet(fa_file)
+```
+
+### Plot results
+```{r}
+# GFF -> tidy
+gff <- as_tibble(gr) %>%
+  transmute(
+    seq_id = as.character(sub("\\|.*", "", seqnames)),
+    start  = start,
+    end    = end,
+    strand = as.character(strand),
+    motif  = if ("Name" %in% names(mcols(gr))) as.character(sub("\\_.*", "", Name)) else type,
+    score  = if ("score" %in% colnames(.)) score else NA_real_
+  )
+
+hdr <- names(fa)
+
+seq_lengths <- tibble(
+  seq_id = sub("\\|.*", "", hdr),
+  transcript_id = sub("^[^|]*\\|(?:transcript:)?([^|]+).*", "\\1", hdr, perl = TRUE),
+  strand = sub(".*\\|strand:([+-]).*", "\\1", hdr),
+  seqlen = width(fa)
+)
+
+# get gene symbol
+mart <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+gene_map <- getBM(
+  attributes = c("ensembl_gene_id", "mgi_symbol"),
+  filters = "ensembl_gene_id",
+  values = unique(sub("\\|.*", "", names(fa))),
+  mart = mart
+) %>%
+  rename(seq_id = ensembl_gene_id, gene_symbol = mgi_symbol)
+
+seq_lengths <- seq_lengths %>%
+  left_join(gene_map,
+            by = "seq_id")
+
+# Order: longest first, promote target to top, then reverse for plotting (so first is at top)
+target <- "ENSMUSG00000029580"
+lvl_by_len <- seq_lengths %>% arrange(desc(seqlen)) %>% pull(seq_id)
+lvl <- rev(c(target, setdiff(lvl_by_len, target)))
+
+# Shared factor + numeric y for all layers
+seq_levels <- factor(seq_lengths$seq_id, levels = lvl)
+y_lookup <- tibble(seq_id = levels(seq_levels)) %>% mutate(y = row_number())
+
+# Join lengths + y to hits; expand width for visibility
+expand_width <- 20
+hits <- gff %>%
+  inner_join(seq_lengths, by = "seq_id") %>%
+  inner_join(y_lookup, by = "seq_id") %>%
+  mutate(
+    xmin = pmax(1L, start - expand_width/2),
+    xmax = pmin(seqlen, end   + expand_width/2)
+  )
+
+# Baselines in same tibble
+baselines <- seq_lengths %>%
+  inner_join(y_lookup, by = "seq_id") %>%
+  transmute(
+    type = "baseline",
+    seq_id, seqlen, y,
+    x0 = 1L, x1 = seqlen,
+    xmin = NA_real_, xmax = NA_real_, motif = NA_character_
+  )
+
+# Motifs present in the target sequence
+target_motifs <- hits %>%
+  filter(seq_id == target) %>%
+  pull(motif) %>%
+  unique()
+
+# Keep only hits whose motif is among target motifs
+hits <- hits %>%
+  filter(motif %in% target_motifs)
+
+# (Optional) drop sequences with no remaining hits
+seq_with_hits <- hits %>% distinct(seq_id)
+baselines <- baselines %>%
+  semi_join(seq_with_hits, by = "seq_id")
+
+# Hits in same tibble
+hits_df <- hits %>%
+  transmute(
+    type = "hit",
+    seq_id, seqlen, y, x0 = NA_real_, x1 = NA_real_,
+    xmin, xmax, motif, transcript_id, gene_symbol
+  )
+
+df_plot <- bind_rows(baselines, hits_df)
+
+# Give motif names
+motif_ids <- unique(df_plot$motif[!is.na(df_plot$motif)])
+motif_labels <- paste0("Motif ", seq_along(motif_ids), " (", motif_ids, ")")
+names(motif_labels) <- motif_ids
+df_plot$motif <- factor(df_plot$motif,
+                        levels = motif_ids)
+
+# build labels from df_plot (use first non-NA from any hit; fallback to seq_id)
+spacing_factor <- 0.5   # smaller = tighter spacing (try 0.5–0.7)
+df_plot <- df_plot %>%
+  mutate(y = y * spacing_factor)
+
+# Then regenerate y_breaks/y_labels using the updated df_plot
+lab_tbl <- df_plot %>%
+  group_by(seq_id, y) %>%
+  summarise(
+    gene_symbol   = first(na.omit(gene_symbol)),
+    transcript_id = first(na.omit(transcript_id)),
+    .groups = "drop"
+  ) %>%
+  mutate(label = paste0(gene_symbol, " (", transcript_id, ")")) %>%
+  arrange(y)
+
+y_breaks <- lab_tbl$y
+y_labels <- lab_tbl$label
+
+# ---- color mapping -------------------------------------------------------
+# If you have exactly 3 motifs and want cyan/blue/red like the example:
+named_cols <- c("#6DE1E8", "#1F4BE3", "#D34A3A")
+motifs_unique <- unique(hits$motif)
+pal <- setNames(
+  if (length(motifs_unique) <= 3) named_cols[seq_along(motifs_unique)]
+  else scales::hue_pal()(length(motifs_unique)),
+  motifs_unique
+)
+
+# Keep only seqs that are actually present (hit or baseline) and re-densify y
+y_map <- df_plot %>%
+  distinct(seq_id) %>%                     # only what’s left
+  arrange(factor(seq_id, levels = unique(df_plot$seq_id[order(df_plot$y)]))) %>%
+  mutate(y_dense = row_number())
+
+# Apply compact y to everything
+df_plot <- df_plot %>% select(-y) %>% left_join(y_map, by = "seq_id") %>% rename(y = y_dense)
+
+# Rebuild axis labels from your metadata
+lab_tbl <- df_plot %>%
+  group_by(seq_id, y) %>%
+  summarise(
+    gene_symbol   = first(na.omit(gene_symbol)),
+    transcript_id = first(na.omit(transcript_id)),
+    .groups = "drop"
+  ) %>%
+  mutate(label = ifelse(is.na(transcript_id),
+                        gene_symbol,
+                        paste0(gene_symbol, " (", transcript_id, ")"))) %>%
+  arrange(y)
+
+y_breaks <- lab_tbl$y
+y_labels <- lab_tbl$label
+
+# Plot (both layers from the same df)
+box_half_height <- 0.3
+
+pdf("oRNAment_motif_mapping.pdf",
+    width = 7,
+    height = 3)
+ggplot() +
+  geom_segment(
+    data = df_plot %>% filter(type=="baseline"),
+    aes(x = x0, xend = x1, y = y, yend = y),
+    color = "grey80", linewidth = 1, lineend = "round"
+  ) +
+  geom_rect(
+    data = df_plot %>% filter(type == "hit"),
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = y - box_half_height, ymax = y + box_half_height,
+      fill = motif
+    ),
+    color = NA
+  ) +
+  scale_fill_manual(values = pal, name = NULL, labels = motif_labels) +
+  scale_y_continuous(breaks = y_breaks, labels = y_labels) +
+  scale_x_continuous(
+    labels = scales::label_scientific(),
+    expand = c(0, 0)
+  ) +
+  coord_cartesian(xlim = c(0, max(df_plot$seqlen, na.rm = TRUE))) +
+  labs(x = "Position in 3'UTR (bp)", y = NULL) +
+  theme_minimal(base_size = 12) +
+theme(
+  text = element_text(color = "black"),
+  axis.text = element_text(color = "black"),
+  axis.title = element_text(color = "black"),
+  legend.text = element_text(color = "black"),
+  legend.title = element_text(color = "black"),
+  panel.grid = element_blank(),
+  axis.ticks.y = element_blank(),
+  legend.position = "none",
+  axis.line.x = element_line(color = "black", linewidth = 0.4)
+)
+dev.off()
+
+pdf("oRNAment_motif_mapping_legend.pdf",
+    width = 7,
+    height = 5)
+ggplot() +
+  geom_segment(
+    data = df_plot %>% filter(type=="baseline"),
+    aes(x = x0, xend = x1, y = y, yend = y),
+    color = "grey80", linewidth = 1, lineend = "round"
+  ) +
+  geom_rect(
+    data = df_plot %>% filter(type == "hit"),
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = y - box_half_height, ymax = y + box_half_height,
+      fill = motif
+    ),
+    color = NA
+  ) +
+  scale_fill_manual(values = pal, name = NULL, labels = motif_labels) +
+  scale_y_continuous(breaks = y_breaks, labels = y_labels) +
+  scale_x_continuous(
+    labels = scales::label_scientific(),
+    expand = c(0, 0)
+  ) +
+  coord_cartesian(xlim = c(0, max(df_plot$seqlen, na.rm = TRUE))) +
+  labs(x = "Position in 3'UTR (bp)", y = NULL) +
+  theme_minimal(base_size = 12) +
+theme(
+  text = element_text(color = "black"),
+  axis.text = element_text(color = "black"),
+  axis.title = element_text(color = "black"),
+  legend.text = element_text(color = "black"),
+  legend.title = element_text(color = "black"),
+  panel.grid = element_blank(),
+  axis.ticks.y = element_blank(),
+  legend.position = "right"
+)
+dev.off()
+```
+
+# STREME results de novo motif
+
+## Load data
+```{r}
+# Path to your motif file (can be MEME, JASPAR, etc.)
+motif_file <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/5-consensus/motifs_deduplicated.meme"
+
+# ---- read motifs ----
+motifs <- read_meme(motif_file)
+```
+
+## Plot results
+```{r}
+# 'motifs' is a list of universalmotif objects
+length(motifs)        # how many motifs found
+motifs[[1]]           # inspect first motif
+
+# Step 1: filter motifs to only those in motif_labels (by motif name)
+motifs_filt <- Filter(function(m) m@name %in% names(motif_labels), motifs)
+
+# Step 2: order them to match the order in motif_labels
+motifs_filt <- motifs_filt[match(names(motif_labels),
+                                 vapply(motifs_filt, slot, "", "name"))]
+
+# Step 3: rename motif objects to have the pretty labels
+for (i in seq_along(motifs_filt)) {
+  motifs_filt[[i]]@name <- motif_labels[names(motif_labels)[i]]
+}
+
+vapply(motifs_filt, slot, "", "name")
+
+# ---- plot motifs ----
+view_motifs(motifs_filt[[1]],
+            )
+
+for (i in seq_along(motifs_filt)) {
+  m <- motifs_filt[[i]]
+  
+  # Get current name and E-value
+  nm <- m@name
+  ev <- tryCatch(slot(m, "eval"), error = function(e) NA_real_)
+  
+  # Format the E-value nicely in scientific notation
+  ev_label <- if (is.na(ev)) "E=NA" else paste0("E=", formatC(ev, format = "e", digits = 2))
+  
+  # Update the motif name to include E-value
+  m@name <- paste0(nm, "  ", ev_label)
+  
+  motifs_filt[[i]] <- m
+}
+
+vapply(motifs_filt, slot, "", "name")
+
+# plot aligned motifs
+pdf("motif_streme_results.pdf",
+    height = 5,
+    width = 5)
+view_motifs(motifs_filt,
+            show.names = TRUE,
+            names.pos	= "top",
+            use.type = "ICM",
+            tryRC = FALSE)
+dev.off()
+```
+
+# TOMTOM results de novo vs oRNAment motifs
+
+## Load data
+```{r}
+# ---- inputs ----
+meme_query <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/6-tomtom/oRNAment_actb/motifs_deduplicated.meme"
+meme_db    <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/6-tomtom/oRNAment_actb/oRNAment_actb_rbp.meme"
+tomtom_tsv <- "~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/motif_enrichment/6-tomtom/oRNAment_actb/tomtom_motifs_deduplicated/tomtom.tsv"
+
+# ---- load motifs ----
+Q <- read_meme(meme_query)  # list of universalmotif objects
+D <- read_meme(meme_db)
+```
+
+## Plot results
+```{r}
+# fast name → index lookups (assumes Tomtom IDs match MEME motif names)
+q_names <- vapply(Q, function(m) m@name, character(1))
+d_names <- vapply(D, function(m) m@name, character(1))
+q_index <- setNames(seq_along(Q), q_names)
+d_index <- setNames(seq_along(D), d_names)
+
+# ---- read tomtom results (ignore header comments) ----
+tt <- read_tsv(tomtom_tsv, comment = "#", show_col_types = FALSE) %>%
+  # keep columns we need; adjust thresholds as you like
+  mutate(
+    Optimal_offset = as.integer(Optimal_offset),
+    Orientation = as.character(Orientation)
+  )
+
+# ---- helper: fetch motif by ID with a small fallback ----
+get_motif <- function(motif_list, idx_map, id) {
+  if (!is.na(idx_map[id])) return(motif_list[[ idx_map[id] ]])
+  # fallback: try stripping spaces or parentheses quirks
+  id2 <- str_replace_all(id, "\\s+", "")
+  id2 <- str_replace_all(id2, "\\(\\d+\\)$", "")
+  hits <- which(str_replace_all(vapply(motif_list, function(m) m@name, ""), "\\s+", "") == id2)
+  if (length(hits)) motif_list[[ hits[1] ]] else stop("Motif not found: ", id)
+}
+
+# ---- helper: label + optional reverse complement for target ----
+prep_pair <- function(row) {
+  E  <- as.numeric(row[["E-value"]])
+  mq <- get_motif(Q, q_index, row[["Query_ID"]])
+  mt <- get_motif(D, d_index, row[["Target_ID"]])
+  mq@name <- sprintf("%s | E=%.3g",
+                     mq@name, E)
+  list(query = mq, target = mt)
+}
+
+# pair 1
+pdf("ACCUAAA_oRNAment_match.pdf",
+    width = 4,
+    height = 3)
+view_motifs(prep_pair(sig[1, ]))
+dev.off()
+
+# pair 2
+pdf("UGACAAA_oRNAment_match.pdf",
+    width = 4,
+    height = 3)
+view_motifs(prep_pair(sig[2, ]))
+dev.off()
+
+# pair 3
+pdf("GACAGCAGAU_oRNAment_match.pdf",
+    width = 4,
+    height = 3)
+view_motifs(prep_pair(sig[3, ]))
+dev.off()
+```
+
+

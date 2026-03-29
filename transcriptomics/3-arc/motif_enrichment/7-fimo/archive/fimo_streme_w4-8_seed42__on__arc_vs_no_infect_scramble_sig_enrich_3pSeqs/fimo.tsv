@@ -1,0 +1,4 @@
+
+# FIMO (Find Individual Motif Occurrences): Version 5.5.8 compiled on May 16 2025 at 08:48:58
+# The format of this file is described at http://localhost:8080/meme_5.5.8/doc/fimo-output-format.html#tsv_results.
+# fimo --verbosity 1 --oc /out --qv-thresh --thresh 0.05 --max-stored-scores 500000 --norc /motifs/streme_w4-8_seed42.txt /seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta

@@ -1,0 +1,3 @@
+#term ID	term description	observed gene count	background gene count	strength	signal	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
+GO:0000278	Mitotic cell cycle	5	603	1.56	1.75	0.00026	10090.ENSMUSP00000030490,10090.ENSMUSP00000040416,10090.ENSMUSP00000045873,10090.ENSMUSP00000090651,10090.ENSMUSP00000141182	Stil,Dlgap5,Anln,Cntrob,Wdhd1
+GO:1903047	Mitotic cell cycle process	4	520	1.53	1.15	0.0085	10090.ENSMUSP00000030490,10090.ENSMUSP00000040416,10090.ENSMUSP00000045873,10090.ENSMUSP00000090651	Stil,Dlgap5,Anln,Cntrob

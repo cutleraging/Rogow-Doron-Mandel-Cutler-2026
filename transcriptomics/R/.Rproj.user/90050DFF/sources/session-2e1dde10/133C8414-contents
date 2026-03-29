@@ -1,0 +1,2841 @@
+---
+title: "Sofiya RNA-Seq Analysis"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Notes
+
+# Preparation
+
+## Set working directory
+```{r}
+working.dir <- "/Users/ronaldcutler/EinsteinMed\ Dropbox/Ronald\ Cutler/Sidoli-lab/Collaboration/Sofia\ Krylova/2025-Liver-HFD/"
+```
+
+## Load functions
+```{r}
+source(paste0(working.dir, "R/functions.R"))
+```
+
+## Load libraries
+```{r}
+library(biomaRt)
+library(msigdbr)
+library(org.Mm.eg.db)
+library(GSVA)
+library(GSEABase)
+library(GSVAdata)
+library(Biobase)
+
+library(limma)
+#library(sva)
+library(clusterProfiler)
+library(enrichplot)
+library(SummarizedExperiment)
+library(DESeq2)
+library(PCAtools)
+library(genefilter)
+library(zFPKM)
+
+library(ggplot2)
+library(cowplot)
+#library(PerformanceAnalytics)
+library(ggrepel)
+library(EnhancedVolcano)
+library(ComplexHeatmap)
+#library(UpSetR)
+library(ggpubr)
+library(ggcorrplot)
+library(ggvenn)
+
+library(data.table)
+library(tibble)
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(stringr)
+
+library(viridis)
+library(RColorBrewer)
+
+library(BiocParallel)
+library(parallel)
+num_cores <- detectCores() # Detect the number of cores
+```
+
+## Load meta data
+```{r}
+setwd(paste0(working.dir, "1-data"))
+
+# metadata
+metadata <- read.csv('samplesheet.csv', header = TRUE)
+rownames(metadata) <- metadata$sample
+```
+
+## Load data
+```{r}
+setwd(paste0(working.dir, "1-data"))
+
+# tpm
+tpm <- read.table('rsem.merged.gene_tpm.tsv', header = TRUE, row.names = 1)
+tpm$transcript_id.s. <- NULL
+
+# Reformat column names
+clean <- sub("^X", "", colnames(tpm))        # drop leading “X”
+clean <- gsub("\\.", "-", clean)             # turn every “.” into “-”
+colnames(tpm) <- clean
+
+# Keep only columns that appear in metadata
+keep <- intersect(colnames(tpm), metadata$sample)
+tpm_filtered <- tpm[, keep]
+
+# reorder columns
+tpm_filtered <- tpm[, metadata$sample[metadata$sample %in% colnames(tpm)]]
+
+# counts
+counts <- read.table('rsem.merged.gene_counts.tsv', header = TRUE, row.names = 1)
+counts$transcript_id.s. <- NULL
+
+# Reformat column names
+clean <- sub("^X", "", colnames(counts))        # drop leading “X”
+clean <- gsub("\\.", "-", clean)             # turn every “.” into “-”
+colnames(counts) <- clean
+
+# Keep only columns that appear in metadata
+keep <- intersect(colnames(counts), metadata$sample)
+counts_filtered <- counts[, keep]
+
+# reorder columns
+counts_filtered <- counts[, metadata$sample[metadata$sample %in% colnames(counts)]]
+
+se <- SummarizedExperiment(assays=SimpleList(counts = as.matrix(round(counts_filtered)),
+                                             tpm = as.matrix(tpm_filtered)),
+                                             colData = metadata)
+
+# remove version from gene name
+rownames(se) <- lapply(rownames(se), sub, pattern = "\\.\\d+$", replacement = "")
+```
+
+## Save
+```{r}
+setwd(paste0(working.dir, "1-data"))
+
+saveRDS(se, "se.RDS")
+```
+
+# Quality Control
+
+## Raw genes expressed per sample
+```{r}
+dir.create(paste0(working.dir, "2-quality-control"))
+setwd(paste0(working.dir, "2-quality-control"))
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se, "tpm") > 1)) 
+
+pdf("raw_counts_genes_expressed_tpm_1.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 1")
+dev.off()
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se, "tpm") > 5)) 
+
+pdf("raw_counts_genes_expressed_tpm_5.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 5")
+dev.off()
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se, "tpm") > 10)) 
+
+pdf("raw_counts_genes_expressed_tpm_10.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 10")
+dev.off()
+```
+
+## Distribution of raw counts
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- colnames(se)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("raw_count_distribution.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.7) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "log2(Counts + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Raw Counts",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- colnames(se)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("raw_tpm_distribution.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.7) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "log2(TPM + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Raw TPM ",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Filter for expressed genes
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+# filtering non-expressed genes
+assay(se, "zfpkm") <- zFPKM(se, assayName = "tpm")
+assay(se, "zfpkm")[assay(se, "zfpkm") == -Inf] <- NA
+
+pdf("zFPKM_distribution.pdf",
+    width = 10,
+    height = 10)
+zFPKMPlot(se, assayName = "tpm", FacetTitles = TRUE)
+dev.off()
+
+# To determine which genes are active, we compute the median expression within each group
+# detach(package:plyr)
+activeGenes <- assay(se, "zfpkm") %>%
+  mutate(gene=rownames(assay(se, "zfpkm"))) %>%
+  gather(sample, zfpkm, -gene) %>%
+  left_join(dplyr::select(as.data.frame(colData(se)), sample, diet, sex), by="sample") %>%
+  group_by(gene, diet, sex) %>%
+  summarize(median_zfpkm=median(zfpkm)) %>%
+  ungroup() %>%
+  mutate(active=(median_zfpkm > -3)) %>%
+  filter(active) %>%
+  dplyr::select(gene) %>%
+  distinct()
+
+# filter for active genes
+se.filter <- se[rownames(se) %in% activeGenes$gene]
+```
+
+## Filtered genes expressed per sample
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 1)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_1.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 1")
+dev.off()
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 5)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_5.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 5")
+dev.off()
+
+df <- data.frame(Sample = colnames(se), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 10)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_10.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 10")
+dev.off()
+```
+
+## Distribution of filtered counts
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+df <- as.data.frame(log2(assay(se.filter) + 1))
+colnames(df) <- colnames(se)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("filtered_count_distribution.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.5) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "Log2(counts + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Post-filtering",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+
+df <- as.data.frame(log2(assay(se.filter, "tpm") + 1))
+colnames(df) <- colnames(se)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("filtered_tpm_distribution.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.5) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "Log2(tpm + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Post-filtering",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Sample Correlation
+
+### All samples
+```{r, eval = FALSE}
+setwd(paste0(working.dir, "2-quality-control"))
+
+# tpm
+df <- log2(assay(se.filter, "tpm") + 1)
+colnames(df) <- colnames(se)
+
+pdf("sample_correlation.pdf",
+    width = 10,
+    height = 10)
+chart.Correlation(df, histogram=TRUE, pch=19)
+dev.off()
+```
+
+## Overlap analysis
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+
+binary_expr <- as.data.frame(t(apply(assay(se.filter, "tpm"), 1, function(x) as.integer(x > 0))))
+colnames(binary_expr) <- se.filter$sample
+
+pdf("overlap_expressed_genes_all.pdf",
+    width = 10,
+    height = 7)
+upset(binary_expr, 
+      sets = colnames(binary_expr),
+      text.scale = 1.25,
+      #nintersects = 10,
+      order.by = "freq",
+      show.numbers = FALSE)
+dev.off()
+
+pdf("overlap_expressed_genes_top_10.pdf",
+    width = 10,
+    height = 7)
+upset(binary_expr, 
+      sets = colnames(binary_expr),
+      text.scale = 1.25,
+      nintersects = 10,
+      order.by = "freq",
+      show.numbers = FALSE)
+dev.off()
+```
+
+## Map gene IDs
+```{r}
+# get database
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
+                dataset = "mmusculus_gene_ensembl")
+
+# mapping
+names <- getBM(attributes = c('ensembl_gene_id', 
+                              'external_gene_name', 
+                              'entrezgene_id',
+                              'gene_biotype',
+                              'chromosome_name',
+                              'start_position',
+                              'end_position',
+                              'percentage_gene_gc_content'),
+                filters = 'ensembl_gene_id',
+                values = rownames(se.filter),
+                mart = mart)
+
+# remove duplicates - 1240
+sum(duplicated(names$external_gene_name))
+names <- names %>%
+  distinct(external_gene_name, .keep_all = TRUE)
+
+# match to genes in dataset
+names.match <- names[match(rownames(se.filter), names$ensembl_gene_id),]
+
+# add to se object row data
+rowData(se.filter) <- names.match
+all(rownames(rowData(se.filter)) == rowData(se.filter)$ensembl_gene_id, na.rm = TRUE)
+```
+
+## Save
+```{r}
+setwd(paste0(working.dir, "2-quality-control"))
+      
+# counts
+write.csv(merge(rowData(se.filter), assay(se.filter, "counts"), by = 'row.names'), "filtered.counts.csv")
+write.csv(merge(rowData(se.filter), assay(se.filter, "tpm"), by = 'row.names'), "filtered.tpm.csv")
+
+# object
+saveRDS(se.filter, "se.filter.RDS")
+```
+
+# Normalization
+
+## DeSeq2 normalization and modeling
+```{r}
+dir.create(paste0(working.dir, "3-normalization"))
+setwd(paste0(working.dir, "3-normalization"))
+
+# set levels
+se.filter$diet      <- factor(se.filter$diet,      levels=c("normal","high-fat"))
+se.filter$sex <- factor(se.filter$sex, levels=c("male","female"))
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~ diet * sex)
+
+dds <- DESeq(dds)
+```
+
+### Save and output normalized counts
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+# save object
+saveRDS(dds, "dds.RDS")
+#dds <- readRDS("dds.RDS")
+
+# save norm counts
+write.csv(merge(rowData(se.filter), counts(dds, normalized = TRUE), by = 'row.names'), 
+          "counts.filtered.normalized.csv", row.names = FALSE)
+```
+
+## DESeq2 model estimates
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+# Mean and variance relationship
+pdf("mean-variance.pdf",
+    width = 5,
+    height = 5)
+norm.counts <- counts(dds, normalized=TRUE) 
+mean.counts <- rowMeans(norm.counts)
+variance.counts <- apply(norm.counts, MARGIN = 1, var)
+mean.var.col <- densCols(x=log2(mean.counts), y=log2(variance.counts)) 
+plot(x=log2(mean.counts), y=log2(variance.counts), pch=16, cex=0.5,
+col=mean.var.col, main="Mean-variance relationship", xlab="Mean log2(normalized counts) per gene", ylab="Variance of log2(normalized counts)", panel.first = grid())
+abline(a=1, b=1, col="red") # a linear line to compare against 
+dev.off()
+
+# dispersion
+pdf("dispersion.pdf",
+    width = 5,
+    height = 5)
+plotDispEsts(dds)
+dev.off()
+```
+
+## Distribution of normalized counts
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- colnames(se)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("normalized_count_distribution_box.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Value)) +
+    geom_boxplot() +
+    theme_Publication() +
+    coord_flip() +
+    labs(y = "Log2(counts + 1)",
+         subtitle = "Normalized counts")
+dev.off()
+
+pdf("normalized_count_distribution_density.pdf",
+    width = 6,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +
+    geom_density(alpha = 0.5) +
+    theme_Publication() +
+    labs(x = "Log2(counts + 1)",
+         subtitle = "Normalized counts") +
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Principle component analysis
+```{r}
+setwd(paste0(working.dir, "3-normalization"))
+
+# Transform counts to stabalize mean-variance
+dds_vst <- vst(dds, blind = FALSE)
+
+# PCA
+p <- pca(assay(dds_vst), metadata = colData(dds_vst), removeVar = 0.1)
+
+pdf("screeplot.pdf",
+    width = 5,
+    height = 5)
+screeplot(p)
+dev.off()
+
+pdf("eingencor.pdf",
+    width = 5,
+    height = 5)
+eigencorplot(p,
+             components = getComponents(p, seq_len(10)),
+             main = "Principle component correlations",
+             cexMain = 1.5,
+             metavars = c("diet", "sex"),
+             col = viridis(100),
+             colCorval = 'firebrick',
+             fontCorval = 2,
+             cexCorval = 0.5,
+             rotLabX = 45,
+             posColKey = 'top')
+dev.off()
+
+pdf("PCA.pdf",
+    width = 6,
+    height = 5)
+biplot(p,
+       colby = "diet",
+       shape = "sex",
+       hline = 0, 
+       vline = 0,
+       gridlines.major = FALSE, 
+       gridlines.minor = FALSE,
+       max.overlaps = Inf,
+       lab = NA) +
+       theme_Publication() +
+       theme(legend.position = "right",
+             legend.box="vertical",
+             legend.direction = "vertical",
+             legend.margin=margin())
+dev.off()
+```
+
+## Batch effect correction
+```{r, eval = FALSE}
+dir.create(paste0(working.dir, "3.5-batch-correction"))
+setwd(paste0(working.dir, "3.5-batch-correction"))
+
+# ComBat method
+# mod <- model.matrix(~condition.cycle, data=colData(dds))
+# mod
+# 
+# counts <- counts(dds, normalized = FALSE)
+# # counts <- na.omit(counts)
+# # zero_var_genes <- apply(counts, 1, function(x) var(x) == 0)
+# # counts <- counts[!zero_var_genes,]
+# # head(counts)
+# 
+# dds$batch
+# 
+# param <- MulticoreParam(workers = num_cores - 1)
+# 
+# ComBat(dat = counts,
+#        batch = dds$batch,
+#        ref.batch = "1",
+#        mod = mod,
+#        par.prior = FALSE,
+#        mean.only = TRUE,
+#        BPPARAM = param)
+# 
+# assays(dds, withDimnames=FALSE)[["counts.batchCorrect"]] <- ComBat(dat = na.omit(counts(dds, normalized = FALSE)),
+#                                                                                  batch = dds$batch,
+#                                                                                  ref.batch = "2",
+#                                                                                  mod = mod)
+
+# Limma method
+# assays(dds, withDimnames=FALSE)[["counts.normalized.batchCorrect"]] <- removeBatchEffect(log2(counts(dds, normalized = TRUE) + 1),
+#                                                                               batch = dds$batch,
+#                                                                               group = dds$condition.cycle)
+```
+
+### Principle component analysis
+```{r, eval = FALSE}
+setwd(paste0(working.dir, "3.5-batch-correction"))
+
+# PCA
+# p <- pca(assay(dds, "counts.normalized.batchCorrect"), 
+#          metadata = colData(dds), 
+#          removeVar = 0.1)
+# 
+# pdf("batchCorrect_screeplot.pdf",
+#     width = 5,
+#     height = 5)
+# screeplot(p)
+# dev.off()
+# 
+# pdf("batchCorrect_eingencor.pdf",
+#     width = 5,
+#     height = 5)
+# eigencorplot(p,
+#              components = getComponents(p, seq_len(9)),
+#              main = "Principle component correlations",
+#              cexMain = 1.5,
+#              metavars = c("condition", "cycle", "batch"),
+#              col = viridis(100),
+#              colCorval = 'firebrick',
+#              fontCorval = 2,
+#              cexCorval = 0.5,
+#              rotLabX = 45,
+#              posColKey = 'top')
+# dev.off()
+# 
+# pdf("batchCorrect_pca.pdf",
+#     width = 5.5,
+#     height = 5)
+# biplot(p,
+#        colby = "condition.cycle",
+#        shape = "batch",
+#        hline = 0,
+#        vline = 0,
+#        gridlines.major = FALSE, 
+#        gridlines.minor = FALSE,
+#        max.overlaps = Inf,
+#        lab = dds$sample.description) +
+#        theme_Publication() +
+#        theme(legend.position = "right",
+#              legend.box="vertical",
+#              legend.direction = "vertical",
+#              legend.margin=margin())
+# dev.off()
+```
+
+
+# Differential Expression
+```{r}
+dir.create(paste0(working.dir, "4-differential-expression"))
+
+resultsNames(dds)
+```
+
+## Male High-Fat vs Male Normal
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# get results
+male_high.fat_vs_male_normal <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("diet", "high.fat", "normal"))
+
+# get a summary of the amount of significantly DEG 
+summary(male_high.fat_vs_male_normal, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# male_high.fat_vs_male_normal <- lfcShrink(dds = dds,
+#                               res = male_high.fat_vs_male_normal,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+male_high.fat_vs_male_normal <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(male_high.fat_vs_male_normal),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+male_high.fat_vs_male_normal <- merge(male_high.fat_vs_male_normal, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+male_high.fat_vs_male_normal$ensembl_gene_id <- NULL
+colnames(male_high.fat_vs_male_normal)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(male_high.fat_vs_male_normal, "male_high.fat_vs_male_normal.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("male_high.fat_vs_male_normal_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(male_high.fat_vs_male_normal$pvalue, 
+     main = "Male High-Fat vs Male Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+male_high.fat_vs_male_normal <- male_high.fat_vs_male_normal %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & male_high.fat_vs_male_normal$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & male_high.fat_vs_male_normal$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("male_high.fat_vs_male_normal_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(male_high.fat_vs_male_normal, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Male High-Fat vs Male Normal",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(male_high.fat_vs_male_normal) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(male_high.fat_vs_male_normal))
+names(keyvals) <- rownames(male_high.fat_vs_male_normal)
+keyvals[male_high.fat_vs_male_normal$log2FoldChange < -thresh & male_high.fat_vs_male_normal$padj < 0.05] <- 'blue'
+keyvals[male_high.fat_vs_male_normal$log2FoldChange > thresh & male_high.fat_vs_male_normal$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("male_high.fat_vs_male_normal_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(male_high.fat_vs_male_normal,
+                lab = male_high.fat_vs_male_normal$external_gene_name,
+                selectLab = top20,
+                title = "Male High-Fat vs Male Normal",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(male_high.fat_vs_male_normal$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[male_high.fat_vs_male_normal$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("male_high.fat_vs_male_normal_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Male High-Fat vs Male Normal\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Female High-Fat vs Female Normal
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# get results
+female_high.fat_vs_female_normal <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = list(c("diet_high.fat_vs_normal", 
+                                    "diethigh.fat.sexfemale")))
+
+# get a summary of the amount of significantly DEG 
+summary(female_high.fat_vs_female_normal, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# female_high.fat_vs_female_normal <- lfcShrink(dds = dds,
+#                               res = female_high.fat_vs_female_normal,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+female_high.fat_vs_female_normal <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(female_high.fat_vs_female_normal),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+female_high.fat_vs_female_normal <- merge(female_high.fat_vs_female_normal, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+female_high.fat_vs_female_normal$ensembl_gene_id <- NULL
+colnames(female_high.fat_vs_female_normal)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(female_high.fat_vs_female_normal, "female_high.fat_vs_female_normal.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("female_high.fat_vs_female_normal_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(female_high.fat_vs_female_normal$pvalue, 
+     main = "Female High-Fat vs Female Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+female_high.fat_vs_female_normal <- female_high.fat_vs_female_normal %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & female_high.fat_vs_female_normal$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & female_high.fat_vs_female_normal$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("female_high.fat_vs_female_normal_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(female_high.fat_vs_female_normal, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Female High-Fat vs Female Normal",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(female_high.fat_vs_female_normal) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(female_high.fat_vs_female_normal))
+names(keyvals) <- rownames(female_high.fat_vs_female_normal)
+keyvals[female_high.fat_vs_female_normal$log2FoldChange < -thresh & female_high.fat_vs_female_normal$padj < 0.05] <- 'blue'
+keyvals[female_high.fat_vs_female_normal$log2FoldChange > thresh & female_high.fat_vs_female_normal$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("female_high.fat_vs_female_normal_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(female_high.fat_vs_female_normal,
+                lab = female_high.fat_vs_female_normal$external_gene_name,
+                selectLab = top20,
+                title = "Female High-Fat vs Female Normal",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(female_high.fat_vs_female_normal$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[female_high.fat_vs_female_normal$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("female_high.fat_vs_female_normal_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Female High-Fat vs Female Normal\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Male Normal vs Female Normal
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# get results
+male_normal_vs_female_normal <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = list(c("sex_female_vs_male")))
+
+# flip the sign to get male vs female instead of default female vs male
+male_normal_vs_female_normal$log2FoldChange <- -male_normal_vs_female_normal$log2FoldChange
+male_normal_vs_female_normal$stat <- -male_normal_vs_female_normal$stat
+
+# get a summary of the amount of significantly DEG 
+summary(male_normal_vs_female_normal, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# male_normal_vs_female_normal <- lfcShrink(dds = dds,
+#                               res = male_normal_vs_female_normal,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+male_normal_vs_female_normal <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(male_normal_vs_female_normal),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+male_normal_vs_female_normal <- merge(male_normal_vs_female_normal, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+male_normal_vs_female_normal$ensembl_gene_id <- NULL
+colnames(male_normal_vs_female_normal)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(male_normal_vs_female_normal, "male_normal_vs_female_normal.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("male_normal_vs_female_normal_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(male_normal_vs_female_normal$pvalue, 
+     main = "Male Normal vs Female Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+male_normal_vs_female_normal <- male_normal_vs_female_normal %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & male_normal_vs_female_normal$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & male_normal_vs_female_normal$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("male_normal_vs_female_normal_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(male_normal_vs_female_normal, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Male Normal vs Female Normal",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(male_normal_vs_female_normal) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(male_normal_vs_female_normal))
+names(keyvals) <- rownames(male_normal_vs_female_normal)
+keyvals[male_normal_vs_female_normal$log2FoldChange < -thresh & male_normal_vs_female_normal$padj < 0.05] <- 'blue'
+keyvals[male_normal_vs_female_normal$log2FoldChange > thresh & male_normal_vs_female_normal$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("male_normal_vs_female_normal_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(male_normal_vs_female_normal,
+                lab = male_normal_vs_female_normal$external_gene_name,
+                selectLab = top20,
+                title = "Male Normal vs Female Normal",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(male_normal_vs_female_normal$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[male_normal_vs_female_normal$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("male_normal_vs_female_normal_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Male Normal vs Female Normal\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Male High-Fat vs Female High-Fat
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# get results
+male_high.fat_vs_female_high.fat <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = list(c("sex_female_vs_male",
+                                    "diethigh.fat.sexfemale")))
+
+# flip the sign to get male vs female instead of default female vs male
+male_high.fat_vs_female_high.fat$log2FoldChange <- -male_high.fat_vs_female_high.fat$log2FoldChange
+male_high.fat_vs_female_high.fat$stat <- -male_high.fat_vs_female_high.fat$stat
+
+# get a summary of the amount of significantly DEG 
+summary(male_high.fat_vs_female_high.fat, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# male_high.fat_vs_female_high.fat <- lfcShrink(dds = dds,
+#                               res = male_high.fat_vs_female_high.fat,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+male_high.fat_vs_female_high.fat <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(male_high.fat_vs_female_high.fat),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+male_high.fat_vs_female_high.fat <- merge(male_high.fat_vs_female_high.fat, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+male_high.fat_vs_female_high.fat$ensembl_gene_id <- NULL
+colnames(male_high.fat_vs_female_high.fat)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(male_high.fat_vs_female_high.fat, "male_high.fat_vs_female_high.fat.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("male_high.fat_vs_female_high.fat_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(male_high.fat_vs_female_high.fat$pvalue, 
+     main = "Male High-Fat vs Female High-Fat", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+male_high.fat_vs_female_high.fat <- male_high.fat_vs_female_high.fat %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & male_high.fat_vs_female_high.fat$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & male_high.fat_vs_female_high.fat$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("male_high.fat_vs_female_high.fat_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(male_high.fat_vs_female_high.fat, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Male High-Fat vs Female High-Fat",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(male_high.fat_vs_female_high.fat) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(male_high.fat_vs_female_high.fat))
+names(keyvals) <- rownames(male_high.fat_vs_female_high.fat)
+keyvals[male_high.fat_vs_female_high.fat$log2FoldChange < -thresh & male_high.fat_vs_female_high.fat$padj < 0.05] <- 'blue'
+keyvals[male_high.fat_vs_female_high.fat$log2FoldChange > thresh & male_high.fat_vs_female_high.fat$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("male_high.fat_vs_female_high.fat_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(male_high.fat_vs_female_high.fat,
+                lab = male_high.fat_vs_female_high.fat$external_gene_name,
+                selectLab = top20,
+                title = "Male High-Fat vs Female High-Fat",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(male_high.fat_vs_female_high.fat$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[male_high.fat_vs_female_high.fat$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("male_high.fat_vs_female_high.fat_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Male High-Fat vs Female High-Fat\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Interaction between diet and sex
+- Tests whether sex alters the effect of the diet
+```{r}
+setwd(paste0(working.dir, "4-differential-expression"))
+
+# get results
+diet_vs_sex_interaction <- results(dds, 
+                  alpha = 0.05, 
+                  name = "diethigh.fat.sexfemale")
+
+# get a summary of the amount of significantly DEG 
+summary(diet_vs_sex_interaction, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# diet_vs_sex_interaction <- lfcShrink(dds = dds,
+#                               res = diet_vs_sex_interaction,
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+diet_vs_sex_interaction <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(diet_vs_sex_interaction),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+diet_vs_sex_interaction <- merge(diet_vs_sex_interaction, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+diet_vs_sex_interaction$ensembl_gene_id <- NULL
+colnames(diet_vs_sex_interaction)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(diet_vs_sex_interaction, "diet_vs_sex_interaction.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("diet_vs_sex_interaction_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(diet_vs_sex_interaction$pvalue, 
+     main = "Diet vs Sex Interaction", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+diet_vs_sex_interaction <- diet_vs_sex_interaction %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & diet_vs_sex_interaction$padj < 0.05 ~ "Upregulated",
+                         log2FoldChange < 0 & diet_vs_sex_interaction$padj < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("diet_vs_sex_interaction_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(diet_vs_sex_interaction, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Diet vs Sex Interaction",
+       subtitle = "Signficant genes: padj < 0.05",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(diet_vs_sex_interaction) %>%
+  arrange(padj)
+top20 <- res_df$external_gene_name[1:20]
+
+# color volcano points
+thresh <- 1 # match with what is in plot below
+keyvals <- rep('grey', nrow(diet_vs_sex_interaction))
+names(keyvals) <- rownames(diet_vs_sex_interaction)
+keyvals[diet_vs_sex_interaction$log2FoldChange < -thresh & diet_vs_sex_interaction$padj < 0.05] <- 'blue'
+keyvals[diet_vs_sex_interaction$log2FoldChange > thresh & diet_vs_sex_interaction$padj < 0.05] <- 'red'
+
+# volcano 
+pdf("diet_vs_sex_interaction_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(diet_vs_sex_interaction,
+                lab = diet_vs_sex_interaction$external_gene_name,
+                selectLab = top20,
+                title = "Diet vs Sex Interaction",
+                subtitle = "Log2FC > 1; padj < 0.05",
+                caption = NULL,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pCutoffCol = "padj",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 1,
+                pCutoff = 0.05,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 15),
+                colCustom = keyvals)
+dev.off()
+
+# # heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE))
+
+# order by results
+mat.order <- mat[match(diet_vs_sex_interaction$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[diet_vs_sex_interaction$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("diet_vs_sex_interaction_sig_heatmap.pdf",
+    width = 5,
+    height = 6)
+Heatmap(mat.sig.scaled,
+        column_title = "Diet vs Sex Interaction\nSignficant genes: padj < 0.05",
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+### Scatter plot
+```{r}
+# merge tables
+diet_vs_sex_interaction_merge <- merge(male_high.fat_vs_male_normal,
+                        female_high.fat_vs_female_normal[,c("ensembl_gene_id","log2FoldChange", "pvalue", "padj")],
+                        by = "ensembl_gene_id")
+
+diet_vs_sex_interaction_merge <- merge(diet_vs_sex_interaction_merge, 
+                        diet_vs_sex_interaction[,c("ensembl_gene_id", "log2FoldChange", "pvalue", "padj")],
+                        by = "ensembl_gene_id")
+
+# clean up columns
+diet_vs_sex_interaction_merge <- diet_vs_sex_interaction_merge[c("ensembl_gene_id", "external_gene_name",
+                                   "log2FoldChange.x", "pvalue.x", "padj.x",
+                                   "log2FoldChange.y", "pvalue.y", "padj.y",
+                                   "log2FoldChange", "pvalue", "padj")]
+
+# rename columns
+colnames(diet_vs_sex_interaction_merge)[3:11] <- c("male_high.fat_vs_male_normal.logFC",
+                                    "male_high.fat_vs_male_normal.P.Value",
+                                    "male_high.fat_vs_male_normal.adj.P.Val",
+                                    "female_high.fat_vs_female_normal.logFC",
+                                    "female_high.fat_vs_female_normal.P.Value",
+                                    "female_high.fat_vs_female_normal.adj.P.Val",
+                                    "diet_vs_sex_interaction_merge.logFC",
+                                    "diet_vs_sex_interaction_merge.P.Value",
+                                    "diet_vs_sex_interaction_merge.adj.P.Val")
+
+fc_thr    <- 1
+p_thr     <- 0.05
+delta_thr <- 0.1
+
+diet_vs_sex_interaction_merge <- diet_vs_sex_interaction_merge %>%
+  mutate(
+    x = male_high.fat_vs_male_normal.logFC,
+    y = female_high.fat_vs_female_normal.logFC,
+    delta = diet_vs_sex_interaction_merge.logFC,
+    quadrant = case_when(
+      x > 0 & y > 0 ~ "Concordant Up",
+      x < 0 & y < 0 ~ "Concordant Down",
+      x > 0 & y < 0 ~ "Negative Reversal: Up -> Down",
+      x < 0 & y > 0 ~ "Positive Reversal: Down -> Up",
+      TRUE ~ "Near Zero / Mixed"
+    ),
+    modulation = case_when(
+      quadrant == "Concordant Up"   & delta >  delta_thr ~ "Amplified Up",
+      quadrant == "Concordant Up"   & delta < -delta_thr ~ "Attenuated Up",
+      quadrant == "Concordant Down" & delta < -delta_thr ~ "Amplified Down",
+      quadrant == "Concordant Down" & delta >  delta_thr ~ "Attenuated Down",
+      TRUE ~ NA_character_
+    ),
+    sig_int = !is.na(diet_vs_sex_interaction_merge.adj.P.Val) &
+              diet_vs_sex_interaction_merge.adj.P.Val < p_thr,
+    sig_simple = ((abs(x) > fc_thr) & !is.na(male_high.fat_vs_male_normal.adj.P.Val) &
+                   male_high.fat_vs_male_normal.adj.P.Val < p_thr) |
+                 ((abs(y) > fc_thr) & !is.na(female_high.fat_vs_female_normal.adj.P.Val) &
+                   female_high.fat_vs_female_normal.adj.P.Val < p_thr),
+    Label = case_when(
+      sig_int    ~ if_else(!is.na(modulation), modulation, quadrant),
+      sig_simple ~ if_else(!is.na(modulation), modulation, quadrant),
+      TRUE       ~ "Not Significant"
+    )
+  )
+
+table(diet_vs_sex_interaction_merge$modulation)
+
+# output
+write.csv(diet_vs_sex_interaction_merge, "diet_vs_sex_interaction_merge.csv", row.names = FALSE)
+
+## ---- plot ----
+
+# only significant-interaction genes
+out <- diet_vs_sex_interaction_merge %>%
+  mutate(sig_int = !is.na(diet_vs_sex_interaction_merge.adj.P.Val) &
+                   diet_vs_sex_interaction_merge.adj.P.Val < p_thr)
+sig <- out %>% filter(sig_int)  
+
+# label top genes by interaction padj
+highlight <- out %>%
+  filter(sig_int) %>%
+  arrange(diet_vs_sex_interaction_merge.adj.P.Val) %>%
+  slice_head(n = 30)
+
+pdf("diet_vs_sex_interaction_merge_log2fc_corr.pdf", height = 4, width = 6)
+ggplot() +
+  # background: nonsignificant interaction genes
+  geom_point(data = out, aes(x = x, y = y),
+             color = "grey40", alpha = 0.1, size = 1, show.legend = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # overlay: only significant interaction genes are colored
+ geom_point(data = sig, aes(x = x, y = y, color = Label),
+             size = 2, alpha = 0.75) +
+ geom_text_repel(
+    data = highlight,
+    aes(x = x, y = y, label = external_gene_name),
+    size = 2, fontface = "bold", colour = "black",
+    segment.color = "black", segment.size = 0.3,
+    box.padding = 0.4, point.padding = 0.3,
+    max.overlaps = Inf, min.segment.length = 0
+  ) +
+  lims(x = c(-4, 4), y = c(-4, 4)) +
+  scale_color_manual(
+    name = "Interaction class",
+    values = c(
+    "Amplified Up"       = "firebrick",
+    "Attenuated Up"      = "orange3",
+    "Amplified Down"     = "navy",
+    "Attenuated Down"    = "skyblue4",
+    "Negative Reversal: Up -> Down"   = "purple",
+    "Positive Reversal: Down -> Up"   = "darkgreen"
+  ) # , drop = FALSE  # uncomment to keep all legend entries even if absent
+  ) +
+  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_bw() + theme(panel.grid = element_blank()) +
+  labs(x = "Effect of diet in males (log2FC)",
+       y = "Effect of diet in females (log2FC)",
+       title = "Diet × Sex: Significant Interactions")
+dev.off()
+```
+
+
+# Gene set enrichment analysis
+
+## Male High-Fat vs Male Normal
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+# get score to use in enrichment
+male_high.fat_vs_male_normal$score <- sign(male_high.fat_vs_male_normal$log2FoldChange) * -log10(male_high.fat_vs_male_normal$pvalue)
+res.sorted <- male_high.fat_vs_male_normal[order(male_high.fat_vs_male_normal$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+res.list <- res.list[!duplicated(names(res.list))]
+```
+
+### Biological process
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+bp.simple@result$core_enrichment <- sapply(
+  strsplit(bp.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(bp.simple@result, "male_high.fat_vs_male_normal_go_bp.csv")
+
+pdf("male_high.fat_vs_male_normal_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Male High-Fat vs Male Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+mf.simple@result$core_enrichment <- sapply(
+  strsplit(mf.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(mf.simple@result, "male_high.fat_vs_male_normal_go_mf.csv")
+
+pdf("male_high.fat_vs_male_normal_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Male High-Fat vs Male Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+cc.simple@result$core_enrichment <- sapply(
+  strsplit(cc.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(cc.simple@result, "male_high.fat_vs_male_normal_go_cc.csv")
+
+pdf("male_high.fat_vs_male_normal_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Male High-Fat vs Male Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Female High-Fat vs Female Normal
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+# get score to use in enrichment
+female_high.fat_vs_female_normal$score <- sign(female_high.fat_vs_female_normal$log2FoldChange) * -log10(female_high.fat_vs_female_normal$pvalue)
+res.sorted <- female_high.fat_vs_female_normal[order(female_high.fat_vs_female_normal$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+res.list <- res.list[!duplicated(names(res.list))]
+```
+
+### Biological process
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+bp.simple@result$core_enrichment <- sapply(
+  strsplit(bp.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(bp.simple@result, "female_high.fat_vs_female_normal_go_bp.csv")
+
+pdf("female_high.fat_vs_female_normal_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Female High-Fat vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+mf.simple@result$core_enrichment <- sapply(
+  strsplit(mf.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(mf.simple@result, "female_high.fat_vs_female_normal_go_mf.csv")
+
+pdf("female_high.fat_vs_female_normal_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Female High-Fat vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+cc.simple@result$core_enrichment <- sapply(
+  strsplit(cc.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(cc.simple@result, "female_high.fat_vs_female_normal_go_cc.csv")
+
+pdf("female_high.fat_vs_female_normal_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Female High-Fat vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Male Normal vs Female Normal
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+# get score to use in enrichment
+male_normal_vs_female_normal$score <- sign(male_normal_vs_female_normal$log2FoldChange) * -log10(male_normal_vs_female_normal$pvalue)
+res.sorted <- male_normal_vs_female_normal[order(male_normal_vs_female_normal$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+res.list <- res.list[!duplicated(names(res.list))]
+```
+
+### Biological process
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+bp.simple@result$core_enrichment <- sapply(
+  strsplit(bp.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(bp.simple@result, "male_normal_vs_female_normal_go_bp.csv")
+
+pdf("male_normal_vs_female_normal_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Male Normal vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+mf.simple@result$core_enrichment <- sapply(
+  strsplit(mf.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(mf.simple@result, "male_normal_vs_female_normal_go_mf.csv")
+
+pdf("male_normal_vs_female_normal_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Male Normal vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+cc.simple@result$core_enrichment <- sapply(
+  strsplit(cc.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(cc.simple@result, "male_normal_vs_female_normal_go_cc.csv")
+
+pdf("male_normal_vs_female_normal_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Male Normal vs Female Normal", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Male High-Fat vs Female High-Fat
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+# get score to use in enrichment
+male_high.fat_vs_female_high.fat$score <- sign(male_high.fat_vs_female_high.fat$log2FoldChange) * -log10(male_high.fat_vs_female_high.fat$pvalue)
+res.sorted <- male_high.fat_vs_female_high.fat[order(male_high.fat_vs_female_high.fat$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+res.list <- res.list[!duplicated(names(res.list))]
+```
+
+### Biological process
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+bp.simple@result$core_enrichment <- sapply(
+  strsplit(bp.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(bp.simple@result, "male_high.fat_vs_female_high.fat_go_bp.csv")
+
+pdf("male_high.fat_vs_female_high.fat_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Male High-Fat vs Female High-Fat", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+mf.simple@result$core_enrichment <- sapply(
+  strsplit(mf.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(mf.simple@result, "male_high.fat_vs_female_high.fat_go_mf.csv")
+
+pdf("male_high.fat_vs_female_high.fat_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Male High-Fat vs Female High-Fat", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+cc.simple@result$core_enrichment <- sapply(
+  strsplit(cc.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(cc.simple@result, "male_high.fat_vs_female_high.fat_go_cc.csv")
+
+pdf("male_high.fat_vs_female_high.fat_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Male High-Fat vs Female High-Fat", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Interaction between diet and sex
+```{r}
+dir.create(paste0(working.dir, "5-functional-enrichment"))
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+# get score to use in enrichment
+diet_vs_sex_interaction$score <- sign(diet_vs_sex_interaction$log2FoldChange) * -log10(diet_vs_sex_interaction$pvalue)
+res.sorted <- diet_vs_sex_interaction[order(diet_vs_sex_interaction$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+res.list <- res.list[!duplicated(names(res.list))]
+```
+
+### Biological process
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+bp.simple@result$core_enrichment <- sapply(
+  strsplit(bp.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(bp.simple@result, "diet_vs_sex_interaction_go_bp.csv")
+
+pdf("diet_vs_sex_interaction_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Interaction between diet and sex", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+mf.simple@result$core_enrichment <- sapply(
+  strsplit(mf.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(mf.simple@result, "diet_vs_sex_interaction_go_mf.csv")
+
+pdf("diet_vs_sex_interaction_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Interaction between diet and sex", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd(paste0(working.dir, "5-functional-enrichment"))
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+cc.simple@result$core_enrichment <- sapply(
+  strsplit(cc.simple@result$core_enrichment, "/"),
+  function(x) paste(mapIds(org.Mm.eg.db, x, "SYMBOL", "ENTREZID"), collapse = "/")
+)
+
+write.csv(cc.simple@result, "diet_vs_sex_interaction_go_cc.csv")
+
+pdf("diet_vs_sex_interaction_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Interaction between diet and sex", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+# Gene set variation analysis
+
+## Get gene sets
+- Using M2 CP collection of gene sets from MSigDB
+- This is different depending on the package used - old one on Mac?
+```{r}
+dir.create(paste0(working.dir, "6-differential-expression-pathway"))
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+# Download the full M2 (mouse‑specific curated) collection
+m2_all <- msigdbr(species = "Mus musculus", category = "C2")
+
+# Keep only the canonical pathways
+m2_canonical <- m2_all %>%
+  filter(gs_subcat %in% c("CP:KEGG", "CP:REACTOME", "CP:BIOCARTA"))
+
+# Convert to a list that matches with row names of expression matrix
+m2_gene_sets <- split(m2_canonical$ensembl_gene,
+                      m2_canonical$gs_name)
+```
+
+## Calcaulte GSVA enrichment score
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+exprData <- counts(dds, normalized = TRUE)
+rownames(exprData) <- rowData(dds)$ensembl_gene_id
+exprData <- exprData[!is.na(rownames(exprData)), ]
+
+se.filter.param <- gsvaParam(exprData = exprData,
+                         geneSets = m2_gene_sets, 
+                         minSize=5, 
+                         maxSize=500,
+                         kcdf="Gaussian")
+
+se.filter.gsva <- gsva(se.filter.param,
+                           verbose = TRUE)
+
+write.csv(se.filter.gsva, "se.filter.gsva.csv")
+```
+
+## Differential abundance
+
+### Fit linear model
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+# Create the design matrix
+design <- model.matrix(~ sex * diet, data = colData(dds))
+
+# make names in correct format=
+colnames(design) <- make.names(colnames(design))
+
+# Fit the linear model
+fit <- lmFit(se.filter.gsva, design)
+
+# Compute empirical Bayes statistics
+fit.eb <- eBayes(fit, robust=TRUE)
+
+gssizes <- sapply(se.filter.param@geneSets, length)
+gssizes <- gssizes[rownames(se.filter.gsva)]
+all(names(gssizes) == names(fit.eb$sigma))
+
+pdf("gene_set_size_vs_precision.pdf",
+    width = 5,
+    height = 5)
+plot(sqrt(gssizes), sqrt(fit.eb$sigma), xlab="Sqrt(gene sets sizes)",
+          ylab="Sqrt(standard deviation)", las=1, pch=".", cex=4)
+lines(lowess(sqrt(gssizes), sqrt(fit.eb$sigma)), col="red", lwd=2)
+dev.off()
+
+# account for increased precision of larger gene sets using limma trend
+fit.eb.trend <- eBayes(fit, robust=TRUE, trend=gssizes)
+
+# set up contrasts
+contrasts <- makeContrasts(
+  # Diet effect in males: (MHF - MNC) = diethigh.fat coefficient
+  Diet_Male       = diethigh.fat,
+
+  # Diet effect in females: (FHF - FNC) = diethigh.fat + interaction
+  Diet_Female     = diethigh.fat + sexfemale.diethigh.fat,
+
+  # Sex effect in normal chow: (FNC - MNC) = sexfemale coefficient
+  Sex_NC          = sexfemale,
+
+  # Sex effect in high fat: (FHF - MHF) = sexfemale + interaction
+  Sex_HF          = sexfemale + sexfemale.diethigh.fat,
+
+  # Interaction: (Diet_Female - Diet_Male) = interaction coefficient
+  Interaction     = sexfemale.diethigh.fat,
+
+  levels = colnames(design)
+)
+
+# Apply the contrasts to the fit object
+fit.eb.trend <- contrasts.fit(fit.eb.trend, contrasts)
+
+# Re-compute the empirical Bayes statistics for this specific contrast
+fit.eb.trend <- eBayes(fit.eb.trend, robust=TRUE, trend=gssizes)
+
+results.adjusted <- summary(decideTests(fit.eb.trend,
+                    adjust.method = 'BH',
+                    p.value = 0.05,
+                    lfc = 0.5))
+write.csv(results.adjusted, "summary_expression_abundance_pathway_lfc1_pvalue0.05.csv")
+```
+
+### Male High-Fat vs Male Normal
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+male_high.fat_vs_male_normal_gsva <- topTable(fit.eb.trend, coef="Diet_Male", number = Inf)
+
+# make pathways easier to read
+male_high.fat_vs_male_normal_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(male_high.fat_vs_male_normal_gsva))), width = 50)))
+male_high.fat_vs_male_normal_gsva$database <- sub("_.*", "", rownames(male_high.fat_vs_male_normal_gsva))
+
+# save
+write.csv(male_high.fat_vs_male_normal_gsva, "male_high.fat_vs_male_normal_gsva.csv")
+
+# p-value distribution histogram
+pdf("male_high.fat_vs_male_normal_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(male_high.fat_vs_male_normal_gsva$P.Value, 
+     main = "Male High-Fat vs Male Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+male_high.fat_vs_male_normal_gsva <- male_high.fat_vs_male_normal_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & male_high.fat_vs_male_normal_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & male_high.fat_vs_male_normal_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("male_high.fat_vs_male_normal_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(male_high.fat_vs_male_normal_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Male High-Fat vs Male Normal",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(male_high.fat_vs_male_normal_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:20]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(male_high.fat_vs_male_normal_gsva))
+names(keyvals) <- rownames(male_high.fat_vs_male_normal_gsva)
+keyvals[male_high.fat_vs_male_normal_gsva$logFC < -thresh & male_high.fat_vs_male_normal_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[male_high.fat_vs_male_normal_gsva$logFC > thresh & male_high.fat_vs_male_normal_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("male_high.fat_vs_male_normal_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(male_high.fat_vs_male_normal_gsva,
+                lab = male_high.fat_vs_male_normal_gsva$pathway,
+                selectLab = top20,
+                title = "Male High-Fat vs Male Normal",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 8),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(male_high.fat_vs_male_normal_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[male_high.fat_vs_male_normal_gsva$adj.P.Val < 0.05 & abs(male_high.fat_vs_male_normal_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ")
+  #str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "CIMSS Infected vs CIMSS Mock\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("male_high.fat_vs_male_normal_gsva_sig_heatmap.pdf",
+    width = 20, height = 50)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 200), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+### Female High-Fat vs Female Normal
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+female_high.fat_vs_female_normal_gsva <- topTable(fit.eb.trend, coef="Diet_Female", number = Inf)
+
+# make pathways easier to read
+female_high.fat_vs_female_normal_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(female_high.fat_vs_female_normal_gsva))), width = 50)))
+female_high.fat_vs_female_normal_gsva$database <- sub("_.*", "", rownames(female_high.fat_vs_female_normal_gsva))
+
+# save
+write.csv(female_high.fat_vs_female_normal_gsva, "female_high.fat_vs_female_normal_gsva.csv")
+
+# p-value distribution histogram
+pdf("female_high.fat_vs_female_normal_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(female_high.fat_vs_female_normal_gsva$P.Value, 
+     main = "Female High-Fat vs Female Normal", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+female_high.fat_vs_female_normal_gsva <- female_high.fat_vs_female_normal_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & female_high.fat_vs_female_normal_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & female_high.fat_vs_female_normal_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("female_high.fat_vs_female_normal_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(female_high.fat_vs_female_normal_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Female High-Fat vs Female Normal",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(female_high.fat_vs_female_normal_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:20]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(female_high.fat_vs_female_normal_gsva))
+names(keyvals) <- rownames(female_high.fat_vs_female_normal_gsva)
+keyvals[female_high.fat_vs_female_normal_gsva$logFC < -thresh & female_high.fat_vs_female_normal_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[female_high.fat_vs_female_normal_gsva$logFC > thresh & female_high.fat_vs_female_normal_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("female_high.fat_vs_female_normal_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(female_high.fat_vs_female_normal_gsva,
+                lab = female_high.fat_vs_female_normal_gsva$pathway,
+                selectLab = top20,
+                title = "Female High-Fat vs Female Normal",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 8),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(female_high.fat_vs_female_normal_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[female_high.fat_vs_female_normal_gsva$adj.P.Val < 0.05 & abs(female_high.fat_vs_female_normal_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ")
+  #str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "CIMSS Infected vs CIMSS Mock\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("female_high.fat_vs_female_normal_gsva_sig_heatmap.pdf",
+    width = 20, height = 50)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 200), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+### Interaction between diet and sex
+```{r}
+setwd(paste0(working.dir, "6-differential-expression-pathway"))
+
+diet_sex_interaction_gsva <- topTable(fit.eb.trend, coef="Interaction", number = Inf)
+
+# make pathways easier to read
+diet_sex_interaction_gsva$pathway <- tools::toTitleCase(tolower(str_wrap(gsub("_", " ", sub(".*?_", "", rownames(diet_sex_interaction_gsva))), width = 30)))
+diet_sex_interaction_gsva$database <- sub("_.*", "", rownames(diet_sex_interaction_gsva))
+
+# save
+write.csv(diet_sex_interaction_gsva, "diet_sex_interaction_gsva.csv")
+
+# p-value distribution histogram
+pdf("diet_sex_interaction_gsva_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(diet_sex_interaction_gsva$P.Value, 
+     main = "Interaction between drug and infection", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+diet_sex_interaction_gsva <- diet_sex_interaction_gsva %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(logFC > 0 & diet_sex_interaction_gsva$adj.P.Val < 0.05 ~ "Upregulated",
+                         logFC < 0 & diet_sex_interaction_gsva$adj.P.Val < 0.05 ~ "Downregulated",
+                         .default = "")
+         )
+
+pdf("diet_sex_interaction_gsva_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(diet_sex_interaction_gsva, aes(log2(AveExpr + 1), logFC, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Interaction between drug and infection",
+       subtitle = "Signficant Pathways: padj < 0.05",
+       x = "Average Normalized Log2(pathway score) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+
+# pick the top 20 most significant gene names
+res_df <- as.data.frame(diet_sex_interaction_gsva) %>%
+  arrange(P.Value)
+top20 <- res_df$pathway[1:10]
+
+# color volcano points
+thresh <- 0.5 # match with what is in plot below
+keyvals <- rep('grey', nrow(diet_sex_interaction_gsva))
+names(keyvals) <- rownames(diet_sex_interaction_gsva)
+keyvals[diet_sex_interaction_gsva$logFC < -thresh & diet_sex_interaction_gsva$adj.P.Val < 0.05] <- 'blue'
+keyvals[diet_sex_interaction_gsva$logFC > thresh & diet_sex_interaction_gsva$adj.P.Val < 0.05] <- 'red'
+
+# volcano 
+pdf("diet_sex_interaction_gsva_volcano.pdf",
+    width = 5, 
+    height = 5)
+EnhancedVolcano(diet_sex_interaction_gsva,
+                lab = diet_sex_interaction_gsva$pathway,
+                selectLab = top20,
+                title = "Interaction between drug and infection",
+                subtitle = "Log2FC > 0.5; padj < 0.05",
+                caption = NULL,
+                x = 'logFC',
+                y = 'P.Value',
+                pCutoffCol = "adj.P.Val",
+                pointSize = 3,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 0.5,
+                pCutoff = 0.05,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                drawConnectors = TRUE,
+                colConnectors = 'black',
+                maxoverlapsConnectors = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                #ylim = c(0, 5),
+                colCustom = keyvals)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Diet = dds$diet,
+                        Sex = dds$sex)
+
+# get normalized counts
+mat <- as.matrix(se.filter.gsva)
+
+# order by results
+mat.order <- mat[match(rownames(diet_sex_interaction_gsva), rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[diet_sex_interaction_gsva$adj.P.Val < 0.05 & abs(diet_sex_interaction_gsva$logFC) > 0.5,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+# replace underscores with spaces & wrap at 30 characters
+new.rn <- rownames(mat.sig.scaled) %>%
+  str_replace_all("_", " ") %>%
+  str_wrap(width = 20)
+
+rownames(mat.sig.scaled) <- new.rn
+
+ht <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  column_title = "Interaction between drug and infection\nSignficant pathways: log2FC > 0.5 & padj < 0.05",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_names = TRUE,
+  row_names_gp = gpar(fontsize = 12),
+  show_column_names = FALSE,
+  row_dend_width = unit(20, "mm")
+)
+
+
+pdf("diet_sex_interaction_gsva_sig_heatmap.pdf",
+    width = 10, height = 10)
+draw(ht,
+     heatmap_legend_side      = "top",
+     annotation_legend_side   = "top",
+     padding               = unit(c(2, 2, 2, 100), "mm")  # top, right, bottom, left
+)
+dev.off()
+```
+
+#### Scatter plot
+```{r}
+# merge tables
+diet_sex_interaction_gsva_merge <- merge(male_high.fat_vs_male_normal_gsva,
+                        female_high.fat_vs_female_normal_gsva[,c("logFC", "P.Value", "adj.P.Val")],
+                        by = "row.names")
+rownames(diet_sex_interaction_gsva_merge) <- diet_sex_interaction_gsva_merge$Row.names
+
+diet_sex_interaction_gsva_merge <- merge(diet_sex_interaction_gsva_merge, 
+                        diet_sex_interaction_gsva[,c("logFC", "P.Value", "adj.P.Val")],
+                        by = "row.names")
+rownames(diet_sex_interaction_gsva_merge) <- diet_sex_interaction_gsva_merge$Row.names
+diet_sex_interaction_gsva_merge$Row.names <- NULL
+
+# clean up columns
+diet_sex_interaction_gsva_merge <- diet_sex_interaction_gsva_merge[c("pathway", "database",
+                                   "logFC.x", "P.Value.x", "adj.P.Val.x",
+                                   "logFC.y", "P.Value.y", "adj.P.Val.y",
+                                   "logFC", "P.Value", "adj.P.Val")]
+
+# rename columns
+colnames(diet_sex_interaction_gsva_merge)[3:11] <- c("male_high.fat_vs_male_normal_gsva.logFC",
+                                    "male_high.fat_vs_male_normal_gsva.P.Value",
+                                    "male_high.fat_vs_male_normal_gsva.adj.P.Val",
+                                    "female_high.fat_vs_female_normal_gsva.logFC",
+                                    "female_high.fat_vs_female_normal_gsva.P.Value",
+                                    "female_high.fat_vs_female_normal_gsva.adj.P.Val",
+                                    "diet_sex_interaction_gsva_merge.logFC",
+                                    "diet_sex_interaction_gsva_merge.P.Value",
+                                    "diet_sex_interaction_gsva_merge.adj.P.Val")
+
+fc_thr    <- 0.5
+p_thr     <- 0.05
+delta_thr <- 0.1
+
+diet_sex_interaction_gsva_merge <- diet_sex_interaction_gsva_merge %>%
+  mutate(
+    x = male_high.fat_vs_male_normal_gsva.logFC,
+    y = female_high.fat_vs_female_normal_gsva.logFC,
+    delta = diet_sex_interaction_gsva_merge.logFC,
+    quadrant = case_when(
+      x > 0 & y > 0 ~ "Concordant Up",
+      x < 0 & y < 0 ~ "Concordant Down",
+      x > 0 & y < 0 ~ "Negative Reversal: Up -> Down",
+      x < 0 & y > 0 ~ "Positive Reversal: Down -> Up",
+      TRUE ~ "Near Zero / Mixed"
+    ),
+    modulation = case_when(
+      quadrant == "Concordant Up"   & delta >  delta_thr ~ "Amplified Up",
+      quadrant == "Concordant Up"   & delta < -delta_thr ~ "Attenuated Up",
+      quadrant == "Concordant Down" & delta < -delta_thr ~ "Amplified Down",
+      quadrant == "Concordant Down" & delta >  delta_thr ~ "Attenuated Down",
+      TRUE ~ NA_character_
+    ),
+    sig_int = !is.na(diet_sex_interaction_gsva_merge.adj.P.Val) &
+              diet_sex_interaction_gsva_merge.adj.P.Val < p_thr,
+    sig_simple = ((abs(x) > fc_thr) & !is.na(male_high.fat_vs_male_normal_gsva.adj.P.Val) &
+                   male_high.fat_vs_male_normal_gsva.adj.P.Val < p_thr) |
+                 ((abs(y) > fc_thr) & !is.na(female_high.fat_vs_female_normal_gsva.adj.P.Val) &
+                   female_high.fat_vs_female_normal_gsva.adj.P.Val < p_thr),
+    Label = case_when(
+      sig_int    ~ if_else(!is.na(modulation), modulation, quadrant),
+      sig_simple ~ if_else(!is.na(modulation), modulation, quadrant),
+      TRUE       ~ "Not Significant"
+    )
+  )
+
+table(diet_sex_interaction_gsva_merge$modulation)
+
+# output
+write.csv(diet_sex_interaction_gsva_merge, "diet_sex_interaction_gsva_merge.csv", row.names = FALSE)
+
+## ---- plot ----
+
+# only significant-interaction genes
+out <- diet_sex_interaction_gsva_merge %>%
+  mutate(sig_int = !is.na(diet_sex_interaction_gsva_merge.adj.P.Val) &
+                   diet_sex_interaction_gsva_merge.adj.P.Val < p_thr)
+sig <- out %>% filter(sig_int)  
+
+# label top genes by interaction padj
+highlight <- out %>%
+  filter(sig_int) %>%
+  arrange(diet_sex_interaction_gsva_merge.adj.P.Val) %>%
+  slice_head(n = 20)
+
+pdf("diet_sex_interaction_gsva_merge_log2fc_corr.pdf", height = 4, width = 6)
+ggplot() +
+  # background: nonsignificant interaction genes
+  geom_point(data = out, aes(x = x, y = y),
+             color = "grey40", alpha = 0.1, size = 1, show.legend = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  # overlay: only significant interaction genes are colored
+ geom_point(data = sig, aes(x = x, y = y, color = Label),
+             size = 2, alpha = 0.75) +
+ geom_text_repel(
+    data = highlight,
+    aes(x = x, y = y, label = pathway),
+    size = 2, fontface = "bold", colour = "black",
+    segment.color = "black", segment.size = 0.3,
+    box.padding = 0.4, point.padding = 0.3,
+    max.overlaps = Inf, min.segment.length = 0
+  ) +
+  lims(x = c(-2, 2), y = c(-2, 2)) +
+  scale_color_manual(
+    name = "Interaction class",
+    values = c(
+    "Amplified Up"       = "firebrick",
+    "Attenuated Up"      = "orange3",
+    "Amplified Down"     = "navy",
+    "Attenuated Down"    = "skyblue4",
+    "Negative Reversal: Up -> Down"   = "purple",
+    "Positive Reversal: Down -> Up"   = "darkgreen"
+  ) # , drop = FALSE  # uncomment to keep all legend entries even if absent
+  ) +
+  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_bw() + theme(panel.grid = element_blank()) +
+  labs(x = "Effect of infection with DMSO (log2FC)",
+       y = "Effect of infection with CIMSS (log2FC)",
+       title = "Drug × Infection: Significant Interactions",
+       subtitle = "Log2FC > 0.5; padj < 0.5",)
+dev.off()
+```

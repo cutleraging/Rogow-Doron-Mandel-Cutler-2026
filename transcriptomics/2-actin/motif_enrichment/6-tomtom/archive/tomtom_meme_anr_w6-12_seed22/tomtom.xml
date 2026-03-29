@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<tomtom version="5.5.8" release="Thu May 15 15:01:46 2025 -0700">
+  <model>
+    <command_line>tomtom -no-ssc -dist ed -thresh 0.05 --norc -oc /out /q/meme_anr_w6-12_seed22.txt /db/cisbp_rna_db.meme</command_line>
+    <distance_measure value="ed"/>
+    <threshold type="qvalue">0.05</threshold>
+    <alphabet name="RNA" like="rna">
+      <letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
+      <letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>
+      <letter id="G" symbol="G" name="Guanine" colour="FFB300"/>
+      <letter id="U" symbol="U" aliases="T" name="Uracil" colour="008000"/>
+      <letter id="N" symbol="N" aliases="X." equals="ACGU" name="Any base"/>
+      <letter id="V" symbol="V" equals="ACG" name="Not U"/>
+      <letter id="H" symbol="H" equals="ACU" name="Not G"/>
+      <letter id="D" symbol="D" equals="AGU" name="Not C"/>
+      <letter id="B" symbol="B" equals="CGU" name="Not A"/>
+      <letter id="M" symbol="M" equals="AC" name="Amino"/>
+      <letter id="R" symbol="R" equals="AG" name="Purine"/>
+      <letter id="W" symbol="W" equals="AU" name="Weak"/>
+      <letter id="S" symbol="S" equals="CG" name="Strong"/>
+      <letter id="Y" symbol="Y" equals="CU" name="Pyrimidine"/>
+      <letter id="K" symbol="K" equals="GU" name="Keto"/>
+    </alphabet>
+    <strands>none</strands>
+    <background from="--query--" A="0.279" C="0.221" G="0.221" U="0.279"/>
+    <host>84a8342cb15e</host>
+    <when>Tue Oct 28 23:01:15 2025</when>
+  </model>
+  <query_dbs>
+    <db source="/q/meme_anr_w6-12_seed22.txt" name="meme_anr_w6-12_seed22.txt" loaded="5" excluded="0" last_mod_date="Tue Oct 28 21:34:12 2025"/>
+  </query_dbs>
+  <target_dbs>
+    <db source="/db/cisbp_rna_db.meme" name="cisbp_rna_db" loaded="599" excluded="0" last_mod_date="Tue Oct 28 23:00:13 2025"/>
+  </target_dbs>
+  <queries>
+    <motif db="0" id="AAGAUYUACAG" alt="MEME-5" length="11" nsites="12" evalue="1.8e-004">
+      <pos A="0.994041" C="0.00182645" G="0.00182645" U="0.00230578"/>
+      <pos A="0.994041" C="0.00182645" G="0.00182645" U="0.00230578"/>
+      <pos A="0.00230578" C="0.00182645" G="0.993562" U="0.00230578"/>
+      <pos A="0.746107" C="0.00182645" G="0.24976" U="0.00230578"/>
+      <pos A="0.25024" C="0.00182645" G="0.00182645" U="0.746107"/>
+      <pos A="0.00230578" C="0.497694" G="0.00182645" U="0.498174"/>
+      <pos A="0.00230578" C="0.24976" G="0.00182645" U="0.746107"/>
+      <pos A="0.994041" C="0.00182645" G="0.00182645" U="0.00230578"/>
+      <pos A="0.00230578" C="0.993562" G="0.00182645" U="0.00230578"/>
+      <pos A="0.994041" C="0.00182645" G="0.00182645" U="0.00230578"/>
+      <pos A="0.00230578" C="0.00182645" G="0.993562" U="0.00230578"/>
+    </motif>
+    <motif db="0" id="CUDAGUBCCCAG" alt="MEME-1" length="12" nsites="20" evalue="3.0e-008">
+      <pos A="0.00138806" C="0.946373" G="0.0508507" U="0.00138806"/>
+      <pos A="0.00138806" C="0.0010995" G="0.150353" U="0.847159"/>
+      <pos A="0.299896" C="0.0010995" G="0.448861" U="0.250144"/>
+      <pos A="0.648154" C="0.200104" G="0.0508507" U="0.100891"/>
+      <pos A="0.00138806" C="0.100602" G="0.846871" U="0.0511393"/>
+      <pos A="0.00138806" C="0.0010995" G="0.0010995" U="0.996413"/>
+      <pos A="0.100891" C="0.249856" G="0.399109" U="0.250144"/>
+      <pos A="0.00138806" C="0.996124" G="0.0010995" U="0.00138806"/>
+      <pos A="0.00138806" C="0.747368" G="0.0010995" U="0.250144"/>
+      <pos A="0.00138806" C="0.946373" G="0.0010995" U="0.0511393"/>
+      <pos A="0.996413" C="0.0010995" G="0.0010995" U="0.00138806"/>
+      <pos A="0.00138806" C="0.0010995" G="0.797119" U="0.200393"/>
+    </motif>
+    <motif db="0" id="SCCAGSUGAAKK" alt="MEME-4" length="12" nsites="11" evalue="7.2e-005">
+      <pos A="0.00251351" C="0.362351" G="0.632622" U="0.00251351"/>
+      <pos A="0.00251351" C="0.992982" G="0.00199099" U="0.00251351"/>
+      <pos A="0.00251351" C="0.992982" G="0.00199099" U="0.00251351"/>
+      <pos A="0.993505" C="0.00199099" G="0.00199099" U="0.00251351"/>
+      <pos A="0.00251351" C="0.00199099" G="0.992982" U="0.00251351"/>
+      <pos A="0.00251351" C="0.542532" G="0.452441" U="0.00251351"/>
+      <pos A="0.00251351" C="0.00199099" G="0.00199099" U="0.993505"/>
+      <pos A="0.182694" C="0.00199099" G="0.812802" U="0.00251351"/>
+      <pos A="0.993505" C="0.00199099" G="0.00199099" U="0.00251351"/>
+      <pos A="0.993505" C="0.00199099" G="0.00199099" U="0.00251351"/>
+      <pos A="0.00251351" C="0.00199099" G="0.362351" U="0.633145"/>
+      <pos A="0.182694" C="0.00199099" G="0.542532" U="0.272784"/>
+    </motif>
+    <motif db="0" id="UGVCARSCVCUG" alt="MEME-3" length="12" nsites="17" evalue="1.5e-007">
+      <pos A="0.118591" C="0.0012924" G="0.0012924" U="0.878825"/>
+      <pos A="0.00163158" C="0.0012924" G="0.995444" U="0.00163158"/>
+      <pos A="0.23555" C="0.469128" G="0.29369" U="0.00163158"/>
+      <pos A="0.00163158" C="0.878485" G="0.118251" U="0.00163158"/>
+      <pos A="0.995784" C="0.0012924" G="0.0012924" U="0.00163158"/>
+      <pos A="0.527948" C="0.0012924" G="0.469128" U="0.00163158"/>
+      <pos A="0.00163158" C="0.469128" G="0.469128" U="0.0601116"/>
+      <pos A="0.118591" C="0.878485" G="0.0012924" U="0.00163158"/>
+      <pos A="0.410989" C="0.352169" G="0.23521" U="0.00163158"/>
+      <pos A="0.177071" C="0.820005" G="0.0012924" U="0.00163158"/>
+      <pos A="0.00163158" C="0.0012924" G="0.0012924" U="0.995784"/>
+      <pos A="0.00163158" C="0.0012924" G="0.995444" U="0.00163158"/>
+    </motif>
+    <motif db="0" id="UUCACUGWSMA" alt="MEME-2" length="11" nsites="21" evalue="4.6e-008">
+      <pos A="0.0961089" C="0.238014" G="0.00104739" U="0.66483"/>
+      <pos A="0.143502" C="0.00104739" G="0.00104739" U="0.854403"/>
+      <pos A="0.00132227" C="0.996308" G="0.00104739" U="0.00132227"/>
+      <pos A="0.996583" C="0.00104739" G="0.00104739" U="0.00132227"/>
+      <pos A="0.00132227" C="0.996308" G="0.00104739" U="0.00132227"/>
+      <pos A="0.00132227" C="0.0484407" G="0.00104739" U="0.94919"/>
+      <pos A="0.00132227" C="0.00104739" G="0.948915" U="0.0487156"/>
+      <pos A="0.427862" C="0.00104739" G="0.00104739" U="0.570043"/>
+      <pos A="0.00132227" C="0.617162" G="0.380194" U="0.00132227"/>
+      <pos A="0.380469" C="0.617162" G="0.00104739" U="0.00132227"/>
+      <pos A="0.66483" C="0.0484407" G="0.285407" U="0.00132227"/>
+    </motif>
+  </queries>
+  <targets>
+  </targets>
+  <matches>
+  </matches>
+  <runtime cycles="376849" seconds="0.377"/>
+</tomtom>

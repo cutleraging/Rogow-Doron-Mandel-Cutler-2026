@@ -1,0 +1,2 @@
+#term ID	term description	observed gene count	background gene count	strength	signal	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
+GO:0001869	Negative regulation of complement activation, lectin pathway	2	2	3.74	2.05	0.0024	10090.ENSMUSP00000023994,10090.ENSMUSP00000032203	Serping1,A2m

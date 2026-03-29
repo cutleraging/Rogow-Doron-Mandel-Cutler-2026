@@ -1,0 +1,2162 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.5.8 (Release date: Thu May 15 15:01:46 2025 -0700)
+
+For further information on how to interpret these results please access http://localhost:8080/meme_5.5.8.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to
+discover motifs in biopolymers",
+Proceedings of the Second International Conference on Intelligent Systems
+for Molecular Biology, pp. 28-36, AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+CONTROL SEQUENCES= --none--
+ALPHABET= ACGU
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+ENSMUSG00000047361|trans 1.0000    247  ENSMUSG00000027624|trans 1.0000   3396  
+ENSMUSG00000027360|trans 1.0000    294  ENSMUSG00000017754|trans 1.0000    188  
+ENSMUSG00000053475|trans 1.0000    715  ENSMUSG00000023224|trans 1.0000    522  
+ENSMUSG00000014361|trans 1.0000   1227  ENSMUSG00000026875|trans 1.0000   2123  
+ENSMUSG00000031343|trans 1.0000   1968  ENSMUSG00000025272|trans 1.0000    712  
+ENSMUSG00000015340|trans 1.0000   2965  ENSMUSG00000043164|trans 1.0000    127  
+ENSMUSG00000052415|trans 1.0000   1023  ENSMUSG00000068874|trans 1.0000   1228  
+ENSMUSG00000001021|trans 1.0000    347  ENSMUSG00000001025|trans 1.0000    506  
+ENSMUSG00000028476|trans 1.0000   1441  ENSMUSG00000028718|trans 1.0000   3928  
+ENSMUSG00000029468|trans 1.0000   2985  ENSMUSG00000064280|trans 1.0000    331  
+ENSMUSG00000029151|trans 1.0000    664  ENSMUSG00000053647|trans 1.0000    771  
+ENSMUSG00000029504|trans 1.0000   2889  ENSMUSG00000029442|trans 1.0000   1228  
+ENSMUSG00000040473|trans 1.0000   1918  ENSMUSG00000002930|trans 1.0000   1133  
+ENSMUSG00000046192|trans 1.0000   1192  ENSMUSG00000030111|trans 1.0000    119  
+ENSMUSG00000030310|trans 1.0000   2123  ENSMUSG00000029843|trans 1.0000    874  
+ENSMUSG00000030406|trans 1.0000   1307  ENSMUSG00000030790|trans 1.0000    652  
+ENSMUSG00000030443|trans 1.0000    645  ENSMUSG00000030862|trans 1.0000   1077  
+ENSMUSG00000062031|trans 1.0000   1301  ENSMUSG00000036634|trans 1.0000    535  
+ENSMUSG00000019892|trans 1.0000    159  ENSMUSG00000019850|trans 1.0000   1821  
+ENSMUSG00000078451|trans 1.0000     84  ENSMUSG00000052837|trans 1.0000    485  
+ENSMUSG00000031786|trans 1.0000    152  ENSMUSG00000014846|trans 1.0000    343  
+ENSMUSG00000037572|trans 1.0000    801  ENSMUSG00000037544|trans 1.0000   2493  
+ENSMUSG00000056296|trans 1.0000   2359  ENSMUSG00000045655|trans 1.0000   1724  
+ENSMUSG00000010044|trans 1.0000   1254  ENSMUSG00000032359|trans 1.0000   1100  
+ENSMUSG00000040936|trans 1.0000   3867  ENSMUSG00000036777|trans 1.0000   1038  
+ENSMUSG00000033491|trans 1.0000   2035  ENSMUSG00000032372|trans 1.0000    551  
+ENSMUSG00000032514|trans 1.0000    119  ENSMUSG00000020937|trans 1.0000    537  
+ENSMUSG00000020387|trans 1.0000   4156  ENSMUSG00000032782|trans 1.0000   2504  
+ENSMUSG00000020878|trans 1.0000     61  ENSMUSG00000035105|trans 1.0000   1643  
+ENSMUSG00000020591|trans 1.0000    317  ENSMUSG00000002799|trans 1.0000   1070  
+ENSMUSG00000022602|trans 1.0000   1668  ENSMUSG00000046380|trans 1.0000   3460  
+ENSMUSG00000054196|trans 1.0000    356  ENSMUSG00000003955|trans 1.0000    238  
+ENSMUSG00000022969|trans 1.0000   2478  ENSMUSG00000022805|trans 1.0000   1456  
+ENSMUSG00000001870|trans 1.0000   1214  ENSMUSG00000036533|trans 1.0000    998  
+ENSMUSG00000103092|trans 1.0000   2401  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod anr -nmotifs 8 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order2.meme -evt 0.02 -seed 22 -oc /data/meme_anr_w6-12_seed22 
+
+model:  mod=           anr    nmotifs=      1000    evt=          0.02
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+width:  minw=            6    maxw=           12
+nsites: minsites=        2    maxsites=      345    wnsites=       0.8
+theta:  spmap=         uni    spfuzz=        0.5
+em:     prior=   dirichlet    b=            0.01    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=           89643    N=              69
+sample: seed=           22    hsfrac=          0
+        searchsize=  89643    norand=         no    csites=       1000
+Letter frequencies in dataset:
+A 0.263 C 0.236 G 0.229 U 0.272 
+Background letter frequencies (from file /data/background_models/bfile_order2.meme):
+A 0.279 C 0.221 G 0.221 U 0.279 
+Background model order: 2
+********************************************************************************
+
+
+********************************************************************************
+MOTIF CUUCCU MEME-1	width =   6  sites = 108  llr = 903  E-value = 2.8e-017
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 Description
+--------------------------------------------------------------------------------
+Simplified        A  ::::::
+pos.-specific     C  a::aa:
+probability       G  ::::::
+matrix            U  :aa::a
+
+         bits    2.2 *  ** 
+                 2.0 *  ** 
+                 1.7 ******
+                 1.5 ******
+Relative         1.3 ******
+Entropy          1.1 ******
+(12.1 bits)      0.9 ******
+                 0.7 ******
+                 0.4 ******
+                 0.2 ******
+                 0.0 ------
+
+Multilevel           CUUCCU
+consensus                  
+sequence                   
+                           
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value             Site 
+-------------             ----- ---------            ------
+ENSMUSG00000036533|trans    788  2.34e-04 TCCATTCGGG CTTCCT TGCAAGCTAC
+ENSMUSG00000001870|trans    811  2.34e-04 AAGTTGTCCC CTTCCT CATAACAGCT
+ENSMUSG00000022805|trans    921  2.34e-04 CCAGTCCTGA CTTCCT TTGGTGATGA
+ENSMUSG00000022805|trans    891  2.34e-04 TCAGCTCCTG CTTCCT GACCTGCTTG
+ENSMUSG00000022969|trans   2430  2.34e-04 TGTTAGCCTA CTTCCT GCTGTTGTAA
+ENSMUSG00000022969|trans   2355  2.34e-04 AAGAGATTTC CTTCCT TACCTGTGTG
+ENSMUSG00000022969|trans   1815  2.34e-04 AAATCTAGAA CTTCCT GATGCTGCAC
+ENSMUSG00000022969|trans   1437  2.34e-04 TGGTCTTCCT CTTCCT CCTGGGCTGC
+ENSMUSG00000022969|trans   1431  2.34e-04 TCCTGGTGGT CTTCCT CTTCCTCCTG
+ENSMUSG00000022969|trans   1385  2.34e-04 GAAATAACCC CTTCCT GGATTGTGGC
+ENSMUSG00000022969|trans    114  2.34e-04 GTGGGATTCT CTTCCT GAGCCCAAAC
+ENSMUSG00000046380|trans   1960  2.34e-04 TCACCTCTCA CTTCCT GGGAGGAGGT
+ENSMUSG00000046380|trans   1817  2.34e-04 TTCATTTCTG CTTCCT ACCACGAGCT
+ENSMUSG00000022602|trans    304  2.34e-04 CACGATCTGG CTTCCT CATTCTGCTC
+ENSMUSG00000002799|trans    801  2.34e-04 GCTGTCCTTG CTTCCT CCTGCCCAGA
+ENSMUSG00000020591|trans     58  2.34e-04 AACGCCGTGT CTTCCT CCTTCAGAAA
+ENSMUSG00000035105|trans   1110  2.34e-04 GCAGGTGTCG CTTCCT CCCGAACTCT
+ENSMUSG00000035105|trans    731  2.34e-04 GGATAGAAAG CTTCCT GGTAATTCAG
+ENSMUSG00000020387|trans   3613  2.34e-04 CTTTAAGCCG CTTCCT GCTGCCTTCT
+ENSMUSG00000020387|trans   2662  2.34e-04 CTGAACAGAC CTTCCT CTCACCTGTG
+ENSMUSG00000020387|trans   2121  2.34e-04 TCGACTTGAA CTTCCT CTTCAAAGGA
+ENSMUSG00000020387|trans   1846  2.34e-04 TTCCCAAATC CTTCCT CCTCCAAGCC
+ENSMUSG00000020387|trans   1825  2.34e-04 TACGCCCCCC CTTCCT ACTCCTTCCC
+ENSMUSG00000020387|trans   1763  2.34e-04 GTTGCTGGAT CTTCCT GGATTACTCT
+ENSMUSG00000020387|trans   1653  2.34e-04 AAGAGATGAG CTTCCT CTTCGGTTTC
+ENSMUSG00000020387|trans   1547  2.34e-04 TTCCTTCTTT CTTCCT TTGGGGCCAG
+ENSMUSG00000020387|trans   1536  2.34e-04 GGGGCTCTAA CTTCCT TCTTTCTTCC
+ENSMUSG00000020387|trans   1391  2.34e-04 TCCCTGGATC CTTCCT GAGCTGTGTT
+ENSMUSG00000033491|trans   1002  2.34e-04 GTTGTGGTTT CTTCCT TTAAATACCC
+ENSMUSG00000033491|trans    928  2.34e-04 TGACTTTGCA CTTCCT TGTGACTCTT
+ENSMUSG00000033491|trans    761  2.34e-04 CACCCACCCA CTTCCT GGGTTCTAGG
+ENSMUSG00000040936|trans   2380  2.34e-04 GAGCCAAAGC CTTCCT GGTGCTGCTG
+ENSMUSG00000040936|trans   1513  2.34e-04 ACTGGAATGA CTTCCT GCAGCAGGTG
+ENSMUSG00000032359|trans    698  2.34e-04 AGAATGGGTA CTTCCT CATTGAACGT
+ENSMUSG00000032359|trans    112  2.34e-04 GGCCCCTACC CTTCCT CCATGGACTG
+ENSMUSG00000010044|trans   1219  2.34e-04 TGGAGACCCT CTTCCT TTCGCACAAT
+ENSMUSG00000010044|trans   1116  2.34e-04 ACACTCTTCA CTTCCT GCCCCACCCA
+ENSMUSG00000010044|trans    530  2.34e-04 AGCTTCAGGC CTTCCT CACTGACACA
+ENSMUSG00000045655|trans    429  2.34e-04 GCATGTGCCT CTTCCT ATCCCCAGCC
+ENSMUSG00000056296|trans   1815  2.34e-04 TATTGTTGTT CTTCCT ATGGAGTTGT
+ENSMUSG00000037544|trans   1726  2.34e-04 GAATTTGCCT CTTCCT GCTGGTGATG
+ENSMUSG00000037544|trans   1008  2.34e-04 CTAAAACATT CTTCCT GTAGAGGTGC
+ENSMUSG00000037544|trans    878  2.34e-04 TCTCTTACCT CTTCCT AAGTGCTGAG
+ENSMUSG00000014846|trans    173  2.34e-04 TGTGTCCCTT CTTCCT GTCTCCCTGT
+ENSMUSG00000014846|trans    113  2.34e-04 CCACCAAGAG CTTCCT GCCCAGTCCC
+ENSMUSG00000019850|trans   1154  2.34e-04 GAATCGGCTG CTTCCT ATGACTCCCT
+ENSMUSG00000019850|trans    148  2.34e-04 AAGATAAGCT CTTCCT TCGTCACAGC
+ENSMUSG00000019892|trans    113  2.34e-04 GGCCTCTTCT CTTCCT TTACATTTCT
+ENSMUSG00000036634|trans    392  2.34e-04 TCCCCTCTCC CTTCCT TTTAACCTCA
+ENSMUSG00000062031|trans    995  2.34e-04 GCATGGGGGG CTTCCT GCAGGCAGCA
+ENSMUSG00000030862|trans    599  2.34e-04 CAAAGCTTGT CTTCCT AAGAGCAGAC
+ENSMUSG00000029843|trans    776  2.34e-04 GTTGCCAGTC CTTCCT ATGCATCCAC
+ENSMUSG00000029843|trans    310  2.34e-04 TTTGTGTCAC CTTCCT AGGAATCAGA
+ENSMUSG00000029843|trans    203  2.34e-04 GCTGCTCTCT CTTCCT GTGTCCAGCT
+ENSMUSG00000030310|trans    472  2.34e-04 TCAATTTCTC CTTCCT GAGGCAGCTT
+ENSMUSG00000030310|trans    454  2.34e-04 GGCTCTGCCT CTTCCT TCTCAATTTC
+ENSMUSG00000046192|trans    521  2.34e-04 ATGTTAAAAG CTTCCT ACAGGGTAGT
+ENSMUSG00000002930|trans    482  2.34e-04 TTTTTTCTTT CTTCCT TCCTATCTTG
+ENSMUSG00000029442|trans    573  2.34e-04 CCTGTCGGAG CTTCCT TTTGTCATGA
+ENSMUSG00000029504|trans   2702  2.34e-04 TTTGTACCCT CTTCCT TAAAGATCCC
+ENSMUSG00000029504|trans   2290  2.34e-04 GAAGGTCAGA CTTCCT TTTGAGTAAT
+ENSMUSG00000029504|trans    371  2.34e-04 CTTGAAGATA CTTCCT TGGCTACTAG
+ENSMUSG00000053647|trans    568  2.34e-04 AACAAAACGC CTTCCT GCTCTGGGAT
+ENSMUSG00000053647|trans    469  2.34e-04 CCAGAGCCTT CTTCCT GTCTTCCAGA
+ENSMUSG00000053647|trans    150  2.34e-04 TGCTGGCATC CTTCCT GACTGTCCAG
+ENSMUSG00000064280|trans    144  2.34e-04 AAAGCAGTGG CTTCCT TGTACATTCA
+ENSMUSG00000029468|trans   2918  2.34e-04 CTTCTAAACT CTTCCT AATTTCGTGT
+ENSMUSG00000029468|trans   2856  2.34e-04 GCCCGGCTGA CTTCCT GGACGACTGG
+ENSMUSG00000029468|trans   2834  2.34e-04 CTGAGAGCAG CTTCCT GACGCAGCCC
+ENSMUSG00000029468|trans   2809  2.34e-04 GTAGCCATGC CTTCCT TGGTCAGAAC
+ENSMUSG00000028718|trans   3258  2.34e-04 AGAATTCTGC CTTCCT CGTCTGGCTC
+ENSMUSG00000028718|trans   1448  2.34e-04 TAATCAGCCA CTTCCT GAATCCAACA
+ENSMUSG00000028718|trans   1377  2.34e-04 GGTAGTGCAT CTTCCT TAAAAGCAGT
+ENSMUSG00000028718|trans   1361  2.34e-04 AGCGACAAGT CTTCCT GGTAGTGCAT
+ENSMUSG00000028476|trans   1061  2.34e-04 TAATGTAATA CTTCCT GTTTGTATGC
+ENSMUSG00000028476|trans    212  2.34e-04 GATGATGCCT CTTCCT GGTGGATCCC
+ENSMUSG00000028476|trans     30  2.34e-04 ACTGCAAAGC CTTCCT CCACCCAGCC
+ENSMUSG00000001025|trans    273  2.34e-04 TTCAGAAGTT CTTCCT GAAGACTTAA
+ENSMUSG00000068874|trans    679  2.34e-04 CTGGGCAGAT CTTCCT TGGGGGCAGC
+ENSMUSG00000068874|trans    592  2.34e-04 TGGATGACCG CTTCCT TTACTTCAGC
+ENSMUSG00000068874|trans    394  2.34e-04 TGGAGATCCG CTTCCT GCACGACCCA
+ENSMUSG00000043164|trans     83  2.34e-04 GTTCTTTAAA CTTCCT ACCTTCTGGG
+ENSMUSG00000015340|trans   2418  2.34e-04 TGTTTGAGAA CTTCCT TCTTTTTGCT
+ENSMUSG00000015340|trans   1815  2.34e-04 TAAATAAGGC CTTCCT AGATGTGCAC
+ENSMUSG00000015340|trans   1208  2.34e-04 GCATCACCAT CTTCCT AAAATATAAA
+ENSMUSG00000015340|trans    537  2.34e-04 TGACTTAATA CTTCCT AAATGACAGT
+ENSMUSG00000015340|trans    300  2.34e-04 AGTTCCACAC CTTCCT TCCAATTCAG
+ENSMUSG00000031343|trans   1731  2.34e-04 TTATTCCCTG CTTCCT GCCATTGTTG
+ENSMUSG00000031343|trans   1644  2.34e-04 CAAGCAGATT CTTCCT GCCCACTCAC
+ENSMUSG00000026875|trans   1979  2.34e-04 GTCTTCCTCC CTTCCT CCAGGTTTCC
+ENSMUSG00000026875|trans   1971  2.34e-04 GGTGTCCGGT CTTCCT CCCTTCCTCC
+ENSMUSG00000026875|trans   1216  2.34e-04 GAGCCCAGGG CTTCCT CCGTGGTGGA
+ENSMUSG00000026875|trans   1000  2.34e-04 CCCCTCTCCT CTTCCT ACCCTTTCTC
+ENSMUSG00000026875|trans    971  2.34e-04 TCATTTATTC CTTCCT TCCTCCCTTT
+ENSMUSG00000026875|trans    951  2.34e-04 TCCTTCCTTC CTTCCT TCCTTCATTT
+ENSMUSG00000026875|trans    943  2.34e-04 CCCTTCCTTC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    935  2.34e-04 CCTTCCTTCC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    922  2.34e-04 TCCTTCCTTC CTTCCT TCCTTCCCTT
+ENSMUSG00000026875|trans    914  2.34e-04 TCCTTCCTTC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    906  2.34e-04 TCCTTCCTTC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    898  2.34e-04 TCCTTCCTTC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    890  2.34e-04 ACCTTCCTTC CTTCCT TCCTTCCTTC
+ENSMUSG00000026875|trans    882  2.34e-04 ATGCACCTAC CTTCCT TCCTTCCTTC
+ENSMUSG00000014361|trans     42  2.34e-04 GCAAATACAG CTTCCT GGGATCTGGT
+ENSMUSG00000023224|trans    385  2.34e-04 GACCTTTCCT CTTCCT GCTCTGGGAC
+ENSMUSG00000027624|trans   1947  2.34e-04 TCCCATCTCA CTTCCT GTCCTGCTAA
+ENSMUSG00000027624|trans   1879  2.34e-04 CACATACAGG CTTCCT CTGGCTTGCT
+ENSMUSG00000027624|trans   1615  2.34e-04 TCATCCTCTT CTTCCT GAGCTAAAGT
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000036533|trans          0.00023  787_[1]_205
+ENSMUSG00000001870|trans          0.00023  810_[1]_398
+ENSMUSG00000022805|trans          0.00023  890_[1]_24_[1]_530
+ENSMUSG00000022969|trans          0.00023  113_[1]_1265_[1]_40_[1]_[1]_372_
+                                           [1]_534_[1]_69_[1]_43
+ENSMUSG00000046380|trans          0.00023  1816_[1]_137_[1]_1495
+ENSMUSG00000022602|trans          0.00023  303_[1]_1359
+ENSMUSG00000002799|trans          0.00023  800_[1]_264
+ENSMUSG00000020591|trans          0.00023  57_[1]_254
+ENSMUSG00000035105|trans          0.00023  730_[1]_373_[1]_528
+ENSMUSG00000020387|trans          0.00023  1390_[1]_139_[1]_5_[1]_100_[1]_
+                                           104_[1]_56_[1]_15_[1]_269_[1]_535_
+                                           [1]_945_[1]_538
+ENSMUSG00000033491|trans          0.00023  760_[1]_161_[1]_68_[1]_1028
+ENSMUSG00000040936|trans          0.00023  1512_[1]_861_[1]_1482
+ENSMUSG00000032359|trans          0.00023  111_[1]_580_[1]_397
+ENSMUSG00000010044|trans          0.00023  529_[1]_580_[1]_97_[1]_30
+ENSMUSG00000045655|trans          0.00023  428_[1]_1290
+ENSMUSG00000056296|trans          0.00023  1814_[1]_539
+ENSMUSG00000037544|trans          0.00023  877_[1]_124_[1]_712_[1]_762
+ENSMUSG00000014846|trans          0.00023  112_[1]_54_[1]_165
+ENSMUSG00000019850|trans          0.00023  147_[1]_1000_[1]_662
+ENSMUSG00000019892|trans          0.00023  112_[1]_41
+ENSMUSG00000036634|trans          0.00023  391_[1]_138
+ENSMUSG00000062031|trans          0.00023  994_[1]_301
+ENSMUSG00000030862|trans          0.00023  598_[1]_473
+ENSMUSG00000029843|trans          0.00023  202_[1]_101_[1]_460_[1]_93
+ENSMUSG00000030310|trans          0.00023  453_[1]_12_[1]_1646
+ENSMUSG00000046192|trans          0.00023  520_[1]_666
+ENSMUSG00000002930|trans          0.00023  481_[1]_646
+ENSMUSG00000029442|trans          0.00023  572_[1]_650
+ENSMUSG00000029504|trans          0.00023  370_[1]_1913_[1]_406_[1]_182
+ENSMUSG00000053647|trans          0.00023  149_[1]_313_[1]_93_[1]_198
+ENSMUSG00000064280|trans          0.00023  143_[1]_182
+ENSMUSG00000029468|trans          0.00023  2808_[1]_19_[1]_16_[1]_56_[1]_62
+ENSMUSG00000028718|trans          0.00023  1360_[1]_10_[1]_65_[1]_1804_[1]_665
+ENSMUSG00000028476|trans          0.00023  29_[1]_176_[1]_843_[1]_375
+ENSMUSG00000001025|trans          0.00023  272_[1]_228
+ENSMUSG00000068874|trans          0.00023  393_[1]_192_[1]_81_[1]_544
+ENSMUSG00000043164|trans          0.00023  82_[1]_39
+ENSMUSG00000015340|trans          0.00023  299_[1]_231_[1]_665_[1]_601_[1]_
+                                           597_[1]_542
+ENSMUSG00000031343|trans          0.00023  1643_[1]_81_[1]_232
+ENSMUSG00000026875|trans          0.00023  881_[1]_2_[1]_2_[1]_2_[1]_2_[1]_
+                                           2_[1]_7_[1]_2_[1]_2_[1]_14_[1]_
+                                           23_[1]_210_[1]_749_[1]_2_[1]_139
+ENSMUSG00000014361|trans          0.00023  41_[1]_1180
+ENSMUSG00000023224|trans          0.00023  384_[1]_132
+ENSMUSG00000027624|trans          0.00023  1614_[1]_258_[1]_62_[1]_1444
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF CUUCCU width=6 seqs=108
+ENSMUSG00000036533|trans (  788) CUUCCU  1 
+ENSMUSG00000001870|trans (  811) CUUCCU  1 
+ENSMUSG00000022805|trans (  921) CUUCCU  1 
+ENSMUSG00000022805|trans (  891) CUUCCU  1 
+ENSMUSG00000022969|trans ( 2430) CUUCCU  1 
+ENSMUSG00000022969|trans ( 2355) CUUCCU  1 
+ENSMUSG00000022969|trans ( 1815) CUUCCU  1 
+ENSMUSG00000022969|trans ( 1437) CUUCCU  1 
+ENSMUSG00000022969|trans ( 1431) CUUCCU  1 
+ENSMUSG00000022969|trans ( 1385) CUUCCU  1 
+ENSMUSG00000022969|trans (  114) CUUCCU  1 
+ENSMUSG00000046380|trans ( 1960) CUUCCU  1 
+ENSMUSG00000046380|trans ( 1817) CUUCCU  1 
+ENSMUSG00000022602|trans (  304) CUUCCU  1 
+ENSMUSG00000002799|trans (  801) CUUCCU  1 
+ENSMUSG00000020591|trans (   58) CUUCCU  1 
+ENSMUSG00000035105|trans ( 1110) CUUCCU  1 
+ENSMUSG00000035105|trans (  731) CUUCCU  1 
+ENSMUSG00000020387|trans ( 3613) CUUCCU  1 
+ENSMUSG00000020387|trans ( 2662) CUUCCU  1 
+ENSMUSG00000020387|trans ( 2121) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1846) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1825) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1763) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1653) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1547) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1536) CUUCCU  1 
+ENSMUSG00000020387|trans ( 1391) CUUCCU  1 
+ENSMUSG00000033491|trans ( 1002) CUUCCU  1 
+ENSMUSG00000033491|trans (  928) CUUCCU  1 
+ENSMUSG00000033491|trans (  761) CUUCCU  1 
+ENSMUSG00000040936|trans ( 2380) CUUCCU  1 
+ENSMUSG00000040936|trans ( 1513) CUUCCU  1 
+ENSMUSG00000032359|trans (  698) CUUCCU  1 
+ENSMUSG00000032359|trans (  112) CUUCCU  1 
+ENSMUSG00000010044|trans ( 1219) CUUCCU  1 
+ENSMUSG00000010044|trans ( 1116) CUUCCU  1 
+ENSMUSG00000010044|trans (  530) CUUCCU  1 
+ENSMUSG00000045655|trans (  429) CUUCCU  1 
+ENSMUSG00000056296|trans ( 1815) CUUCCU  1 
+ENSMUSG00000037544|trans ( 1726) CUUCCU  1 
+ENSMUSG00000037544|trans ( 1008) CUUCCU  1 
+ENSMUSG00000037544|trans (  878) CUUCCU  1 
+ENSMUSG00000014846|trans (  173) CUUCCU  1 
+ENSMUSG00000014846|trans (  113) CUUCCU  1 
+ENSMUSG00000019850|trans ( 1154) CUUCCU  1 
+ENSMUSG00000019850|trans (  148) CUUCCU  1 
+ENSMUSG00000019892|trans (  113) CUUCCU  1 
+ENSMUSG00000036634|trans (  392) CUUCCU  1 
+ENSMUSG00000062031|trans (  995) CUUCCU  1 
+ENSMUSG00000030862|trans (  599) CUUCCU  1 
+ENSMUSG00000029843|trans (  776) CUUCCU  1 
+ENSMUSG00000029843|trans (  310) CUUCCU  1 
+ENSMUSG00000029843|trans (  203) CUUCCU  1 
+ENSMUSG00000030310|trans (  472) CUUCCU  1 
+ENSMUSG00000030310|trans (  454) CUUCCU  1 
+ENSMUSG00000046192|trans (  521) CUUCCU  1 
+ENSMUSG00000002930|trans (  482) CUUCCU  1 
+ENSMUSG00000029442|trans (  573) CUUCCU  1 
+ENSMUSG00000029504|trans ( 2702) CUUCCU  1 
+ENSMUSG00000029504|trans ( 2290) CUUCCU  1 
+ENSMUSG00000029504|trans (  371) CUUCCU  1 
+ENSMUSG00000053647|trans (  568) CUUCCU  1 
+ENSMUSG00000053647|trans (  469) CUUCCU  1 
+ENSMUSG00000053647|trans (  150) CUUCCU  1 
+ENSMUSG00000064280|trans (  144) CUUCCU  1 
+ENSMUSG00000029468|trans ( 2918) CUUCCU  1 
+ENSMUSG00000029468|trans ( 2856) CUUCCU  1 
+ENSMUSG00000029468|trans ( 2834) CUUCCU  1 
+ENSMUSG00000029468|trans ( 2809) CUUCCU  1 
+ENSMUSG00000028718|trans ( 3258) CUUCCU  1 
+ENSMUSG00000028718|trans ( 1448) CUUCCU  1 
+ENSMUSG00000028718|trans ( 1377) CUUCCU  1 
+ENSMUSG00000028718|trans ( 1361) CUUCCU  1 
+ENSMUSG00000028476|trans ( 1061) CUUCCU  1 
+ENSMUSG00000028476|trans (  212) CUUCCU  1 
+ENSMUSG00000028476|trans (   30) CUUCCU  1 
+ENSMUSG00000001025|trans (  273) CUUCCU  1 
+ENSMUSG00000068874|trans (  679) CUUCCU  1 
+ENSMUSG00000068874|trans (  592) CUUCCU  1 
+ENSMUSG00000068874|trans (  394) CUUCCU  1 
+ENSMUSG00000043164|trans (   83) CUUCCU  1 
+ENSMUSG00000015340|trans ( 2418) CUUCCU  1 
+ENSMUSG00000015340|trans ( 1815) CUUCCU  1 
+ENSMUSG00000015340|trans ( 1208) CUUCCU  1 
+ENSMUSG00000015340|trans (  537) CUUCCU  1 
+ENSMUSG00000015340|trans (  300) CUUCCU  1 
+ENSMUSG00000031343|trans ( 1731) CUUCCU  1 
+ENSMUSG00000031343|trans ( 1644) CUUCCU  1 
+ENSMUSG00000026875|trans ( 1979) CUUCCU  1 
+ENSMUSG00000026875|trans ( 1971) CUUCCU  1 
+ENSMUSG00000026875|trans ( 1216) CUUCCU  1 
+ENSMUSG00000026875|trans ( 1000) CUUCCU  1 
+ENSMUSG00000026875|trans (  971) CUUCCU  1 
+ENSMUSG00000026875|trans (  951) CUUCCU  1 
+ENSMUSG00000026875|trans (  943) CUUCCU  1 
+ENSMUSG00000026875|trans (  935) CUUCCU  1 
+ENSMUSG00000026875|trans (  922) CUUCCU  1 
+ENSMUSG00000026875|trans (  914) CUUCCU  1 
+ENSMUSG00000026875|trans (  906) CUUCCU  1 
+ENSMUSG00000026875|trans (  898) CUUCCU  1 
+ENSMUSG00000026875|trans (  890) CUUCCU  1 
+ENSMUSG00000026875|trans (  882) CUUCCU  1 
+ENSMUSG00000014361|trans (   42) CUUCCU  1 
+ENSMUSG00000023224|trans (  385) CUUCCU  1 
+ENSMUSG00000027624|trans ( 1947) CUUCCU  1 
+ENSMUSG00000027624|trans ( 1879) CUUCCU  1 
+ENSMUSG00000027624|trans ( 1615) CUUCCU  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 6 n= 89298 bayes= 9.49014 E= 2.8e-017 
+ -1340    218  -1340  -1340 
+ -1340  -1340  -1340    184 
+ -1340  -1340  -1340    184 
+ -1340    218  -1340  -1340 
+ -1340    218  -1340  -1340 
+ -1340  -1340  -1340    184 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 6 nsites= 108 E= 2.8e-017 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUUCCU MEME-1 regular expression
+--------------------------------------------------------------------------------
+CUUCCU
+--------------------------------------------------------------------------------
+
+
+
+
+Time 105.15 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF GGRGDDGGRGG MEME-2	width =  11  sites =  55  llr = 557  E-value = 2.3e-016
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 Description
+--------------------------------------------------------------------------------
+Simplified        A  ::41231:6:2
+pos.-specific     C  :::::::::::
+probability       G  aa66548a4a7
+matrix            U  :::233::::1
+
+         bits    2.2  *       * 
+                 2.0 **     * * 
+                 1.7 **     * * 
+                 1.5 **     * * 
+Relative         1.3 **    ** * 
+Entropy          1.1 ***   *****
+(14.6 bits)      0.9 ***   *****
+                 0.7 ****  *****
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           GGGGGGGGAGG
+consensus              AUUA  G  
+sequence                 AU     
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000022969|trans   2228  2.37e-07 ATTTTAAATG GGGGGGGGGGG CATGGAAACA
+ENSMUSG00000033491|trans   1175  2.37e-07 GTCAGAACAT GGGGGGGGGGG TCCTCACGTT
+ENSMUSG00000030862|trans    659  5.10e-07 AGCAGACCCT GGGGGAGGGGG CTTGCTATCC
+ENSMUSG00000026875|trans      6  5.10e-07      GGATG GGGGGAGGGGG TGTCTCCTGA
+ENSMUSG00000030406|trans    795  6.86e-07 CAAAGGCTCT GGGGTGGGAGG CTCTTTGCCT
+ENSMUSG00000027624|trans    618  8.87e-07 AGGAGGAGGA GGAGGAGGAGG AGGAGGAGGA
+ENSMUSG00000027624|trans    597  8.87e-07 AGGAGGAGGA GGAGGAGGAGG AGGAGGAGGA
+ENSMUSG00000027624|trans    582  8.87e-07 CCCATGGAGA GGAGGAGGAGG AGGAGGAGGA
+ENSMUSG00000046380|trans   2976  9.85e-07 TTAGGTTTCA GGGGAGGGAGG TAAATAAGGG
+ENSMUSG00000020387|trans   2782  9.85e-07 AACGCTGCAG GGGGAGGGAGG GAAGCCCAGT
+ENSMUSG00000022805|trans   1195  1.83e-06 ACACTCGGGT GGGTGGGGAGG AAAATGGAAG
+ENSMUSG00000002799|trans    716  1.83e-06 GGTTGTCAGT GGGGTTGGAGG TCACTGGTGT
+ENSMUSG00000020387|trans   1131  1.83e-06 GGTCCATTTT GGGTGGGGAGG TGTCCTGCTG
+ENSMUSG00000002930|trans    317  1.83e-06 GATAAAAGAT GGGGAGGGGGG AGGGGAGGCG
+ENSMUSG00000046380|trans    753  2.15e-06 AGCTCAACAT GGGGTAGGGGG GTTAGCACTA
+ENSMUSG00000030406|trans   1107  2.15e-06 GCTTCTTTAC GGAGTGGGAGG AGGCCAGGCT
+ENSMUSG00000029151|trans    611  2.89e-06 TTTCCCCAAG GGAGAGGGAGG ACTCCACTGC
+ENSMUSG00000028718|trans   2981  2.89e-06 ACATTGGCTG GGGGTTGGGGG TGGTTGACCC
+ENSMUSG00000027624|trans   2036  2.89e-06 CAAGGCAGAA GGAGAGGGAGG GACCTGGGAA
+ENSMUSG00000029151|trans    168  3.24e-06 AGGCAATGGG GGGAGGGGAGG CTCAGATTGA
+ENSMUSG00000031343|trans   1832  3.46e-06 GTGGATGTGT GGGGATGGGGG GTGGGATGGG
+ENSMUSG00000026875|trans   1556  3.46e-06 TGGAGGATGT GGGTGTGGAGG AGAGGACAGC
+ENSMUSG00000052837|trans     63  4.39e-06 CCCCCCACTG GGGTGAGGGGG GCAGGCGATG
+ENSMUSG00000029442|trans    476  4.39e-06 AATTCTACAG GGAGTTGGAGG ACTATTTTTA
+ENSMUSG00000032782|trans   1225  4.72e-06 CCAGAGAAGG GGGAGAGGAGG ACCTGGGCCA
+ENSMUSG00000052837|trans    266  6.27e-06 AACAGGGAGG GGAGAAGGGGG CTGTCGCGGC
+ENSMUSG00000040936|trans   1966  6.61e-06 GGTGCCTCCG GGAAGGGGAGG AACGGGTTGT
+ENSMUSG00000040936|trans     76  7.49e-06 TGCAGACACA GGGTTGGGGGG ACGATGACAG
+ENSMUSG00000010044|trans   1179  7.49e-06 CTGGCAGACA GGGTTGGGGGG TGTAAGCAAG
+ENSMUSG00000027624|trans   2743  8.41e-06 CCCCGCCCAG GGAGGAGGAGA CCTGCACAGC
+ENSMUSG00000035105|trans    832  9.20e-06 AGTTCAGTTC GGGGAGGGAGA TGGGGTTGGA
+ENSMUSG00000052415|trans    538  1.15e-05 AGATAATGTA GGAGGAAGAGG ATTTATGCAG
+ENSMUSG00000031343|trans   1845  1.15e-05 GATGGGGGGT GGGATGGGGGG CTGTCTTAAG
+ENSMUSG00000022969|trans   2027  1.44e-05 CCAGCACTTT GGAGGTAGAGG CAGGAGGATC
+ENSMUSG00000001870|trans    568  1.54e-05 AACTTTTGGA GGGGATGGAGA AACATCTTTA
+ENSMUSG00000030862|trans    719  1.72e-05 ATTAGCCCTG GGGTGAGGAGA GCCAGACATG
+ENSMUSG00000068874|trans    130  2.22e-05 TTGTGCTGCT GGATGGGGAGA CCTTCGAGGT
+ENSMUSG00000036533|trans     24  2.40e-05 CTTTTTCTTG GGAGTAAGAGG TACCAAAATA
+ENSMUSG00000032782|trans    353  2.78e-05 TACAGCAGAG GGAGAAAGAGG CCCTGGAAGA
+ENSMUSG00000030406|trans     80  2.78e-05 GCAATGCTGG GGAAATGGAGG CGAAGGAACC
+ENSMUSG00000027360|trans     38  2.78e-05 TGTGCTTCAG GGAGTTGGGGA ACCCCTCGAA
+ENSMUSG00000029468|trans   1582  2.93e-05 TGGCTTGGCA GGGGTAGGGGT GGGAAAAGAG
+ENSMUSG00000027624|trans   1506  2.93e-05 TTCTTTAAAG GGAGGTGGGGT CCTAGCTAAG
+ENSMUSG00000010044|trans   1204  3.10e-05 AGCAAGGGCC GGATGTGGAGA CCCTCTTCCT
+ENSMUSG00000032782|trans   1864  3.33e-05 TACCAGGCTC GGGGTTGGGGT GCCCTGCCTG
+ENSMUSG00000028718|trans   2239  3.33e-05 ACAATAGTGA GGATGAAGAGG AGCCTCCCAG
+ENSMUSG00000022805|trans     99  3.51e-05 GGACAACGTG GGAAGGAGAGG AGAATTACTG
+ENSMUSG00000032514|trans     62  4.22e-05 ACGGTTCAGG GGGGGAGTAGG AAGTAAAACC
+ENSMUSG00000037544|trans    307  4.22e-05 CCTTCTGCAC GGGGGTTGAGG GAGTCATCTG
+ENSMUSG00000027624|trans   2654  4.22e-05 TGGGACATTA GGGTTTGGGGA GATACTTACT
+ENSMUSG00000029468|trans   1455  4.52e-05 AAAAGGGAGG GGGAAGAGAGG CTAGGGAGAT
+ENSMUSG00000025272|trans    645  4.52e-05 AGCCCAAATG GGGATTGGAGA GGAAGCTGTG
+ENSMUSG00000010044|trans    339  6.13e-05 CTGGAGCCGG CGGGTAGGAGG CAAGCTGCAG
+ENSMUSG00000029504|trans    692  6.13e-05 CTTGGAACTT GGATAAGGGGA AGCTTCCCAC
+ENSMUSG00000019892|trans     58  6.45e-05 TTTACAGATA GGGGGTAGGGT GCTAGCCACC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000022969|trans          1.4e-05  2026_[2]_190_[2]_240
+ENSMUSG00000033491|trans          2.4e-07  1174_[2]_850
+ENSMUSG00000030862|trans          1.7e-05  658_[2]_49_[2]_348
+ENSMUSG00000026875|trans          3.5e-06  5_[2]_1539_[2]_557
+ENSMUSG00000030406|trans          2.8e-05  79_[2]_704_[2]_301_[2]_190
+ENSMUSG00000027624|trans          4.2e-05  581_[2]_4_[2]_10_[2]_877_[2]_519_
+                                           [2]_607_[2]_78_[2]_643
+ENSMUSG00000046380|trans          9.8e-07  752_[2]_2212_[2]_474
+ENSMUSG00000020387|trans          1.8e-06  1130_[2]_1640_[2]_1364
+ENSMUSG00000022805|trans          3.5e-05  98_[2]_1085_[2]_251
+ENSMUSG00000002799|trans          1.8e-06  715_[2]_344
+ENSMUSG00000002930|trans          1.8e-06  316_[2]_806
+ENSMUSG00000029151|trans          3.2e-06  167_[2]_432_[2]_43
+ENSMUSG00000028718|trans          3.3e-05  2238_[2]_731_[2]_937
+ENSMUSG00000031343|trans          1.1e-05  1831_[2]_2_[2]_113
+ENSMUSG00000052837|trans          6.3e-06  62_[2]_192_[2]_209
+ENSMUSG00000029442|trans          4.4e-06  475_[2]_742
+ENSMUSG00000032782|trans          2.8e-05  352_[2]_861_[2]_628_[2]_630
+ENSMUSG00000040936|trans          6.6e-06  75_[2]_1879_[2]_1891
+ENSMUSG00000010044|trans          3.1e-05  338_[2]_829_[2]_14_[2]_40
+ENSMUSG00000035105|trans          9.2e-06  831_[2]_801
+ENSMUSG00000052415|trans          1.1e-05  537_[2]_475
+ENSMUSG00000001870|trans          1.5e-05  567_[2]_636
+ENSMUSG00000068874|trans          2.2e-05  129_[2]_1088
+ENSMUSG00000036533|trans          2.4e-05  23_[2]_964
+ENSMUSG00000027360|trans          2.8e-05  37_[2]_246
+ENSMUSG00000029468|trans          4.5e-05  1454_[2]_116_[2]_1393
+ENSMUSG00000032514|trans          4.2e-05  61_[2]_47
+ENSMUSG00000037544|trans          4.2e-05  306_[2]_2176
+ENSMUSG00000025272|trans          4.5e-05  644_[2]_57
+ENSMUSG00000029504|trans          6.1e-05  691_[2]_2187
+ENSMUSG00000019892|trans          6.5e-05  57_[2]_91
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF GGRGDDGGRGG width=11 seqs=55
+ENSMUSG00000022969|trans ( 2228) GGGGGGGGGGG  1 
+ENSMUSG00000033491|trans ( 1175) GGGGGGGGGGG  1 
+ENSMUSG00000030862|trans (  659) GGGGGAGGGGG  1 
+ENSMUSG00000026875|trans (    6) GGGGGAGGGGG  1 
+ENSMUSG00000030406|trans (  795) GGGGUGGGAGG  1 
+ENSMUSG00000027624|trans (  618) GGAGGAGGAGG  1 
+ENSMUSG00000027624|trans (  597) GGAGGAGGAGG  1 
+ENSMUSG00000027624|trans (  582) GGAGGAGGAGG  1 
+ENSMUSG00000046380|trans ( 2976) GGGGAGGGAGG  1 
+ENSMUSG00000020387|trans ( 2782) GGGGAGGGAGG  1 
+ENSMUSG00000022805|trans ( 1195) GGGUGGGGAGG  1 
+ENSMUSG00000002799|trans (  716) GGGGUUGGAGG  1 
+ENSMUSG00000020387|trans ( 1131) GGGUGGGGAGG  1 
+ENSMUSG00000002930|trans (  317) GGGGAGGGGGG  1 
+ENSMUSG00000046380|trans (  753) GGGGUAGGGGG  1 
+ENSMUSG00000030406|trans ( 1107) GGAGUGGGAGG  1 
+ENSMUSG00000029151|trans (  611) GGAGAGGGAGG  1 
+ENSMUSG00000028718|trans ( 2981) GGGGUUGGGGG  1 
+ENSMUSG00000027624|trans ( 2036) GGAGAGGGAGG  1 
+ENSMUSG00000029151|trans (  168) GGGAGGGGAGG  1 
+ENSMUSG00000031343|trans ( 1832) GGGGAUGGGGG  1 
+ENSMUSG00000026875|trans ( 1556) GGGUGUGGAGG  1 
+ENSMUSG00000052837|trans (   63) GGGUGAGGGGG  1 
+ENSMUSG00000029442|trans (  476) GGAGUUGGAGG  1 
+ENSMUSG00000032782|trans ( 1225) GGGAGAGGAGG  1 
+ENSMUSG00000052837|trans (  266) GGAGAAGGGGG  1 
+ENSMUSG00000040936|trans ( 1966) GGAAGGGGAGG  1 
+ENSMUSG00000040936|trans (   76) GGGUUGGGGGG  1 
+ENSMUSG00000010044|trans ( 1179) GGGUUGGGGGG  1 
+ENSMUSG00000027624|trans ( 2743) GGAGGAGGAGA  1 
+ENSMUSG00000035105|trans (  832) GGGGAGGGAGA  1 
+ENSMUSG00000052415|trans (  538) GGAGGAAGAGG  1 
+ENSMUSG00000031343|trans ( 1845) GGGAUGGGGGG  1 
+ENSMUSG00000022969|trans ( 2027) GGAGGUAGAGG  1 
+ENSMUSG00000001870|trans (  568) GGGGAUGGAGA  1 
+ENSMUSG00000030862|trans (  719) GGGUGAGGAGA  1 
+ENSMUSG00000068874|trans (  130) GGAUGGGGAGA  1 
+ENSMUSG00000036533|trans (   24) GGAGUAAGAGG  1 
+ENSMUSG00000032782|trans (  353) GGAGAAAGAGG  1 
+ENSMUSG00000030406|trans (   80) GGAAAUGGAGG  1 
+ENSMUSG00000027360|trans (   38) GGAGUUGGGGA  1 
+ENSMUSG00000029468|trans ( 1582) GGGGUAGGGGU  1 
+ENSMUSG00000027624|trans ( 1506) GGAGGUGGGGU  1 
+ENSMUSG00000010044|trans ( 1204) GGAUGUGGAGA  1 
+ENSMUSG00000032782|trans ( 1864) GGGGUUGGGGU  1 
+ENSMUSG00000028718|trans ( 2239) GGAUGAAGAGG  1 
+ENSMUSG00000022805|trans (   99) GGAAGGAGAGG  1 
+ENSMUSG00000032514|trans (   62) GGGGGAGUAGG  1 
+ENSMUSG00000037544|trans (  307) GGGGGUUGAGG  1 
+ENSMUSG00000027624|trans ( 2654) GGGUUUGGGGA  1 
+ENSMUSG00000029468|trans ( 1455) GGGAAGAGAGG  1 
+ENSMUSG00000025272|trans (  645) GGGAUUGGAGA  1 
+ENSMUSG00000010044|trans (  339) CGGGUAGGAGG  1 
+ENSMUSG00000029504|trans (  692) GGAUAAGGGGA  1 
+ENSMUSG00000019892|trans (   58) GGGGGUAGGGU  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 88953 bayes= 12.7852 E= 2.3e-016 
+ -1243   -360    215  -1243 
+ -1243  -1243    218  -1243 
+    52  -1243    144  -1243 
+   -94  -1243    153    -36 
+   -24  -1243    110      6 
+    31  -1243     72      6 
+   -94  -1243    192   -394 
+ -1243  -1243    215   -394 
+   119  -1243     72  -1243 
+ -1243  -1243    218  -1243 
+   -62  -1243    176   -194 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 55 E= 2.3e-016 
+ 0.000000  0.018182  0.981818  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.400000  0.000000  0.600000  0.000000 
+ 0.145455  0.000000  0.636364  0.218182 
+ 0.236364  0.000000  0.472727  0.290909 
+ 0.345455  0.000000  0.363636  0.290909 
+ 0.145455  0.000000  0.836364  0.018182 
+ 0.000000  0.000000  0.981818  0.018182 
+ 0.636364  0.000000  0.363636  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.181818  0.000000  0.745455  0.072727 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif GGRGDDGGRGG MEME-2 regular expression
+--------------------------------------------------------------------------------
+GG[GA][GU][GUA][GAU]GG[AG]GG
+--------------------------------------------------------------------------------
+
+
+
+
+Time 209.42 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF UUUUUUUUUUU MEME-3	width =  11  sites =  55  llr = 554  E-value = 9.7e-015
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 Description
+--------------------------------------------------------------------------------
+Simplified        A  :1:::31:3::
+pos.-specific     C  :1:::1:1:::
+probability       G  1:::3:::1::
+matrix            U  99a977996aa
+
+         bits    2.2            
+                 2.0            
+                 1.7          **
+                 1.5   **     **
+Relative         1.3 * **  ** **
+Entropy          1.1 ***** ** **
+(14.5 bits)      0.9 ***** ** **
+                 0.7 ***********
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           UUUUUUUUUUU
+consensus                GA  A  
+sequence                        
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000103092|trans   1730  7.97e-07 ATAAAGCTGG TTTTTTTTTTT CCTAGTAAGA
+ENSMUSG00000001870|trans    303  7.97e-07 CTTGTTTTGA TTTTTTTTTTT ACTATTGCTT
+ENSMUSG00000022969|trans    645  7.97e-07 TTGTTTTTTG TTTTTTTTTTT TTTTTTCGTT
+ENSMUSG00000020387|trans   1943  7.97e-07 CGTGAAAACA TTTTTTTTTTT CTTTTATGAA
+ENSMUSG00000033491|trans   1451  7.97e-07 TTTTGAAGTC TTTTTTTTTTT CATAAGAGAA
+ENSMUSG00000037572|trans    360  7.97e-07 TATATTTTTC TTTTTTTTTTT TTTTTTTTTT
+ENSMUSG00000030790|trans    349  7.97e-07 GCTGTCAAGG TTTTTTTTTTT GTAACTTCAA
+ENSMUSG00000030310|trans    309  7.97e-07 GCTTTTAGTC TTTTTTTTTTT TTTTCAGACT
+ENSMUSG00000029504|trans   1764  7.97e-07 ATTCTGATTC TTTTTTTTTTT TAATGTTTAT
+ENSMUSG00000015340|trans   1154  7.97e-07 CAATAACTTG TTTTTTTTTTT TTAATTGCAG
+ENSMUSG00000053475|trans     70  7.97e-07 TTGTTGTTGG TTTTTTTTTTT TTATTTTGTT
+ENSMUSG00000022969|trans    633  1.43e-06 TTGGTTTTGG TTTTGTTTTTT GTTTTTTTTT
+ENSMUSG00000030862|trans    184  1.43e-06 GTTTTTTGTT TTTTGTTTTTT CCTTTGTTCT
+ENSMUSG00000030862|trans    170  1.43e-06 GCTCAGGGTG TTTTGTTTTTT GTTTTTTGTT
+ENSMUSG00000053475|trans     94  1.43e-06 TTTTGTTTTG TTTTGTTTTTT TGAGACGGGG
+ENSMUSG00000022969|trans    707  3.02e-06 TCTTGCTTTG TTTTTATTTTT GTTTTGTTTT
+ENSMUSG00000029468|trans   1198  3.02e-06 ATGTCTTTAT TTTTTATTTTT GTAAGATTTA
+ENSMUSG00000035105|trans   1473  3.66e-06 TCCTTATTTA TTTTGTTTATT GTCTCTTTAG
+ENSMUSG00000056296|trans    967  3.66e-06 GTTTGTTTAG TTTTGTTTATT TTTGAAGCTA
+ENSMUSG00000001870|trans    397  5.72e-06 CTCAGCTGCC GTTTTTTTTTT CCTCCAATGA
+ENSMUSG00000037572|trans    156  5.72e-06 AAAGAATATA TTTTTATTATT ATTTTTTTAA
+ENSMUSG00000052837|trans    198  5.72e-06 TATTTTGTAT GTTTTTTTTTT CTGCAAAGAG
+ENSMUSG00000053475|trans    387  5.72e-06 CTTCAAATGA GTTTTTTTTTT AAATCTCATA
+ENSMUSG00000053475|trans    290  5.72e-06 CTCTTTTGTA TTTTTATTATT AACATGTATT
+ENSMUSG00000033491|trans   1821  1.02e-05 GGGTAAAACC TTTTTTTCTTT TAGATGTGTC
+ENSMUSG00000002930|trans    471  1.02e-05 TGATGAAATG TTTTTTTCTTT CTTCCTTCCT
+ENSMUSG00000028476|trans    794  1.02e-05 TAGTACATGA TTTTTTATTTT ATTATGAAGG
+ENSMUSG00000027624|trans   3218  1.16e-05 TCTAGATATC TATTTTTTTTT CAAAAGCACC
+ENSMUSG00000027624|trans   2701  1.16e-05 CGGTTCTTAC TATTTTTTTTT CTCCCAGAGA
+ENSMUSG00000020387|trans    815  1.22e-05 CTCTGTCGTG GTTTTATTTTT AATATAGAGA
+ENSMUSG00000029468|trans   2234  1.32e-05 TTCACTGTAT TTTTGTTTGTT TTTGGTTTTG
+ENSMUSG00000028718|trans    574  1.32e-05 AGCCACACAA TCTTGTTTTTT CAACTCATAA
+ENSMUSG00000002799|trans    348  1.55e-05 TACAGAATCT TCTTTTTTATT CCTCATTTGG
+ENSMUSG00000043164|trans     69  1.55e-05 TACAAAGCAA TTTTGTTCTTT AAACTTCCTA
+ENSMUSG00000027624|trans   2850  1.55e-05 TACTTTTTCC TTTTGCTTTTT TTGTGTGTCT
+ENSMUSG00000022805|trans    391  1.93e-05 AATTTTGTAG TTTTTCTTATT TGTAGTTTCT
+ENSMUSG00000052415|trans    642  1.93e-05 TGGCATTATA TTTTTTATATT TTGCATCATC
+ENSMUSG00000015340|trans   2573  1.93e-05 CTAGAAATGA TTTTTCTTATT TTTTCCCCGC
+ENSMUSG00000029468|trans   2687  2.14e-05 GATATTTGCA TCTTTATTTTT GGTCTACTGC
+ENSMUSG00000015340|trans   2076  2.14e-05 GTTTTCCTTG TCTTTATTTTT CTTGCAGACA
+ENSMUSG00000032782|trans   2245  2.55e-05 TTCCAGAATT GTTTTATTATT TTAGAATATA
+ENSMUSG00000036533|trans    475  2.82e-05 TCCTAGCCTT TTTTGTATATT GTATCTTTTG
+ENSMUSG00000032782|trans   2412  2.82e-05 ATAATTTATA TTTTGTATATT TTCTGAAATA
+ENSMUSG00000035105|trans   1418  2.94e-05 GTGGCTCAGT TTTGTTTTATT TAGTATTTCC
+ENSMUSG00000056296|trans   1343  2.94e-05 TCTTAAATCC TATTGTTTATT AAATCCTGTA
+ENSMUSG00000064280|trans    221  3.04e-05 TCAAAGGGCA TTTTGATTGTT CATGTGTTTC
+ENSMUSG00000056296|trans   1527  4.10e-05 CCTCTCACAC TTTTTTTATTT CCACCTTTTT
+ENSMUSG00000002930|trans    744  4.10e-05 ATGTAAGGAA TTTATTTTTTT AAATCTAAGG
+ENSMUSG00000040473|trans    138  4.10e-05 ATAATACACT TTATTTTTATT GAAAACACCA
+ENSMUSG00000028718|trans   3617  4.10e-05 CACCAGAATG TTTTTATCATT TTAAGAACAT
+ENSMUSG00000053475|trans    307  4.25e-05 TATTAACATG TATTTATTATT TTTCCAAATG
+ENSMUSG00000054196|trans    218  4.38e-05 TTTTTTTTCA TTATTATTTTT TAAGCCTATA
+ENSMUSG00000022969|trans    589  4.88e-05 TTTAGTGTTT GTTTGTTTGTT TGTTTGTTTG
+ENSMUSG00000046192|trans     97  6.41e-05 TATATTTCTA TTTGTATTATT TGCTTTACTG
+ENSMUSG00000053475|trans    510  1.03e-04 TATGATTTGC GTTTGAATTTT GGCATTCTGC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000103092|trans            8e-07  1729_[3]_661
+ENSMUSG00000001870|trans          5.7e-06  302_[3]_83_[3]_807
+ENSMUSG00000022969|trans          4.9e-05  588_[3]_33_[3]_1_[3]_51_[3]_1761
+ENSMUSG00000020387|trans          1.2e-05  814_[3]_1117_[3]_2203
+ENSMUSG00000033491|trans            1e-05  1450_[3]_359_[3]_204
+ENSMUSG00000037572|trans            8e-07  155_[3]_193_[3]_431
+ENSMUSG00000030790|trans            8e-07  348_[3]_293
+ENSMUSG00000030310|trans            8e-07  308_[3]_1804
+ENSMUSG00000029504|trans            8e-07  1763_[3]_1115
+ENSMUSG00000015340|trans          2.1e-05  1153_[3]_911_[3]_486_[3]_382
+ENSMUSG00000053475|trans           0.0001  69_[3]_13_[3]_185_[3]_6_[3]_69_
+                                           [3]_112_[3]_195
+ENSMUSG00000030862|trans          1.4e-06  169_[3]_3_[3]_883
+ENSMUSG00000029468|trans          2.1e-05  1197_[3]_1025_[3]_442_[3]_288
+ENSMUSG00000035105|trans          2.9e-05  1417_[3]_44_[3]_160
+ENSMUSG00000056296|trans          4.1e-05  966_[3]_365_[3]_173_[3]_822
+ENSMUSG00000052837|trans          5.7e-06  197_[3]_277
+ENSMUSG00000002930|trans          4.1e-05  470_[3]_262_[3]_379
+ENSMUSG00000028476|trans            1e-05  793_[3]_637
+ENSMUSG00000027624|trans          1.5e-05  2700_[3]_138_[3]_357_[3]_168
+ENSMUSG00000028718|trans          4.1e-05  573_[3]_3032_[3]_301
+ENSMUSG00000002799|trans          1.5e-05  347_[3]_712
+ENSMUSG00000043164|trans          1.5e-05  68_[3]_48
+ENSMUSG00000022805|trans          1.9e-05  390_[3]_1055
+ENSMUSG00000052415|trans          1.9e-05  641_[3]_371
+ENSMUSG00000032782|trans          2.8e-05  2244_[3]_156_[3]_82
+ENSMUSG00000036533|trans          2.8e-05  474_[3]_513
+ENSMUSG00000064280|trans            3e-05  220_[3]_100
+ENSMUSG00000040473|trans          4.1e-05  137_[3]_1770
+ENSMUSG00000054196|trans          4.4e-05  217_[3]_128
+ENSMUSG00000046192|trans          6.4e-05  96_[3]_1085
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF UUUUUUUUUUU width=11 seqs=55
+ENSMUSG00000103092|trans ( 1730) UUUUUUUUUUU  1 
+ENSMUSG00000001870|trans (  303) UUUUUUUUUUU  1 
+ENSMUSG00000022969|trans (  645) UUUUUUUUUUU  1 
+ENSMUSG00000020387|trans ( 1943) UUUUUUUUUUU  1 
+ENSMUSG00000033491|trans ( 1451) UUUUUUUUUUU  1 
+ENSMUSG00000037572|trans (  360) UUUUUUUUUUU  1 
+ENSMUSG00000030790|trans (  349) UUUUUUUUUUU  1 
+ENSMUSG00000030310|trans (  309) UUUUUUUUUUU  1 
+ENSMUSG00000029504|trans ( 1764) UUUUUUUUUUU  1 
+ENSMUSG00000015340|trans ( 1154) UUUUUUUUUUU  1 
+ENSMUSG00000053475|trans (   70) UUUUUUUUUUU  1 
+ENSMUSG00000022969|trans (  633) UUUUGUUUUUU  1 
+ENSMUSG00000030862|trans (  184) UUUUGUUUUUU  1 
+ENSMUSG00000030862|trans (  170) UUUUGUUUUUU  1 
+ENSMUSG00000053475|trans (   94) UUUUGUUUUUU  1 
+ENSMUSG00000022969|trans (  707) UUUUUAUUUUU  1 
+ENSMUSG00000029468|trans ( 1198) UUUUUAUUUUU  1 
+ENSMUSG00000035105|trans ( 1473) UUUUGUUUAUU  1 
+ENSMUSG00000056296|trans (  967) UUUUGUUUAUU  1 
+ENSMUSG00000001870|trans (  397) GUUUUUUUUUU  1 
+ENSMUSG00000037572|trans (  156) UUUUUAUUAUU  1 
+ENSMUSG00000052837|trans (  198) GUUUUUUUUUU  1 
+ENSMUSG00000053475|trans (  387) GUUUUUUUUUU  1 
+ENSMUSG00000053475|trans (  290) UUUUUAUUAUU  1 
+ENSMUSG00000033491|trans ( 1821) UUUUUUUCUUU  1 
+ENSMUSG00000002930|trans (  471) UUUUUUUCUUU  1 
+ENSMUSG00000028476|trans (  794) UUUUUUAUUUU  1 
+ENSMUSG00000027624|trans ( 3218) UAUUUUUUUUU  1 
+ENSMUSG00000027624|trans ( 2701) UAUUUUUUUUU  1 
+ENSMUSG00000020387|trans (  815) GUUUUAUUUUU  1 
+ENSMUSG00000029468|trans ( 2234) UUUUGUUUGUU  1 
+ENSMUSG00000028718|trans (  574) UCUUGUUUUUU  1 
+ENSMUSG00000002799|trans (  348) UCUUUUUUAUU  1 
+ENSMUSG00000043164|trans (   69) UUUUGUUCUUU  1 
+ENSMUSG00000027624|trans ( 2850) UUUUGCUUUUU  1 
+ENSMUSG00000022805|trans (  391) UUUUUCUUAUU  1 
+ENSMUSG00000052415|trans (  642) UUUUUUAUAUU  1 
+ENSMUSG00000015340|trans ( 2573) UUUUUCUUAUU  1 
+ENSMUSG00000029468|trans ( 2687) UCUUUAUUUUU  1 
+ENSMUSG00000015340|trans ( 2076) UCUUUAUUUUU  1 
+ENSMUSG00000032782|trans ( 2245) GUUUUAUUAUU  1 
+ENSMUSG00000036533|trans (  475) UUUUGUAUAUU  1 
+ENSMUSG00000032782|trans ( 2412) UUUUGUAUAUU  1 
+ENSMUSG00000035105|trans ( 1418) UUUGUUUUAUU  1 
+ENSMUSG00000056296|trans ( 1343) UAUUGUUUAUU  1 
+ENSMUSG00000064280|trans (  221) UUUUGAUUGUU  1 
+ENSMUSG00000056296|trans ( 1527) UUUUUUUAUUU  1 
+ENSMUSG00000002930|trans (  744) UUUAUUUUUUU  1 
+ENSMUSG00000040473|trans (  138) UUAUUUUUAUU  1 
+ENSMUSG00000028718|trans ( 3617) UUUUUAUCAUU  1 
+ENSMUSG00000053475|trans (  307) UAUUUAUUAUU  1 
+ENSMUSG00000054196|trans (  218) UUAUUAUUUUU  1 
+ENSMUSG00000022969|trans (  589) GUUUGUUUGUU  1 
+ENSMUSG00000046192|trans (   97) UUUGUAUUAUU  1 
+ENSMUSG00000053475|trans (  510) GUUUGAAUUUU  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 88953 bayes= 11.8675 E= 9.7e-015 
+ -1243  -1243    -79    164 
+  -194   -160  -1243    161 
+  -294  -1243  -1243    179 
+  -394  -1243   -260    176 
+ -1243  -1243     40    134 
+   -13   -202  -1243    131 
+  -162  -1243  -1243    170 
+  -394   -160  -1243    170 
+    15  -1243   -202    119 
+ -1243  -1243  -1243    184 
+ -1243  -1243  -1243    184 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 55 E= 9.7e-015 
+ 0.000000  0.000000  0.127273  0.872727 
+ 0.072727  0.072727  0.000000  0.854545 
+ 0.036364  0.000000  0.000000  0.963636 
+ 0.018182  0.000000  0.036364  0.945455 
+ 0.000000  0.000000  0.290909  0.709091 
+ 0.254545  0.054545  0.000000  0.690909 
+ 0.090909  0.000000  0.000000  0.909091 
+ 0.018182  0.072727  0.000000  0.909091 
+ 0.309091  0.000000  0.054545  0.636364 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.000000  0.000000  0.000000  1.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif UUUUUUUUUUU MEME-3 regular expression
+--------------------------------------------------------------------------------
+UUUU[UG][UA]UU[UA]UU
+--------------------------------------------------------------------------------
+
+
+
+
+Time 312.81 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF MCACMCMCASMC MEME-4	width =  12  sites =  33  llr = 379  E-value = 1.3e-011
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 Description
+--------------------------------------------------------------------------------
+Simplified        A  5:a:5:5:a:5:
+pos.-specific     C  4a:a3a59:648
+probability       G  ::::1::::3::
+matrix            U  1:::1:11:111
+
+         bits    2.2  * * *      
+                 2.0  * * *      
+                 1.7  *** * **   
+                 1.5  *** * **   
+Relative         1.3  *** * **  *
+Entropy          1.1  *** * **  *
+(16.6 bits)      0.9  *** * *** *
+                 0.7 **** *******
+                 0.4 **** *******
+                 0.2 ************
+                 0.0 ------------
+
+Multilevel           ACACACCCACAC
+consensus            C   C A  GC 
+sequence                         
+                                 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value                Site  
+-------------             ----- ---------            ------------
+ENSMUSG00000030406|trans    931  6.18e-08 CGCCTCCCAG ACACACCCACCC CCACCCCACA
+ENSMUSG00000035105|trans   1384  1.89e-07 CCCGCCCCCA ACACCCCCACCC GTGCCCCGTC
+ENSMUSG00000035105|trans   1349  1.89e-07 AACTGTCATC CCACCCCCACCC CCAACACCCC
+ENSMUSG00000029504|trans   2362  3.29e-07 GATCATATTC ACACACACACCC TTTTCTCCCA
+ENSMUSG00000022805|trans    294  4.89e-07 CACCATATGA ACACACACACAC ACACACACGA
+ENSMUSG00000022969|trans    493  4.89e-07 ACACACACAC ACACACACACAC ACACACACAT
+ENSMUSG00000022969|trans    481  4.89e-07 ACACACACAC ACACACACACAC ACACACACAC
+ENSMUSG00000022969|trans    469  4.89e-07 ACACACACAT ACACACACACAC ACACACACAC
+ENSMUSG00000029504|trans   2766  4.89e-07 GGTCAACACT CCACACACACAC TCTCACTCTG
+ENSMUSG00000014361|trans   1088  4.89e-07 ACACACACAC ACACACACACAC GAACATGCAT
+ENSMUSG00000014361|trans   1076  4.89e-07 TGTTCTCTGT ACACACACACAC ACACACACAC
+ENSMUSG00000022602|trans     32  6.29e-07 AGCCCGCCTG CCACACCCAGCC TGTGGCTTTT
+ENSMUSG00000052837|trans     23  7.56e-07 CCCCATACGG ACACCCCCAGCC TTGAAGGCTG
+ENSMUSG00000029442|trans   1167  7.56e-07 CCACCCCCCA CCACCCCCAGCC TAATCTTTGG
+ENSMUSG00000030310|trans    495  8.17e-07 CTTCCAGGAC CCACCCCCAGAC TGTTCACAGA
+ENSMUSG00000022805|trans    572  1.31e-06 CATTAGGCAG ACACTCCCACCC CCACGCACAA
+ENSMUSG00000030310|trans   1542  2.64e-06 CAACCCCACC CCACCCCCACCT GTGTAGGAAG
+ENSMUSG00000022969|trans    505  3.68e-06 ACACACACAC ACACACACATCC ACACAACATT
+ENSMUSG00000029151|trans     10  3.68e-06  GCCTCAGCC CCACCCTCACCC CACTGCCAGG
+ENSMUSG00000029468|trans   2186  3.68e-06 TGGCATGTGT CCACCCCCAGTC TCCCAGTAAA
+ENSMUSG00000022969|trans    457  4.28e-06 GGCATAGCTA ACACACACACAT ACACACACAC
+ENSMUSG00000029468|trans   1676  4.28e-06 TCCACATGAA CCACACACATAC TCACACACAT
+ENSMUSG00000040936|trans   3581  4.96e-06 TCTCAGCAAA CCACTCACAGAC CTCATCAGCC
+ENSMUSG00000022602|trans    703  5.24e-06 GGCTGAGTCC TCACACCCAGCC GAGGCAGCGG
+ENSMUSG00000030310|trans    877  6.18e-06 TTTCAGATGT ACACGCCCACTC ATGGAGCAGG
+ENSMUSG00000035105|trans   1369  6.67e-06 CCCCAACACC CCACCCCCGCCC CCAACACCCC
+ENSMUSG00000032782|trans   1425  6.67e-06 TGATGTGACT CCACCCACAGCT GGGCCCTTCT
+ENSMUSG00000026875|trans    633  7.21e-06 AGGTGTGAGA CCACACCCACAG AGGATTCTGG
+ENSMUSG00000029468|trans   1690  7.52e-06 ACACATACTC ACACACATACAC ACATATAAAT
+ENSMUSG00000028718|trans   2393  1.75e-05 CTCTGCGGAC ACACGCACAGAT GTGCCAGTAC
+ENSMUSG00000022602|trans    272  1.85e-05 CTCACCCTCT ACACTCTCAGAC CATCACAGAA
+ENSMUSG00000046380|trans    415  2.27e-05 CTGGTGGACC CCACGCCCATTC CTAAGGGCAC
+ENSMUSG00000030310|trans     16  2.41e-05 CAGCCCCCCA TCACCCCTACAC TGGCACTCTG
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000030406|trans          6.2e-08  930_[4]_365
+ENSMUSG00000035105|trans          6.7e-06  1348_[4]_8_[4]_3_[4]_248
+ENSMUSG00000029504|trans          4.9e-07  2361_[4]_392_[4]_112
+ENSMUSG00000022805|trans          1.3e-06  293_[4]_266_[4]_873
+ENSMUSG00000022969|trans          4.3e-06  456_[4]_[4]_[4]_[4]_[4]_1962
+ENSMUSG00000014361|trans          4.9e-07  1075_[4]_[4]_128
+ENSMUSG00000022602|trans          1.8e-05  31_[4]_228_[4]_419_[4]_954
+ENSMUSG00000052837|trans          7.6e-07  22_[4]_451
+ENSMUSG00000029442|trans          7.6e-07  1166_[4]_50
+ENSMUSG00000030310|trans          2.4e-05  15_[4]_467_[4]_370_[4]_653_[4]_570
+ENSMUSG00000029151|trans          3.7e-06  9_[4]_643
+ENSMUSG00000029468|trans          7.5e-06  1675_[4]_2_[4]_484_[4]_788
+ENSMUSG00000040936|trans            5e-06  3580_[4]_275
+ENSMUSG00000032782|trans          6.7e-06  1424_[4]_1068
+ENSMUSG00000026875|trans          7.2e-06  632_[4]_1479
+ENSMUSG00000028718|trans          1.7e-05  2392_[4]_1524
+ENSMUSG00000046380|trans          2.3e-05  414_[4]_3034
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF MCACMCMCASMC width=12 seqs=33
+ENSMUSG00000030406|trans (  931) ACACACCCACCC  1 
+ENSMUSG00000035105|trans ( 1384) ACACCCCCACCC  1 
+ENSMUSG00000035105|trans ( 1349) CCACCCCCACCC  1 
+ENSMUSG00000029504|trans ( 2362) ACACACACACCC  1 
+ENSMUSG00000022805|trans (  294) ACACACACACAC  1 
+ENSMUSG00000022969|trans (  493) ACACACACACAC  1 
+ENSMUSG00000022969|trans (  481) ACACACACACAC  1 
+ENSMUSG00000022969|trans (  469) ACACACACACAC  1 
+ENSMUSG00000029504|trans ( 2766) CCACACACACAC  1 
+ENSMUSG00000014361|trans ( 1088) ACACACACACAC  1 
+ENSMUSG00000014361|trans ( 1076) ACACACACACAC  1 
+ENSMUSG00000022602|trans (   32) CCACACCCAGCC  1 
+ENSMUSG00000052837|trans (   23) ACACCCCCAGCC  1 
+ENSMUSG00000029442|trans ( 1167) CCACCCCCAGCC  1 
+ENSMUSG00000030310|trans (  495) CCACCCCCAGAC  1 
+ENSMUSG00000022805|trans (  572) ACACUCCCACCC  1 
+ENSMUSG00000030310|trans ( 1542) CCACCCCCACCU  1 
+ENSMUSG00000022969|trans (  505) ACACACACAUCC  1 
+ENSMUSG00000029151|trans (   10) CCACCCUCACCC  1 
+ENSMUSG00000029468|trans ( 2186) CCACCCCCAGUC  1 
+ENSMUSG00000022969|trans (  457) ACACACACACAU  1 
+ENSMUSG00000029468|trans ( 1676) CCACACACAUAC  1 
+ENSMUSG00000040936|trans ( 3581) CCACUCACAGAC  1 
+ENSMUSG00000022602|trans (  703) UCACACCCAGCC  1 
+ENSMUSG00000030310|trans (  877) ACACGCCCACUC  1 
+ENSMUSG00000035105|trans ( 1369) CCACCCCCGCCC  1 
+ENSMUSG00000032782|trans ( 1425) CCACCCACAGCU  1 
+ENSMUSG00000026875|trans (  633) CCACACCCACAG  1 
+ENSMUSG00000029468|trans ( 1690) ACACACAUACAC  1 
+ENSMUSG00000028718|trans ( 2393) ACACGCACAGAU  1 
+ENSMUSG00000022602|trans (  272) ACACUCUCAGAC  1 
+ENSMUSG00000046380|trans (  415) CCACGCCCAUUC  1 
+ENSMUSG00000030310|trans (   16) UCACCCCUACAC  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 12 n= 88884 bayes= 12.739 E= 1.3e-011 
+    88     94  -1169   -220 
+ -1169    218  -1169  -1169 
+   184  -1169  -1169  -1169 
+ -1169    218  -1169  -1169 
+    80     59   -128   -162 
+ -1169    218  -1169  -1169 
+    70    114  -1169   -220 
+ -1169    209  -1169   -220 
+   180  -1169   -286  -1169 
+ -1169    146     46   -162 
+    80     94  -1169   -162 
+ -1169    194   -286   -120 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 12 nsites= 33 E= 1.3e-011 
+ 0.515152  0.424242  0.000000  0.060606 
+ 0.000000  1.000000  0.000000  0.000000 
+ 1.000000  0.000000  0.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.484848  0.333333  0.090909  0.090909 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.454545  0.484848  0.000000  0.060606 
+ 0.000000  0.939394  0.000000  0.060606 
+ 0.969697  0.000000  0.030303  0.000000 
+ 0.000000  0.606061  0.303030  0.090909 
+ 0.484848  0.424242  0.000000  0.090909 
+ 0.000000  0.848485  0.030303  0.121212 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif MCACMCMCASMC MEME-4 regular expression
+--------------------------------------------------------------------------------
+[AC]CAC[AC]C[CA]CA[CG][AC]C
+--------------------------------------------------------------------------------
+
+
+
+
+Time 415.36 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF SCCYRSCYSSC MEME-5	width =  11  sites = 137  llr = 1131  E-value = 2.3e-013
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 Description
+--------------------------------------------------------------------------------
+Simplified        A  :2:23:::::2
+pos.-specific     C  67a426a4366
+probability       G  42::54::53:
+matrix            U  :::5:::6212
+
+         bits    2.2   *   *    
+                 2.0   *   *    
+                 1.7   *   *    
+                 1.5   *   *    
+Relative         1.3   *  **    
+Entropy          1.1 * *  ***   
+(11.9 bits)      0.9 ***  *** * 
+                 0.7 ***  ******
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           CCCUGCCUGCC
+consensus            G  CAG CCG 
+sequence                 C   U  
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000022602|trans   1174  1.75e-07 TCCTGCTGTG CCCTGCCTGCC AGGTCAAGCC
+ENSMUSG00000026875|trans     68  1.75e-07 GACAGCCAGG CCCTGCCTGCC CTTGGAGCCC
+ENSMUSG00000020387|trans    154  3.51e-07 GGCCGCACTC GCCTGCCTGCC AAGAAGAAAC
+ENSMUSG00000052837|trans    130  1.55e-06 CTGGACTCCG GCCCGCCCGCC TGCGCCCAGT
+ENSMUSG00000002799|trans    970  2.44e-06 CCAGGCCGCT GCCCACCTGCC GGCCCCGGCC
+ENSMUSG00000019850|trans    335  2.44e-06 CAGTTCCTGA GCCTGGCTGCC AGGCAACAGG
+ENSMUSG00000030790|trans    103  2.44e-06 GCAGAGATCT GCCTGGCTGCC CCTAGGGGAG
+ENSMUSG00000068874|trans   1086  2.44e-06 CACATTCTGA GCCTGCCTGGC TTCACTCTGC
+ENSMUSG00000052837|trans     48  3.60e-06 AAGGCTGGGC GCCTGCCCCCC ACTGGGGTGA
+ENSMUSG00000030310|trans    579  3.60e-06 GTGTCCCCTG CCCTACCTCCC CAGGTGGCAT
+ENSMUSG00000068874|trans    659  3.60e-06 CCCACAGAAG CCCCGCCTCGC TGGGCAGATC
+ENSMUSG00000046380|trans   2127  6.06e-06 GTTACCTGAG CCCTACCTGGC CCTTTGCTGG
+ENSMUSG00000022602|trans    493  6.06e-06 CCAGCTGGTA CCCTAGCTGCC GCCCAGGGCA
+ENSMUSG00000014846|trans     77  6.06e-06 GAGCAAGAAA GCCTGGCTCCC TCCCTGCTGG
+ENSMUSG00000029843|trans    146  6.06e-06 GTGTCTCCCT CCCAGCCTGCC TGCTTTTCTT
+ENSMUSG00000029504|trans    725  8.29e-06 CTTTAACCAG GCCTCCCTCCC TTTTAAATTT
+ENSMUSG00000029151|trans    372  8.29e-06 GTCATCAGGG GCCCCCCTCCC CATGTGACCC
+ENSMUSG00000022602|trans    993  1.02e-05 CTGCCATGAT GCCCGCCCCGC TGGCCGCTCA
+ENSMUSG00000022602|trans     19  1.02e-05 GCCCAGGGTC CCCAGCCCGCC TGCCACACCC
+ENSMUSG00000020387|trans   1087  1.02e-05 CCATCCCAGG GCCTGCCCCGC CTTGTCCCCC
+ENSMUSG00000029442|trans   1155  1.02e-05 TTCTGTCCAT GCCCACCCCCC ACCACCCCCA
+ENSMUSG00000028718|trans   3788  1.02e-05 TACTTCTATT CCCCCCCCCCC AAGTTGTTTC
+ENSMUSG00000015340|trans   1402  1.02e-05 TTTCTGACTG CCCCCCCCCCC CCAGGAATAC
+ENSMUSG00000002799|trans     41  1.20e-05 GCTGGCACCA CGCTGCCTGCC GGACCATAGG
+ENSMUSG00000032782|trans   1876  1.20e-05 GGTTGGGGTG CCCTGCCTGCT GAGGACCTGC
+ENSMUSG00000020387|trans   1295  1.20e-05 ACCATCTGAG GCCCGCCCTCC CGCCCGCCCG
+ENSMUSG00000031786|trans     81  1.20e-05 TCCTATACTA GCCTCGCTGCC ACACTACCTC
+ENSMUSG00000029504|trans    943  1.20e-05 GCTACCACAG CCCTGGCTTCC CTTACTGGTG
+ENSMUSG00000062031|trans    241  1.46e-05 AGTGAGCTTC CCCAGCCTGGC ACTCAAGGAT
+ENSMUSG00000023224|trans    512  1.70e-05 ATTTCCTTGC CACTGCCTGCC           
+ENSMUSG00000022969|trans    439  2.01e-05 ATAAAACCTA GCCTCCCCGGC ATAGCTAACA
+ENSMUSG00000032782|trans    933  2.01e-05 GGAACTGGCT GCCCAGCTGGC TCAGTTCAAG
+ENSMUSG00000020387|trans   3542  2.01e-05 CGTGCCCTTG GCCCAGCTGGC CACATTGGCC
+ENSMUSG00000036634|trans    222  2.01e-05 CCCATCAAGA CCCTCGCTGGC CCCCACTGGC
+ENSMUSG00000001025|trans    122  2.01e-05 AACCAGTCAG GCCCAGCTGGC ACCCTGGCAC
+ENSMUSG00000015340|trans   2137  2.01e-05 CCTCTCCCAG CCCTGCCTCCA CACCTCCTCT
+ENSMUSG00000046380|trans   2947  2.24e-05 AGATTGTAAC CCCCAGCTCGC AGAGAGGCTT
+ENSMUSG00000029468|trans    255  2.24e-05 CTCCTCATAT CCCAACCTCCC CACCTACTTT
+ENSMUSG00000028476|trans    256  2.24e-05 TCAGTAGATG GCCCCCCTTCC CCAAAGCAAA
+ENSMUSG00000046380|trans   1884  2.78e-05 TGTCACACTG CCCTGGCTGCT CCTTTCCCAC
+ENSMUSG00000032782|trans    860  2.78e-05 GCCTGCGGCA GGCCGCCTCCC TCAGGGACCA
+ENSMUSG00000020387|trans   1307  2.78e-05 CCGCCCTCCC GCCCGCCCGCA ACCCCTCCTC
+ENSMUSG00000040936|trans   1929  2.78e-05 TGGGCCGTCC CCCTGGCTGCA TACACTGTGC
+ENSMUSG00000019850|trans   1166  2.78e-05 TCCTATGACT CCCTGGCTGCA CAAGAAGAAA
+ENSMUSG00000028476|trans    429  2.78e-05 AGTGAAAAGC CGCTACCTGCC ATGACAGGGC
+ENSMUSG00000027624|trans   2348  2.78e-05 AGGCTGGTAG GCCTGCCCTGC TCCAGTGGGG
+ENSMUSG00000027624|trans   1762  2.78e-05 CTGCATCAGA CCCTGGCTTGC AGGACCTCCA
+ENSMUSG00000022602|trans   1080  3.04e-05 TTGGCACAGA GCCCAGCTCGC TGCATGGCCT
+ENSMUSG00000029468|trans   1112  3.04e-05 TAGAAAGTAG CCCAAGCTGCC AGGAGAGGCG
+ENSMUSG00000103092|trans   1068  3.61e-05 GTATTATCCC GGCCACCTGCC AATCACAGCT
+ENSMUSG00000103092|trans    274  3.61e-05 GGAGAAGCTT CCCAGCCCCGC CAGTGAGAGT
+ENSMUSG00000032359|trans    730  3.61e-05 AACATGTGTG GCCTGGCTGCT TGTGCCTCCT
+ENSMUSG00000052837|trans    342  3.61e-05 GAGGGACCTC CGCCCCCTGCC CTCCCCCTCT
+ENSMUSG00000036634|trans    325  3.61e-05 TGGGGGCCTG GCCTCCCCTCC TTCCCAGCTG
+ENSMUSG00000028718|trans   1186  3.61e-05 CACAGTCTTC GCCTGGCTTGC ACATGAGAAA
+ENSMUSG00000068874|trans     50  3.61e-05 GCACACCAGC CACTGCCTGGC CAGTGGAGAA
+ENSMUSG00000054196|trans     20  4.21e-05 CGATTTCAGT CCCTGCCTCGT TGGCTTTTTA
+ENSMUSG00000002930|trans    195  4.21e-05 TGCTTTTTAA CCCCACCTCCT AAACTTTCAT
+ENSMUSG00000001025|trans    225  4.21e-05 TGCTCCCTGG CCCTGGCCTGC AGCTGTGCTC
+ENSMUSG00000040936|trans   3449  4.64e-05 CACACTGCTG GCCTCCCTGCT CGACATCCTA
+ENSMUSG00000052837|trans      3  4.64e-05         GA GCCTCCCTTGC CCCATACGGA
+ENSMUSG00000017754|trans     57  4.64e-05 GTCTTCTCTG CACCCCCTGCC AACCCCTTCC
+ENSMUSG00000103092|trans    964  5.70e-05 ATACAATCCC CCCAACCTTCC CTCAAAAGAG
+ENSMUSG00000046380|trans    281  5.70e-05 CTGGAGCCTC CCCTAGCTGCA GCTTGGTTCA
+ENSMUSG00000032782|trans   1793  5.70e-05 GTGGTCTCAG CACTGGCTCCC CAGAGAAAGA
+ENSMUSG00000031786|trans     93  5.70e-05 CTCGCTGCCA CACTACCTCCC TATCCCTCAT
+ENSMUSG00000053475|trans    230  5.70e-05 CGTCCACCAC CACCGCCCGGC TTCAATATTT
+ENSMUSG00000027624|trans   2163  5.70e-05 TCCGGGAGAG CCCCGGCTGGA TGTGTTCTCT
+ENSMUSG00000027624|trans    402  5.70e-05 TTCCCTTGAA CCCCAGCTGCA CAGACTCCAG
+ENSMUSG00000020387|trans   2625  6.15e-05 CGTCGGCATC CCCCGCCCCGT CTCTTGTTTA
+ENSMUSG00000040936|trans   2164  6.15e-05 GGCAGTCTCC CACCGCCTTCC AGAATGTCAT
+ENSMUSG00000022602|trans   1012  7.16e-05 GCTGGCCGCT CACTAGCTGCC TGCCATTAGC
+ENSMUSG00000030443|trans    258  7.16e-05 TACCCTAACA GGCCACCTGGC CCCCAGAACC
+ENSMUSG00000029151|trans    295  7.16e-05 CCCTGTGGCA GGCTGGCTGGC TAGCTGGGGA
+ENSMUSG00000068874|trans   1067  7.16e-05 CGCACTAGGG GCCCCCCTCCA CATTCTGAGC
+ENSMUSG00000015340|trans   2455  7.16e-05 AGCTCACAGC CACCAGCTGCC AGCTGCCAGC
+ENSMUSG00000015340|trans   2434  7.16e-05 TCTTTTTGCT CCCAAGCCCCC AGCTCACAGC
+ENSMUSG00000031343|trans    481  7.16e-05 TAGGCATATG GCCTACCTGGT AGAATGGGAA
+ENSMUSG00000027624|trans    701  7.16e-05 CTGTTCTTCT GCCTCCCCGCT TCACCCTTGA
+ENSMUSG00000022969|trans    368  8.02e-05 AGGTTCCCTG CCCCAGCTCCA GCCAGGGTTC
+ENSMUSG00000022602|trans   1287  8.02e-05 CTCAGCCAAG CCCCAGCTCCA ATTACCTTGT
+ENSMUSG00000027624|trans    773  8.02e-05 CTGCCTCTCT CCCAACCCTCC TGTTCTGTGT
+ENSMUSG00000002799|trans    925  8.90e-05 CCTTCACACA GACCCCCTCCC AGCTGTCAGC
+ENSMUSG00000020387|trans   2579  8.90e-05 GACTTAGTCT GCCTGCCCGTC TCGGTAGTAG
+ENSMUSG00000020387|trans   2287  8.90e-05 AAACTTTGAG GACTCCCTCCC CCTTTTGAGG
+ENSMUSG00000029468|trans   2279  8.90e-05 GACTGGAAAG CCCTGGCTGTC CTGGAATTCA
+ENSMUSG00000028718|trans   2794  8.90e-05 CTCTGTGTAG CCCTGGCTGTC CGGGAACTCA
+ENSMUSG00000103092|trans    251  1.02e-04 TTTCCTTTCT CCCCCGCCGCA AAGGAGAAGC
+ENSMUSG00000014846|trans    225  1.02e-04 TCCTCACCGC CCCAGCCTGGT CCCAGGCATG
+ENSMUSG00000027624|trans   1116  1.02e-04 CTCTGGGTGT GGCCAGCTCCC AGTAGGGCTG
+ENSMUSG00000010044|trans    613  1.11e-04 CTGGCTGAAA CCCAGCCCCCT AAGAAGGACC
+ENSMUSG00000010044|trans    591  1.11e-04 GGGTTTCCTG GCCCACCTGTC CCTGGCTGAA
+ENSMUSG00000030790|trans    205  1.11e-04 GGGTCTGAGC CACTGCCTTGC CCGCTCATAA
+ENSMUSG00000053647|trans    401  1.11e-04 GACCCAAACT GGCTACCTTCC CTTTGCTTGT
+ENSMUSG00000015340|trans   2839  1.11e-04 TCAGTTACAA CCCTCCCTGTC TAGGTAATGC
+ENSMUSG00000040936|trans   2217  1.25e-04 GTCATCAGCT CCCTGGCCTCT GCCATCTGCA
+ENSMUSG00000052837|trans    294  1.25e-04 GGCGGAGCTG GCCCCGCCGCT TGGTACTCAG
+ENSMUSG00000030406|trans   1239  1.25e-04 TGCTACTGTA CCCTGCCCTGA GCTAATCTCT
+ENSMUSG00000026875|trans   2058  1.25e-04 GCAGGATATT GCCAACCTTGC ATTTGCTCAG
+ENSMUSG00000027624|trans   3302  1.25e-04 CTCTCTCGTC CCCACGCTTCC CCACCTCAGT
+ENSMUSG00000046380|trans     68  1.36e-04 GTGGGGCAGA GACTGCCTGCT AGGGAGGAGA
+ENSMUSG00000022602|trans   1432  1.36e-04 CTGTGCCCCT GCCAGCCCCCA CAAGTTTATT
+ENSMUSG00000052837|trans    173  1.36e-04 AGGTTTACAT GGCCCCCTTCC AGCGTATTTT
+ENSMUSG00000029468|trans   2842  1.36e-04 AGCTTCCTGA CGCAGCCCGGC TGACTTCCTG
+ENSMUSG00000002799|trans    987  1.51e-04 TGCCGGCCCC GGCCACCCTCC TTGTGAAAGT
+ENSMUSG00000035105|trans    109  1.51e-04 TCGTTCAGCT CCCCACCTTGT TTGTGGTACT
+ENSMUSG00000020387|trans    367  1.51e-04 AGCCCTCCAC CACTGGCCTCC GAGATACTAG
+ENSMUSG00000020937|trans    337  1.51e-04 CAGCCACCTT CACTGCCTCCT TTCAGGGTGA
+ENSMUSG00000056296|trans   1512  1.51e-04 TATCTCCTGC CCCTCCCTCTC ACACTTTTTT
+ENSMUSG00000056296|trans     35  1.51e-04 GTGATAGCAT CACCACCCTCC ATTTCAGTAG
+ENSMUSG00000022602|trans    213  1.94e-04 CCCACCTGCC GCCTACCCCTC ATCTGTCTGC
+ENSMUSG00000035105|trans     16  1.94e-04 GTGTGCAATC CGCTGGCCGCA TTCGTGTAGT
+ENSMUSG00000020878|trans     20  1.94e-04 TCTATGCACG CGCCACCTCCT CAGGCTTTGC
+ENSMUSG00000040936|trans   2441  1.94e-04 GAGCTGCCAA GCCAGGCTGGT GATGTACATC
+ENSMUSG00000029504|trans   1676  1.94e-04 TTGCATCTGA CCCTAGCCTCT TGCTGTGTGG
+ENSMUSG00000027624|trans   2540  1.94e-04 TGCAGGAACT CCCCGGCCTGA ACACACAAGA
+ENSMUSG00000032782|trans   2122  2.08e-04 TGGAGATGAG GCCCGCCCTTC TCCTCTTCTG
+ENSMUSG00000022969|trans    933  2.30e-04 ACTGCAAGCG CACTGCCTCGA CTCAGTGCGA
+ENSMUSG00000020387|trans   1727  2.30e-04 GGCAGGCCGA GGCTGGCCTGC TGTGGCTGGT
+ENSMUSG00000032359|trans    833  2.30e-04 CGATGAGAAT GCCACCCTGGA GAAAATTGTG
+ENSMUSG00000022969|trans   2274  2.66e-04 AATGCCTATA GACCACCCGCA TCTCAAAAGT
+ENSMUSG00000040936|trans   1643  2.66e-04 CAGGCTGCTT CACTCCCCGCT GTTCCAGTTG
+ENSMUSG00000022969|trans   1578  2.82e-04 TGTTCTCCTT CCCTCCCCCCG AGGAGGCCGA
+ENSMUSG00000035105|trans   1154  2.82e-04 ACGAAAGTTA GCCACCCTCGT TTCTGCTGCT
+ENSMUSG00000020387|trans    937  2.82e-04 GGTTCTATGT GCCACCCCGGT CCCAGCCCAT
+ENSMUSG00000029843|trans    456  2.82e-04 TCAGTGGTCC CCCTACCTCGG CACCAAATTC
+ENSMUSG00000040936|trans   3176  3.02e-04 CATGACGGAA CACAACCCCGC TTTCACCAGG
+ENSMUSG00000010044|trans    821  3.02e-04 CTCCGGAGAG GCCCCGCTGCG GCTACTGCAA
+ENSMUSG00000037544|trans   2318  3.02e-04 TCCATCCAGA CGCTACCTTCA GAGTAGCCTG
+ENSMUSG00000030310|trans    373  3.43e-04 AGACTTTTCT GCCCGCCTTGG CTCTGAACTG
+ENSMUSG00000037544|trans   1383  3.69e-04 TCTGAACAGA GACTGGCCGGA AAGACTTGCT
+ENSMUSG00000029468|trans    214  3.69e-04 TGGTCTGCGG CGCCACCCTCA GCTTAAAATG
+ENSMUSG00000020387|trans    469  3.87e-04 GGCAGGCTCC GGCCACCCCGA GAGATGAAGG
+ENSMUSG00000010044|trans   1038  4.34e-04 AGGGACTCGT GGCTCGCCCCT GTCAGACCTC
+ENSMUSG00000053647|trans     18  4.34e-04 AGGTCAGGGG CGCAGGCTGGT GCTCAGGACT
+ENSMUSG00000037572|trans    580  4.57e-04 TGAGCCATCT CGCCAGCCCGA AAATATATTT
+ENSMUSG00000029442|trans    249  5.00e-04 ACCAGTTGAC GGCAACCCCCA CAAAACATGT
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000022602|trans            8e-05  18_[5]_183_[5]_269_[5]_489_[5]_
+                                           8_[5]_57_[5]_83_[5]_102_[5]_134_
+                                           [5]_226
+ENSMUSG00000026875|trans          0.00013  67_[5]_1979_[5]_55
+ENSMUSG00000020387|trans          0.00015  153_[5]_202_[5]_91_[5]_457_[5]_
+                                           139_[5]_197_[5]_1_[5]_409_[5]_549_
+                                           [5]_281_[5]_35_[5]_906_[5]_604
+ENSMUSG00000052837|trans          0.00014  2_[5]_34_[5]_71_[5]_32_[5]_110_
+                                           [5]_37_[5]_133
+ENSMUSG00000002799|trans          8.9e-05  40_[5]_873_[5]_34_[5]_6_[5]_73
+ENSMUSG00000019850|trans          2.8e-05  334_[5]_820_[5]_645
+ENSMUSG00000030790|trans          0.00011  102_[5]_91_[5]_437
+ENSMUSG00000068874|trans          7.2e-05  49_[5]_598_[5]_397_[5]_8_[5]_132
+ENSMUSG00000030310|trans          0.00034  372_[5]_195_[5]_1534
+ENSMUSG00000046380|trans          0.00014  67_[5]_202_[5]_1592_[5]_232_[5]_
+                                           809_[5]_503
+ENSMUSG00000014846|trans           0.0001  76_[5]_137_[5]_108
+ENSMUSG00000029843|trans          0.00028  145_[5]_299_[5]_408
+ENSMUSG00000029504|trans          0.00019  724_[5]_207_[5]_722_[5]_1203
+ENSMUSG00000029151|trans          7.2e-05  294_[5]_66_[5]_282
+ENSMUSG00000029442|trans           0.0005  248_[5]_895_[5]_63
+ENSMUSG00000028718|trans          8.9e-05  1185_[5]_1597_[5]_983_[5]_130
+ENSMUSG00000015340|trans          7.2e-05  1401_[5]_724_[5]_286_[5]_10_[5]_
+                                           373_[5]_116
+ENSMUSG00000032782|trans          5.7e-05  859_[5]_62_[5]_849_[5]_72_[5]_235_
+                                           [5]_372
+ENSMUSG00000031786|trans          5.7e-05  80_[5]_1_[5]_49
+ENSMUSG00000062031|trans          1.5e-05  240_[5]_1050
+ENSMUSG00000023224|trans          1.7e-05  511_[5]
+ENSMUSG00000022969|trans            8e-05  367_[5]_60_[5]_483_[5]_634_[5]_
+                                           685_[5]_194
+ENSMUSG00000036634|trans          3.6e-05  221_[5]_92_[5]_200
+ENSMUSG00000001025|trans          4.2e-05  121_[5]_92_[5]_271
+ENSMUSG00000029468|trans          0.00037  213_[5]_30_[5]_846_[5]_1156_[5]_
+                                           552_[5]_133
+ENSMUSG00000028476|trans          2.2e-05  255_[5]_162_[5]_1002
+ENSMUSG00000040936|trans          0.00013  1642_[5]_275_[5]_224_[5]_42_[5]_
+                                           213_[5]_724_[5]_262_[5]_408
+ENSMUSG00000027624|trans          5.7e-05  401_[5]_288_[5]_61_[5]_332_[5]_
+                                           635_[5]_390_[5]_174_[5]_181_[5]_
+                                           751_[5]_84
+ENSMUSG00000103092|trans          5.7e-05  250_[5]_12_[5]_679_[5]_93_[5]_1323
+ENSMUSG00000032359|trans          0.00023  729_[5]_92_[5]_257
+ENSMUSG00000054196|trans          4.2e-05  19_[5]_326
+ENSMUSG00000002930|trans          4.2e-05  194_[5]_928
+ENSMUSG00000017754|trans          4.6e-05  56_[5]_121
+ENSMUSG00000053475|trans          5.7e-05  229_[5]_475
+ENSMUSG00000030443|trans          7.2e-05  257_[5]_377
+ENSMUSG00000031343|trans          7.2e-05  480_[5]_1477
+ENSMUSG00000010044|trans          0.00011  590_[5]_11_[5]_197_[5]_206_[5]_206
+ENSMUSG00000053647|trans          0.00043  17_[5]_372_[5]_360
+ENSMUSG00000030406|trans          0.00013  1238_[5]_58
+ENSMUSG00000035105|trans          0.00015  15_[5]_82_[5]_1034_[5]_479
+ENSMUSG00000020937|trans          0.00015  336_[5]_190
+ENSMUSG00000056296|trans          0.00015  34_[5]_1466_[5]_837
+ENSMUSG00000020878|trans          0.00019  19_[5]_31
+ENSMUSG00000037544|trans          0.00037  1382_[5]_924_[5]_165
+ENSMUSG00000037572|trans          0.00046  579_[5]_211
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF SCCYRSCYSSC width=11 seqs=137
+ENSMUSG00000022602|trans ( 1174) CCCUGCCUGCC  1 
+ENSMUSG00000026875|trans (   68) CCCUGCCUGCC  1 
+ENSMUSG00000020387|trans (  154) GCCUGCCUGCC  1 
+ENSMUSG00000052837|trans (  130) GCCCGCCCGCC  1 
+ENSMUSG00000002799|trans (  970) GCCCACCUGCC  1 
+ENSMUSG00000019850|trans (  335) GCCUGGCUGCC  1 
+ENSMUSG00000030790|trans (  103) GCCUGGCUGCC  1 
+ENSMUSG00000068874|trans ( 1086) GCCUGCCUGGC  1 
+ENSMUSG00000052837|trans (   48) GCCUGCCCCCC  1 
+ENSMUSG00000030310|trans (  579) CCCUACCUCCC  1 
+ENSMUSG00000068874|trans (  659) CCCCGCCUCGC  1 
+ENSMUSG00000046380|trans ( 2127) CCCUACCUGGC  1 
+ENSMUSG00000022602|trans (  493) CCCUAGCUGCC  1 
+ENSMUSG00000014846|trans (   77) GCCUGGCUCCC  1 
+ENSMUSG00000029843|trans (  146) CCCAGCCUGCC  1 
+ENSMUSG00000029504|trans (  725) GCCUCCCUCCC  1 
+ENSMUSG00000029151|trans (  372) GCCCCCCUCCC  1 
+ENSMUSG00000022602|trans (  993) GCCCGCCCCGC  1 
+ENSMUSG00000022602|trans (   19) CCCAGCCCGCC  1 
+ENSMUSG00000020387|trans ( 1087) GCCUGCCCCGC  1 
+ENSMUSG00000029442|trans ( 1155) GCCCACCCCCC  1 
+ENSMUSG00000028718|trans ( 3788) CCCCCCCCCCC  1 
+ENSMUSG00000015340|trans ( 1402) CCCCCCCCCCC  1 
+ENSMUSG00000002799|trans (   41) CGCUGCCUGCC  1 
+ENSMUSG00000032782|trans ( 1876) CCCUGCCUGCU  1 
+ENSMUSG00000020387|trans ( 1295) GCCCGCCCUCC  1 
+ENSMUSG00000031786|trans (   81) GCCUCGCUGCC  1 
+ENSMUSG00000029504|trans (  943) CCCUGGCUUCC  1 
+ENSMUSG00000062031|trans (  241) CCCAGCCUGGC  1 
+ENSMUSG00000023224|trans (  512) CACUGCCUGCC  1 
+ENSMUSG00000022969|trans (  439) GCCUCCCCGGC  1 
+ENSMUSG00000032782|trans (  933) GCCCAGCUGGC  1 
+ENSMUSG00000020387|trans ( 3542) GCCCAGCUGGC  1 
+ENSMUSG00000036634|trans (  222) CCCUCGCUGGC  1 
+ENSMUSG00000001025|trans (  122) GCCCAGCUGGC  1 
+ENSMUSG00000015340|trans ( 2137) CCCUGCCUCCA  1 
+ENSMUSG00000046380|trans ( 2947) CCCCAGCUCGC  1 
+ENSMUSG00000029468|trans (  255) CCCAACCUCCC  1 
+ENSMUSG00000028476|trans (  256) GCCCCCCUUCC  1 
+ENSMUSG00000046380|trans ( 1884) CCCUGGCUGCU  1 
+ENSMUSG00000032782|trans (  860) GGCCGCCUCCC  1 
+ENSMUSG00000020387|trans ( 1307) GCCCGCCCGCA  1 
+ENSMUSG00000040936|trans ( 1929) CCCUGGCUGCA  1 
+ENSMUSG00000019850|trans ( 1166) CCCUGGCUGCA  1 
+ENSMUSG00000028476|trans (  429) CGCUACCUGCC  1 
+ENSMUSG00000027624|trans ( 2348) GCCUGCCCUGC  1 
+ENSMUSG00000027624|trans ( 1762) CCCUGGCUUGC  1 
+ENSMUSG00000022602|trans ( 1080) GCCCAGCUCGC  1 
+ENSMUSG00000029468|trans ( 1112) CCCAAGCUGCC  1 
+ENSMUSG00000103092|trans ( 1068) GGCCACCUGCC  1 
+ENSMUSG00000103092|trans (  274) CCCAGCCCCGC  1 
+ENSMUSG00000032359|trans (  730) GCCUGGCUGCU  1 
+ENSMUSG00000052837|trans (  342) CGCCCCCUGCC  1 
+ENSMUSG00000036634|trans (  325) GCCUCCCCUCC  1 
+ENSMUSG00000028718|trans ( 1186) GCCUGGCUUGC  1 
+ENSMUSG00000068874|trans (   50) CACUGCCUGGC  1 
+ENSMUSG00000054196|trans (   20) CCCUGCCUCGU  1 
+ENSMUSG00000002930|trans (  195) CCCCACCUCCU  1 
+ENSMUSG00000001025|trans (  225) CCCUGGCCUGC  1 
+ENSMUSG00000040936|trans ( 3449) GCCUCCCUGCU  1 
+ENSMUSG00000052837|trans (    3) GCCUCCCUUGC  1 
+ENSMUSG00000017754|trans (   57) CACCCCCUGCC  1 
+ENSMUSG00000103092|trans (  964) CCCAACCUUCC  1 
+ENSMUSG00000046380|trans (  281) CCCUAGCUGCA  1 
+ENSMUSG00000032782|trans ( 1793) CACUGGCUCCC  1 
+ENSMUSG00000031786|trans (   93) CACUACCUCCC  1 
+ENSMUSG00000053475|trans (  230) CACCGCCCGGC  1 
+ENSMUSG00000027624|trans ( 2163) CCCCGGCUGGA  1 
+ENSMUSG00000027624|trans (  402) CCCCAGCUGCA  1 
+ENSMUSG00000020387|trans ( 2625) CCCCGCCCCGU  1 
+ENSMUSG00000040936|trans ( 2164) CACCGCCUUCC  1 
+ENSMUSG00000022602|trans ( 1012) CACUAGCUGCC  1 
+ENSMUSG00000030443|trans (  258) GGCCACCUGGC  1 
+ENSMUSG00000029151|trans (  295) GGCUGGCUGGC  1 
+ENSMUSG00000068874|trans ( 1067) GCCCCCCUCCA  1 
+ENSMUSG00000015340|trans ( 2455) CACCAGCUGCC  1 
+ENSMUSG00000015340|trans ( 2434) CCCAAGCCCCC  1 
+ENSMUSG00000031343|trans (  481) GCCUACCUGGU  1 
+ENSMUSG00000027624|trans (  701) GCCUCCCCGCU  1 
+ENSMUSG00000022969|trans (  368) CCCCAGCUCCA  1 
+ENSMUSG00000022602|trans ( 1287) CCCCAGCUCCA  1 
+ENSMUSG00000027624|trans (  773) CCCAACCCUCC  1 
+ENSMUSG00000002799|trans (  925) GACCCCCUCCC  1 
+ENSMUSG00000020387|trans ( 2579) GCCUGCCCGUC  1 
+ENSMUSG00000020387|trans ( 2287) GACUCCCUCCC  1 
+ENSMUSG00000029468|trans ( 2279) CCCUGGCUGUC  1 
+ENSMUSG00000028718|trans ( 2794) CCCUGGCUGUC  1 
+ENSMUSG00000103092|trans (  251) CCCCCGCCGCA  1 
+ENSMUSG00000014846|trans (  225) CCCAGCCUGGU  1 
+ENSMUSG00000027624|trans ( 1116) GGCCAGCUCCC  1 
+ENSMUSG00000010044|trans (  613) CCCAGCCCCCU  1 
+ENSMUSG00000010044|trans (  591) GCCCACCUGUC  1 
+ENSMUSG00000030790|trans (  205) CACUGCCUUGC  1 
+ENSMUSG00000053647|trans (  401) GGCUACCUUCC  1 
+ENSMUSG00000015340|trans ( 2839) CCCUCCCUGUC  1 
+ENSMUSG00000040936|trans ( 2217) CCCUGGCCUCU  1 
+ENSMUSG00000052837|trans (  294) GCCCCGCCGCU  1 
+ENSMUSG00000030406|trans ( 1239) CCCUGCCCUGA  1 
+ENSMUSG00000026875|trans ( 2058) GCCAACCUUGC  1 
+ENSMUSG00000027624|trans ( 3302) CCCACGCUUCC  1 
+ENSMUSG00000046380|trans (   68) GACUGCCUGCU  1 
+ENSMUSG00000022602|trans ( 1432) GCCAGCCCCCA  1 
+ENSMUSG00000052837|trans (  173) GGCCCCCUUCC  1 
+ENSMUSG00000029468|trans ( 2842) CGCAGCCCGGC  1 
+ENSMUSG00000002799|trans (  987) GGCCACCCUCC  1 
+ENSMUSG00000035105|trans (  109) CCCCACCUUGU  1 
+ENSMUSG00000020387|trans (  367) CACUGGCCUCC  1 
+ENSMUSG00000020937|trans (  337) CACUGCCUCCU  1 
+ENSMUSG00000056296|trans ( 1512) CCCUCCCUCUC  1 
+ENSMUSG00000056296|trans (   35) CACCACCCUCC  1 
+ENSMUSG00000022602|trans (  213) GCCUACCCCUC  1 
+ENSMUSG00000035105|trans (   16) CGCUGGCCGCA  1 
+ENSMUSG00000020878|trans (   20) CGCCACCUCCU  1 
+ENSMUSG00000040936|trans ( 2441) GCCAGGCUGGU  1 
+ENSMUSG00000029504|trans ( 1676) CCCUAGCCUCU  1 
+ENSMUSG00000027624|trans ( 2540) CCCCGGCCUGA  1 
+ENSMUSG00000032782|trans ( 2122) GCCCGCCCUUC  1 
+ENSMUSG00000022969|trans (  933) CACUGCCUCGA  1 
+ENSMUSG00000020387|trans ( 1727) GGCUGGCCUGC  1 
+ENSMUSG00000032359|trans (  833) GCCACCCUGGA  1 
+ENSMUSG00000022969|trans ( 2274) GACCACCCGCA  1 
+ENSMUSG00000040936|trans ( 1643) CACUCCCCGCU  1 
+ENSMUSG00000022969|trans ( 1578) CCCUCCCCCCG  1 
+ENSMUSG00000035105|trans ( 1154) GCCACCCUCGU  1 
+ENSMUSG00000020387|trans (  937) GCCACCCCGGU  1 
+ENSMUSG00000029843|trans (  456) CCCUACCUCGG  1 
+ENSMUSG00000040936|trans ( 3176) CACAACCCCGC  1 
+ENSMUSG00000010044|trans (  821) GCCCCGCUGCG  1 
+ENSMUSG00000037544|trans ( 2318) CGCUACCUUCA  1 
+ENSMUSG00000030310|trans (  373) GCCCGCCUUGG  1 
+ENSMUSG00000037544|trans ( 1383) GACUGGCCGGA  1 
+ENSMUSG00000029468|trans (  214) CGCCACCCUCA  1 
+ENSMUSG00000020387|trans (  469) GGCCACCCCGA  1 
+ENSMUSG00000010044|trans ( 1038) GGCUCGCCCCU  1 
+ENSMUSG00000053647|trans (   18) CGCAGGCUGGU  1 
+ENSMUSG00000037572|trans (  580) CGCCAGCCCGA  1 
+ENSMUSG00000029442|trans (  249) GGCAACCCCCA  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 88953 bayes= 11.5048 E= 2.3e-013 
+ -1374    133    101  -1374 
+   -87    164    -46  -1374 
+ -1374    218  -1374  -1374 
+   -80     70  -1374     79 
+    23     -1    104  -1374 
+ -1374    156     67  -1374 
+ -1374    218  -1374  -1374 
+ -1374     67  -1374    122 
+ -1374     54    106    -35 
+ -1374    144     64   -226 
+   -67    149   -292    -67 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 137 E= 2.3e-013 
+ 0.000000  0.554745  0.445255  0.000000 
+ 0.153285  0.686131  0.160584  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.160584  0.357664  0.000000  0.481752 
+ 0.328467  0.218978  0.452555  0.000000 
+ 0.000000  0.649635  0.350365  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.350365  0.000000  0.649635 
+ 0.000000  0.321168  0.459854  0.218978 
+ 0.000000  0.598540  0.343066  0.058394 
+ 0.175182  0.620438  0.029197  0.175182 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCCYRSCYSSC MEME-5 regular expression
+--------------------------------------------------------------------------------
+[CG]CC[UC][GAC][CG]C[UC][GCU][CG]C
+--------------------------------------------------------------------------------
+
+
+
+
+Time 517.24 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF CUCUSYCUBYC MEME-6	width =  11  sites =  56  llr = 553  E-value = 4.8e-010
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 Description
+--------------------------------------------------------------------------------
+Simplified        A  2::::::::::
+pos.-specific     C  6:6144a:34a
+probability       G  2:2:6::15::
+matrix            U  :a19:6:936:
+
+         bits    2.2       *   *
+                 2.0       *   *
+                 1.7  *    *   *
+                 1.5  *    *   *
+Relative         1.3  * *  **  *
+Entropy          1.1  * ***** **
+(14.2 bits)      0.9  ******* **
+                 0.7 ***********
+                 0.4 ***********
+                 0.2 ***********
+                 0.0 -----------
+
+Multilevel           CUCUGUCUGUC
+consensus            G G CC  CC 
+sequence                     U  
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+ENSMUSG00000036634|trans    424  1.97e-07 GAGAGGGGTG CTCTGTCTGTC CATGTTATTT
+ENSMUSG00000027624|trans   1587  1.97e-07 TCCCCTCTGC CTCTGTCTGTC TTGTGAATCA
+ENSMUSG00000037544|trans   1469  5.50e-07 TTTGGAACAC CTCTGTCTGCC AGCAAAGTTG
+ENSMUSG00000029843|trans    339  7.06e-07 AGCCAGAGCA CTCTGCCTGTC AGACCATGAG
+ENSMUSG00000030310|trans   1043  1.34e-06 GTTCCAGAAG CTCTGTCTCTC TCCTCTGCGG
+ENSMUSG00000103092|trans    188  2.06e-06 CTGGTGTTAA CTCTCTCTCTC TCCACTCTGG
+ENSMUSG00000030443|trans    379  2.06e-06 CTCTCTTGCG CTCTCTCTCTC TCTCTCTCTC
+ENSMUSG00000029151|trans     83  2.06e-06 CAGAAGGGAC CTCTCTCTCTC TCCATCTTCC
+ENSMUSG00000027624|trans   1394  2.06e-06 TTTCGGTCCT CTCTCTCTCTC TCTCTCTCTC
+ENSMUSG00000027624|trans    761  2.22e-06 CTCAGCTCCC CTCTGCCTCTC TCCCAACCCT
+ENSMUSG00000103092|trans    123  3.02e-06 AGAAAGTTCC CTGTGTCTGTC TTGATCGCAT
+ENSMUSG00000030443|trans    397  3.02e-06 CTCTCTCTCT CTCTCTCTTTC AATACATACA
+ENSMUSG00000022805|trans     72  3.69e-06 ATGTGGCCAT GTCTGTCTGTC ACCCCAGGAC
+ENSMUSG00000033491|trans   1546  3.69e-06 GACATCCTTG CTCTGCCTCCC AAGTAGTACT
+ENSMUSG00000029468|trans   2342  3.69e-06 TTCCACCTGC CTCTGCCTCCC GAGTGCTGGG
+ENSMUSG00000015340|trans   2122  3.69e-06 AGACTGGCCC CTCTCCCTCTC CCAGCCCTGC
+ENSMUSG00000028718|trans   2859  5.23e-06 ATCCACCTAC CTCTGCCTTCC AGGTGCTAAG
+ENSMUSG00000027624|trans   1903  5.23e-06 CTCTCAATGT CTCTCCCTTTC TGAGTGAAAG
+ENSMUSG00000037544|trans    187  5.54e-06 GATGCCATAG CTGTCTCTGCC ATGCAGTGCC
+ENSMUSG00000026875|trans   1026  6.33e-06 TTCCCCCTTT CTCTCCCTTCC CCCTCACCCC
+ENSMUSG00000014846|trans    179  7.05e-06 CCTTCTTCCT GTCTCCCTGTC ATCTGTCTGG
+ENSMUSG00000029151|trans    561  7.05e-06 TCCATATGGG ATCTGTCTGTC CATCCCTGTG
+ENSMUSG00000020387|trans   1338  7.78e-06 CCTTGCTGCT CTGTCCCTGCC AGTGCCCAGC
+ENSMUSG00000029843|trans    134  7.78e-06 GGCGCATTGG CTGTGTCTCCC TCCCAGCCTG
+ENSMUSG00000028718|trans   3290  7.78e-06 GCACTTTACC CTGTGTCTCCC AAAAATAGTT
+ENSMUSG00000022602|trans    224  9.35e-06 CCTACCCCTC ATCTGTCTGCC CTGGTCCTGG
+ENSMUSG00000029151|trans    317  1.03e-05 AGCTGGGGAC ATCTGCCTGTC TGTGTGCTGT
+ENSMUSG00000032782|trans   1318  1.25e-05 GTGCCTGGAG CTCCGTCTGTC CTCTGCAGCA
+ENSMUSG00000032359|trans   1013  1.25e-05 ACCTAGAATC GTCTCTCTTTC CAGCTCTCTT
+ENSMUSG00000019850|trans   1189  1.25e-05 AGAAGAAATT GTCTGTCTTCC ATATATGCTT
+ENSMUSG00000029468|trans   1041  1.25e-05 AAAGCTGCCT CTGTGCCTTTC ACGTCCCGGA
+ENSMUSG00000027624|trans   2863  1.25e-05 TGCTTTTTTT GTGTGTCTGTC TCATCATCTC
+ENSMUSG00000029504|trans   1633  1.58e-05 TACCTTACAG CTTTCTCTGCC CTGGACCATA
+ENSMUSG00000028718|trans   2104  1.58e-05 ACGGTGACTC CTCTGTCGGCC TTCTACATAT
+ENSMUSG00000001025|trans     31  1.58e-05 TTCCGGGGGC CTCTCTCGGTC AAATCCAGTG
+ENSMUSG00000046380|trans    559  2.23e-05 AAGCTCTGTA GTGTCCCTGTC AGCAGCAGGT
+ENSMUSG00000002930|trans    168  2.23e-05 CAGGTCACCT CTTTGTCTTTC CTTTCTTGCT
+ENSMUSG00000029504|trans    901  2.23e-05 AGCCATCTCT GTGTCCCTGTC CAAGTCCTTT
+ENSMUSG00000031343|trans   1888  2.31e-05 GAAGCCTGAT CTTTGCCTCTC TGTAGAAATT
+ENSMUSG00000046380|trans    786  2.64e-05 CCAGTGGGAT ATGTGTCTGCC CTGGTTGGTT
+ENSMUSG00000022969|trans    605  2.84e-05 TTGTTTGTTT GTTTGTCTGTC TGTTTGGTTG
+ENSMUSG00000030310|trans   1248  2.84e-05 GCAATAAGCT ATCTCCCTCCC TCAGAGCATT
+ENSMUSG00000026875|trans   1009  3.07e-05 TCTTCCTACC CTTTCTCTTCC CCCTTTCTCT
+ENSMUSG00000045655|trans    919  3.41e-05 AGCCAGTCAT GTCTGTCGGTC ACCACATGAA
+ENSMUSG00000040936|trans   2654  3.87e-05 GCAGCTGAAG ATGTGTCTCCC CATGATGCCT
+ENSMUSG00000029504|trans   2136  4.04e-05 TTGAACTCTC CTGCCTCTGCC TCTTGAATGC
+ENSMUSG00000022969|trans    749  4.25e-05 ACATTGCTAC CTCTCCCGTCC TCCTCCTCAT
+ENSMUSG00000029468|trans    311  4.25e-05 TGAAGGTGTT CTCTCCCGTCC ACGTTTACAC
+ENSMUSG00000053475|trans    449  4.57e-05 GTTTTTAAAT GTTTGTCTTTC ATTCATTTTT
+ENSMUSG00000029442|trans    558  4.76e-05 GTCGGAACAT ATTTGCCTGTC GGAGCTTCCT
+ENSMUSG00000046380|trans   1585  5.17e-05 CTTTGTCTTC ATCCCTCTGTC CCAGGGGAGA
+ENSMUSG00000032782|trans   2169  5.48e-05 GTGCCCTGCA TTCTGTCTGTC TCAGAGGAAT
+ENSMUSG00000029504|trans   2534  5.84e-05 AGAAAACTGA GTCCCTCTTTC AGTAGCAGTA
+ENSMUSG00000026875|trans    668  7.04e-05 AATACCCAGG GTCCCCCTCCC CTTCAGCTTC
+ENSMUSG00000037544|trans   1028  7.74e-05 AGGTGCACCT CTTCGTCTTTC TTTCTAAGTT
+ENSMUSG00000030310|trans   1093  1.13e-04 AGCAAAGCGT ATGTCTCGTCC CGTAGCTTCT
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000036634|trans            2e-07  423_[6]_101
+ENSMUSG00000027624|trans          1.3e-05  760_[6]_622_[6]_182_[6]_305_[6]_
+                                           949_[6]_523
+ENSMUSG00000037544|trans          7.7e-05  186_[6]_830_[6]_430_[6]_1014
+ENSMUSG00000029843|trans          7.8e-06  133_[6]_194_[6]_525
+ENSMUSG00000030310|trans          0.00011  1042_[6]_39_[6]_144_[6]_865
+ENSMUSG00000103092|trans            3e-06  122_[6]_54_[6]_2203
+ENSMUSG00000030443|trans            3e-06  378_[6]_7_[6]_238
+ENSMUSG00000029151|trans            1e-05  82_[6]_223_[6]_233_[6]_93
+ENSMUSG00000022805|trans          3.7e-06  71_[6]_1374
+ENSMUSG00000033491|trans          3.7e-06  1545_[6]_479
+ENSMUSG00000029468|trans          1.3e-05  310_[6]_719_[6]_1290_[6]_633
+ENSMUSG00000015340|trans          3.7e-06  2121_[6]_833
+ENSMUSG00000028718|trans          7.8e-06  2103_[6]_744_[6]_420_[6]_628
+ENSMUSG00000026875|trans          3.1e-05  667_[6]_330_[6]_6_[6]_1087
+ENSMUSG00000014846|trans          7.1e-06  178_[6]_154
+ENSMUSG00000020387|trans          7.8e-06  1337_[6]_2808
+ENSMUSG00000022602|trans          9.4e-06  223_[6]_1434
+ENSMUSG00000032782|trans          5.5e-05  1317_[6]_840_[6]_325
+ENSMUSG00000032359|trans          1.3e-05  1012_[6]_77
+ENSMUSG00000019850|trans          1.3e-05  1188_[6]_622
+ENSMUSG00000029504|trans            4e-05  900_[6]_721_[6]_492_[6]_387_[6]_345
+ENSMUSG00000001025|trans          1.6e-05  30_[6]_465
+ENSMUSG00000046380|trans          2.6e-05  558_[6]_216_[6]_788_[6]_1865
+ENSMUSG00000002930|trans          2.2e-05  167_[6]_955
+ENSMUSG00000031343|trans          2.3e-05  1887_[6]_70
+ENSMUSG00000022969|trans          2.8e-05  604_[6]_133_[6]_1719
+ENSMUSG00000045655|trans          3.4e-05  918_[6]_795
+ENSMUSG00000040936|trans          3.9e-05  2653_[6]_1203
+ENSMUSG00000053475|trans          4.6e-05  448_[6]_256
+ENSMUSG00000029442|trans          4.8e-05  557_[6]_660
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF CUCUSYCUBYC width=11 seqs=56
+ENSMUSG00000036634|trans (  424) CUCUGUCUGUC  1 
+ENSMUSG00000027624|trans ( 1587) CUCUGUCUGUC  1 
+ENSMUSG00000037544|trans ( 1469) CUCUGUCUGCC  1 
+ENSMUSG00000029843|trans (  339) CUCUGCCUGUC  1 
+ENSMUSG00000030310|trans ( 1043) CUCUGUCUCUC  1 
+ENSMUSG00000103092|trans (  188) CUCUCUCUCUC  1 
+ENSMUSG00000030443|trans (  379) CUCUCUCUCUC  1 
+ENSMUSG00000029151|trans (   83) CUCUCUCUCUC  1 
+ENSMUSG00000027624|trans ( 1394) CUCUCUCUCUC  1 
+ENSMUSG00000027624|trans (  761) CUCUGCCUCUC  1 
+ENSMUSG00000103092|trans (  123) CUGUGUCUGUC  1 
+ENSMUSG00000030443|trans (  397) CUCUCUCUUUC  1 
+ENSMUSG00000022805|trans (   72) GUCUGUCUGUC  1 
+ENSMUSG00000033491|trans ( 1546) CUCUGCCUCCC  1 
+ENSMUSG00000029468|trans ( 2342) CUCUGCCUCCC  1 
+ENSMUSG00000015340|trans ( 2122) CUCUCCCUCUC  1 
+ENSMUSG00000028718|trans ( 2859) CUCUGCCUUCC  1 
+ENSMUSG00000027624|trans ( 1903) CUCUCCCUUUC  1 
+ENSMUSG00000037544|trans (  187) CUGUCUCUGCC  1 
+ENSMUSG00000026875|trans ( 1026) CUCUCCCUUCC  1 
+ENSMUSG00000014846|trans (  179) GUCUCCCUGUC  1 
+ENSMUSG00000029151|trans (  561) AUCUGUCUGUC  1 
+ENSMUSG00000020387|trans ( 1338) CUGUCCCUGCC  1 
+ENSMUSG00000029843|trans (  134) CUGUGUCUCCC  1 
+ENSMUSG00000028718|trans ( 3290) CUGUGUCUCCC  1 
+ENSMUSG00000022602|trans (  224) AUCUGUCUGCC  1 
+ENSMUSG00000029151|trans (  317) AUCUGCCUGUC  1 
+ENSMUSG00000032782|trans ( 1318) CUCCGUCUGUC  1 
+ENSMUSG00000032359|trans ( 1013) GUCUCUCUUUC  1 
+ENSMUSG00000019850|trans ( 1189) GUCUGUCUUCC  1 
+ENSMUSG00000029468|trans ( 1041) CUGUGCCUUUC  1 
+ENSMUSG00000027624|trans ( 2863) GUGUGUCUGUC  1 
+ENSMUSG00000029504|trans ( 1633) CUUUCUCUGCC  1 
+ENSMUSG00000028718|trans ( 2104) CUCUGUCGGCC  1 
+ENSMUSG00000001025|trans (   31) CUCUCUCGGUC  1 
+ENSMUSG00000046380|trans (  559) GUGUCCCUGUC  1 
+ENSMUSG00000002930|trans (  168) CUUUGUCUUUC  1 
+ENSMUSG00000029504|trans (  901) GUGUCCCUGUC  1 
+ENSMUSG00000031343|trans ( 1888) CUUUGCCUCUC  1 
+ENSMUSG00000046380|trans (  786) AUGUGUCUGCC  1 
+ENSMUSG00000022969|trans (  605) GUUUGUCUGUC  1 
+ENSMUSG00000030310|trans ( 1248) AUCUCCCUCCC  1 
+ENSMUSG00000026875|trans ( 1009) CUUUCUCUUCC  1 
+ENSMUSG00000045655|trans (  919) GUCUGUCGGUC  1 
+ENSMUSG00000040936|trans ( 2654) AUGUGUCUCCC  1 
+ENSMUSG00000029504|trans ( 2136) CUGCCUCUGCC  1 
+ENSMUSG00000022969|trans (  749) CUCUCCCGUCC  1 
+ENSMUSG00000029468|trans (  311) CUCUCCCGUCC  1 
+ENSMUSG00000053475|trans (  449) GUUUGUCUUUC  1 
+ENSMUSG00000029442|trans (  558) AUUUGCCUGUC  1 
+ENSMUSG00000046380|trans ( 1585) AUCCCUCUGUC  1 
+ENSMUSG00000032782|trans ( 2169) UUCUGUCUGUC  1 
+ENSMUSG00000029504|trans ( 2534) GUCCCUCUUUC  1 
+ENSMUSG00000026875|trans (  668) GUCCCCCUCCC  1 
+ENSMUSG00000037544|trans ( 1028) CUUCGUCUUUC  1 
+ENSMUSG00000030310|trans ( 1093) AUGUCUCGUCC  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 11 n= 88953 bayes= 12.303 E= 4.8e-010 
+   -80    146     -4   -396 
+ -1245  -1245  -1245    184 
+ -1245    150      7    -97 
+ -1245   -104  -1245    168 
+ -1245    102    133  -1245 
+ -1245     69  -1245    120 
+ -1245    218  -1245  -1245 
+ -1245  -1245   -104    168 
+ -1245     28    107     -6 
+ -1245     83  -1245    112 
+ -1245    218  -1245  -1245 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 11 nsites= 56 E= 4.8e-010 
+ 0.160714  0.607143  0.214286  0.017857 
+ 0.000000  0.000000  0.000000  1.000000 
+ 0.000000  0.625000  0.232143  0.142857 
+ 0.000000  0.107143  0.000000  0.892857 
+ 0.000000  0.446429  0.553571  0.000000 
+ 0.000000  0.357143  0.000000  0.642857 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.107143  0.892857 
+ 0.000000  0.267857  0.464286  0.267857 
+ 0.000000  0.392857  0.000000  0.607143 
+ 0.000000  1.000000  0.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif CUCUSYCUBYC MEME-6 regular expression
+--------------------------------------------------------------------------------
+[CG]U[CG]U[GC][UC]CU[GCU][UC]C
+--------------------------------------------------------------------------------
+
+
+
+
+Time 617.50 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF SCUGUGGC MEME-7	width =   8  sites =  40  llr = 396  E-value = 1.9e-004
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 Description
+--------------------------------------------------------------------------------
+Simplified        A  ::::3:::
+pos.-specific     C  4a2::::a
+probability       G  6::a:aa:
+matrix            U  ::8:7:::
+
+         bits    2.2  * * ***
+                 2.0  * * ***
+                 1.7  * * ***
+                 1.5  * * ***
+Relative         1.3 ** * ***
+Entropy          1.1 ********
+(14.3 bits)      0.9 ********
+                 0.7 ********
+                 0.4 ********
+                 0.2 ********
+                 0.0 --------
+
+Multilevel           GCUGUGGC
+consensus            C C A   
+sequence                     
+                             
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value              Site
+-------------             ----- ---------            --------
+ENSMUSG00000022969|trans   1461  9.07e-06 GCTTTGTCGT GCTGTGGC TCATTTATAA
+ENSMUSG00000002799|trans    417  9.07e-06 TGTGGGCTGG GCTGTGGC TCTCAGTGAG
+ENSMUSG00000032782|trans   1257  9.07e-06 GCCTCCCATG GCTGTGGC TCTGAAACCT
+ENSMUSG00000032782|trans     96  9.07e-06 ACAACAGCTA GCTGTGGC TGTGGCTGCC
+ENSMUSG00000020387|trans    543  9.07e-06 ACTACCGTCT GCTGTGGC CGAGAGGCCA
+ENSMUSG00000040936|trans    143  9.07e-06 GGAAACGCTT GCTGTGGC TTCCCAGATT
+ENSMUSG00000032359|trans    486  9.07e-06 AATGGTTGAG GCTGTGGC TCTATACAAC
+ENSMUSG00000032359|trans    219  9.07e-06 CCTAGAGTCA GCTGTGGC TATTGCCAGT
+ENSMUSG00000045655|trans   1268  9.07e-06 AGACTATCCT GCTGTGGC TCATACTGTC
+ENSMUSG00000062031|trans   1208  9.07e-06 TAGAAGCTGA GCTGTGGC CATCGCTGGC
+ENSMUSG00000062031|trans    555  9.07e-06 TATCAATGGG GCTGTGGC CTTGGCCTTT
+ENSMUSG00000062031|trans    160  9.07e-06 CTCTGGGCAG GCTGTGGC CTGGATGTGG
+ENSMUSG00000029151|trans    485  9.07e-06 GTTCTTTGGT GCTGTGGC CTGTGTGTCC
+ENSMUSG00000001021|trans    300  9.07e-06 AACTGGGACC GCTGTGGC AGGGGCCTCC
+ENSMUSG00000025272|trans    660  9.07e-06 TGGAGAGGAA GCTGTGGC TGGTCCCTGG
+ENSMUSG00000025272|trans    600  9.07e-06 TGCAGCTGTG GCTGTGGC TGAGGCTAAG
+ENSMUSG00000046380|trans    979  1.81e-05 CTCCTGGATT CCTGTGGC TGTGCTACCA
+ENSMUSG00000002799|trans    605  1.81e-05 GTCAGTGGGA CCTGTGGC TGTCAGTGGC
+ENSMUSG00000002799|trans    548  1.81e-05 CTCAGTGGGA CCTGTGGC TGTCCATGGT
+ENSMUSG00000002799|trans    474  1.81e-05 CTCAGTGGGA CCTGTGGC TGACAGCATG
+ENSMUSG00000040936|trans   2077  1.81e-05 TTGGGCCTGT CCTGTGGC ACCTCTTTAG
+ENSMUSG00000032359|trans    172  1.81e-05 AATCAGGGGG CCTGTGGC AGCTGCTGGA
+ENSMUSG00000036634|trans    198  1.81e-05 GGGGGCTGGC CCTGTGGC TCACCCCCCA
+ENSMUSG00000029151|trans    286  1.81e-05 TTCATGTGTC CCTGTGGC AGGCTGGCTG
+ENSMUSG00000028718|trans    899  1.81e-05 AGAACCGTCT CCTGTGGC AGGACCTTCA
+ENSMUSG00000040936|trans   1153  2.72e-05 ACCCAACTGA GCTGAGGC CCAAGAGCAT
+ENSMUSG00000037544|trans   1870  2.72e-05 ACAAGAAGAA GCTGAGGC GTCGCAGTCA
+ENSMUSG00000062031|trans     84  2.72e-05 GGACTGCTTT GCTGAGGC CCTACAGCTG
+ENSMUSG00000030310|trans   1418  2.72e-05 GGGTTGTGTG GCTGAGGC ATCTGCCTGC
+ENSMUSG00000029468|trans   1996  2.72e-05 AGAGGGTGGG GCTGAGGC ACCTTCATGA
+ENSMUSG00000028476|trans    372  2.72e-05 TCCTGTGAGT GCTGAGGC CGCCATGTGC
+ENSMUSG00000025272|trans    624  2.72e-05 TAAGGCCAGG GCTGAGGC AAGAGCCCAA
+ENSMUSG00000002799|trans    455  5.06e-05 TTCAGTGTGG CCCGTGGC TCTCAGTGGG
+ENSMUSG00000035105|trans   1405  5.06e-05 CGTGCCCCGT CCCGTGGC TCAGTTTTGT
+ENSMUSG00000020387|trans    896  5.06e-05 TAGGATTCCT CCCGTGGC CCCGGCCACG
+ENSMUSG00000019850|trans    591  5.06e-05 GCACACAGAT CCCGTGGC TGCTGAAAAG
+ENSMUSG00000026875|trans   1908  5.78e-05 AGATGGGAAA GCCGAGGC CAGAGCAATC
+ENSMUSG00000002799|trans    493  6.50e-05 GACAGCATGG CCCGAGGC TGTCAGTGGG
+ENSMUSG00000020387|trans    139  6.50e-05 GCCAGAAAGG CCCGAGGC CGCACTCGCC
+ENSMUSG00000030310|trans   1389  6.50e-05 ACCAGCTCTT CCCGAGGC CACTTGTAAC
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000022969|trans          9.1e-06  1460_[7]_1010
+ENSMUSG00000002799|trans          6.5e-05  416_[7]_30_[7]_11_[7]_11_[7]_47_
+                                           [7]_49_[7]_458
+ENSMUSG00000032782|trans          9.1e-06  95_[7]_1153_[7]_1240
+ENSMUSG00000020387|trans          6.5e-05  138_[7]_396_[7]_345_[7]_3253
+ENSMUSG00000040936|trans          2.7e-05  142_[7]_1002_[7]_916_[7]_1783
+ENSMUSG00000032359|trans          1.8e-05  171_[7]_39_[7]_259_[7]_607
+ENSMUSG00000045655|trans          9.1e-06  1267_[7]_449
+ENSMUSG00000062031|trans          2.7e-05  83_[7]_68_[7]_387_[7]_645_[7]_86
+ENSMUSG00000029151|trans          1.8e-05  285_[7]_191_[7]_172
+ENSMUSG00000001021|trans          9.1e-06  299_[7]_40
+ENSMUSG00000025272|trans          2.7e-05  599_[7]_16_[7]_28_[7]_45
+ENSMUSG00000046380|trans          1.8e-05  978_[7]_2474
+ENSMUSG00000036634|trans          1.8e-05  197_[7]_330
+ENSMUSG00000028718|trans          1.8e-05  898_[7]_3022
+ENSMUSG00000037544|trans          2.7e-05  1869_[7]_616
+ENSMUSG00000030310|trans          2.7e-05  1388_[7]_21_[7]_698
+ENSMUSG00000029468|trans          2.7e-05  1995_[7]_982
+ENSMUSG00000028476|trans          2.7e-05  371_[7]_1062
+ENSMUSG00000035105|trans          5.1e-05  1404_[7]_231
+ENSMUSG00000019850|trans          5.1e-05  590_[7]_1223
+ENSMUSG00000026875|trans          5.8e-05  1907_[7]_208
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF SCUGUGGC width=8 seqs=40
+ENSMUSG00000022969|trans ( 1461) GCUGUGGC  1 
+ENSMUSG00000002799|trans (  417) GCUGUGGC  1 
+ENSMUSG00000032782|trans ( 1257) GCUGUGGC  1 
+ENSMUSG00000032782|trans (   96) GCUGUGGC  1 
+ENSMUSG00000020387|trans (  543) GCUGUGGC  1 
+ENSMUSG00000040936|trans (  143) GCUGUGGC  1 
+ENSMUSG00000032359|trans (  486) GCUGUGGC  1 
+ENSMUSG00000032359|trans (  219) GCUGUGGC  1 
+ENSMUSG00000045655|trans ( 1268) GCUGUGGC  1 
+ENSMUSG00000062031|trans ( 1208) GCUGUGGC  1 
+ENSMUSG00000062031|trans (  555) GCUGUGGC  1 
+ENSMUSG00000062031|trans (  160) GCUGUGGC  1 
+ENSMUSG00000029151|trans (  485) GCUGUGGC  1 
+ENSMUSG00000001021|trans (  300) GCUGUGGC  1 
+ENSMUSG00000025272|trans (  660) GCUGUGGC  1 
+ENSMUSG00000025272|trans (  600) GCUGUGGC  1 
+ENSMUSG00000046380|trans (  979) CCUGUGGC  1 
+ENSMUSG00000002799|trans (  605) CCUGUGGC  1 
+ENSMUSG00000002799|trans (  548) CCUGUGGC  1 
+ENSMUSG00000002799|trans (  474) CCUGUGGC  1 
+ENSMUSG00000040936|trans ( 2077) CCUGUGGC  1 
+ENSMUSG00000032359|trans (  172) CCUGUGGC  1 
+ENSMUSG00000036634|trans (  198) CCUGUGGC  1 
+ENSMUSG00000029151|trans (  286) CCUGUGGC  1 
+ENSMUSG00000028718|trans (  899) CCUGUGGC  1 
+ENSMUSG00000040936|trans ( 1153) GCUGAGGC  1 
+ENSMUSG00000037544|trans ( 1870) GCUGAGGC  1 
+ENSMUSG00000062031|trans (   84) GCUGAGGC  1 
+ENSMUSG00000030310|trans ( 1418) GCUGAGGC  1 
+ENSMUSG00000029468|trans ( 1996) GCUGAGGC  1 
+ENSMUSG00000028476|trans (  372) GCUGAGGC  1 
+ENSMUSG00000025272|trans (  624) GCUGAGGC  1 
+ENSMUSG00000002799|trans (  455) CCCGUGGC  1 
+ENSMUSG00000035105|trans ( 1405) CCCGUGGC  1 
+ENSMUSG00000020387|trans (  896) CCCGUGGC  1 
+ENSMUSG00000019850|trans (  591) CCCGUGGC  1 
+ENSMUSG00000026875|trans ( 1908) GCCGAGGC  1 
+ENSMUSG00000002799|trans (  493) CCCGAGGC  1 
+ENSMUSG00000020387|trans (  139) CCCGAGGC  1 
+ENSMUSG00000030310|trans ( 1389) CCCGAGGC  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 4 w= 8 n= 89160 bayes= 12.0653 E= 1.9e-004 
+ -1197     86    144  -1197 
+ -1197    218  -1197  -1197 
+ -1197    -14  -1197    152 
+ -1197  -1197    218  -1197 
+    -2  -1197  -1197    138 
+ -1197  -1197    218  -1197 
+ -1197  -1197    218  -1197 
+ -1197    218  -1197  -1197 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 4 w= 8 nsites= 40 E= 1.9e-004 
+ 0.000000  0.400000  0.600000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.200000  0.000000  0.800000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.275000  0.000000  0.000000  0.725000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.000000  0.000000  1.000000  0.000000 
+ 0.000000  1.000000  0.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SCUGUGGC MEME-7 regular expression
+--------------------------------------------------------------------------------
+[GC]C[UC]G[UA]GGC
+--------------------------------------------------------------------------------
+
+
+
+
+Time 716.67 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+SUMMARY OF MOTIFS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+	Combined block diagrams: non-overlapping sites with p-value < 0.0001
+--------------------------------------------------------------------------------
+SEQUENCE NAME            COMBINED P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+ENSMUSG00000047361|trans         1.84e-01  247
+ENSMUSG00000027624|trans         5.76e-05  206_[7(7.94e-05)]_187_[5(5.70e-05)]_\
+    169_[2(8.87e-07)]_1_[2(8.87e-07)]_1_[2(8.87e-07)]_1_[2(8.87e-07)]_72_\
+    [5(7.16e-05)]_49_[6(2.22e-06)]_1_[5(8.02e-05)]_608_[6(2.06e-06)]_1_\
+    [6(2.06e-06)]_91_[2(2.93e-05)]_70_[6(1.97e-07)]_164_[5(2.78e-05)]_130_\
+    [6(5.23e-06)]_122_[2(2.89e-06)]_116_[5(5.70e-05)]_174_[5(2.78e-05)]_295_\
+    [2(4.22e-05)]_36_[3(1.16e-05)]_31_[2(8.41e-06)]_96_[3(1.55e-05)]_2_\
+    [6(1.25e-05)]_344_[3(1.16e-05)]_63_[6(3.54e-05)]_94
+ENSMUSG00000027360|trans         3.02e-01  37_[2(2.78e-05)]_246
+ENSMUSG00000017754|trans         9.28e-02  56_[5(4.64e-05)]_121
+ENSMUSG00000053475|trans         1.77e-03  69_[3(7.97e-07)]_13_[3(1.43e-06)]_\
+    125_[5(5.70e-05)]_49_[3(5.72e-06)]_6_[3(4.25e-05)]_69_[3(5.72e-06)]_51_\
+    [6(4.57e-05)]_256
+ENSMUSG00000023224|trans         4.33e-03  85_[2(3.97e-05)]_415_[5(1.70e-05)]
+ENSMUSG00000014361|trans         3.08e-02  146_[2(8.31e-05)]_918_[4(4.89e-07)]_\
+    [4(4.89e-07)]_128
+ENSMUSG00000026875|trans         1.73e-06  5_[2(5.10e-07)]_51_[5(1.75e-07)]_\
+    229_[7(4.35e-05)]_317_[4(7.21e-06)]_23_[6(7.04e-05)]_308_[6(8.86e-05)]_11_\
+    [6(3.07e-05)]_6_[6(6.33e-06)]_519_[2(3.46e-06)]_341_[7(5.78e-05)]_208
+ENSMUSG00000031343|trans         9.07e-03  480_[5(7.16e-05)]_860_[4(7.66e-05)]_\
+    468_[2(3.46e-06)]_2_[2(1.15e-05)]_32_[6(2.31e-05)]_70
+ENSMUSG00000025272|trans         1.92e-01  593_[7(9.07e-06)]_4_[7(2.72e-05)]_\
+    10_[7(2.72e-05)]_13_[2(4.52e-05)]_4_[7(9.07e-06)]_45
+ENSMUSG00000015340|trans         1.57e-03  832_[2(8.31e-05)]_310_[3(7.97e-07)]_\
+    237_[5(1.02e-05)]_663_[3(2.14e-05)]_35_[6(3.69e-06)]_4_[5(2.01e-05)]_286_\
+    [5(7.16e-05)]_10_[5(7.16e-05)]_107_[3(1.93e-05)]_382
+ENSMUSG00000043164|trans         2.59e-02  68_[3(1.55e-05)]_48
+ENSMUSG00000052415|trans         1.97e-01  537_[2(1.15e-05)]_93_[3(1.93e-05)]_\
+    371
+ENSMUSG00000068874|trans         1.46e-02  49_[5(3.61e-05)]_69_[2(2.22e-05)]_\
+    518_[5(3.60e-06)]_397_[5(7.16e-05)]_8_[5(2.44e-06)]_132
+ENSMUSG00000001021|trans         4.43e-03  299_[7(9.07e-06)]_40
+ENSMUSG00000001025|trans         1.22e-03  30_[6(1.58e-05)]_80_[5(2.01e-05)]_\
+    92_[5(4.21e-05)]_271
+ENSMUSG00000028476|trans         2.86e-03  255_[5(2.24e-05)]_105_[7(2.72e-05)]_\
+    49_[5(2.78e-05)]_354_[3(1.02e-05)]_637
+ENSMUSG00000028718|trans         1.76e-04  573_[3(1.32e-05)]_314_[7(1.81e-05)]_\
+    279_[5(3.61e-05)]_907_[6(1.58e-05)]_124_[2(3.33e-05)]_143_[4(1.75e-05)]_\
+    389_[5(8.90e-05)]_54_[6(5.23e-06)]_111_[2(2.89e-06)]_260_[6(9.79e-05)]_27_\
+    [6(7.78e-06)]_316_[3(4.10e-05)]_160_[5(1.02e-05)]_130
+ENSMUSG00000029468|trans         4.83e-05  215_[4(2.27e-05)]_27_[5(2.24e-05)]_\
+    45_[6(4.25e-05)]_719_[6(1.25e-05)]_60_[5(3.04e-05)]_75_[3(3.02e-06)]_244_\
+    [2(2.78e-05)]_118_[2(2.93e-05)]_83_[4(4.28e-06)]_2_[4(7.52e-06)]_151_\
+    [3(4.10e-05)]_132_[7(2.72e-05)]_182_[4(3.68e-06)]_36_[3(1.32e-05)]_34_\
+    [5(8.90e-05)]_52_[6(3.69e-06)]_334_[3(2.14e-05)]_288
+ENSMUSG00000064280|trans         4.34e-03  220_[3(3.04e-05)]_100
+ENSMUSG00000029151|trans         1.06e-07  9_[4(3.68e-06)]_61_[6(2.06e-06)]_74_\
+    [2(3.24e-06)]_107_[7(1.81e-05)]_1_[5(7.16e-05)]_11_[6(1.03e-05)]_44_\
+    [5(8.29e-06)]_102_[7(9.07e-06)]_68_[6(7.05e-06)]_39_[2(2.89e-06)]_43
+ENSMUSG00000053647|trans         1.76e-01  771
+ENSMUSG00000029504|trans         2.88e-05  691_[2(6.13e-05)]_22_[5(8.29e-06)]_\
+    165_[6(2.23e-05)]_31_[5(1.20e-05)]_679_[6(1.58e-05)]_120_[3(7.97e-07)]_361_\
+    [6(4.04e-05)]_34_[4(5.90e-05)]_169_[4(3.29e-07)]_160_[6(5.84e-05)]_221_\
+    [4(4.89e-07)]_112
+ENSMUSG00000029442|trans         8.03e-05  475_[2(4.39e-06)]_71_[6(4.76e-05)]_\
+    586_[5(1.02e-05)]_1_[4(7.56e-07)]_50
+ENSMUSG00000040473|trans         6.59e-01  137_[3(4.10e-05)]_1770
+ENSMUSG00000002930|trans         2.88e-04  167_[6(2.23e-05)]_3_[3(7.41e-05)]_2_\
+    [5(4.21e-05)]_111_[2(1.83e-06)]_143_[3(1.02e-05)]_262_[3(4.10e-05)]_303_\
+    [6(8.03e-05)]_65
+ENSMUSG00000046192|trans         4.73e-01  96_[3(6.41e-05)]_1085
+ENSMUSG00000030111|trans         6.75e-01  119
+ENSMUSG00000030310|trans         6.30e-07  15_[4(2.41e-05)]_251_[7(7.94e-05)]_\
+    22_[3(7.97e-07)]_128_[6(6.30e-05)]_16_[7(4.35e-05)]_12_[4(8.17e-07)]_72_\
+    [5(3.60e-06)]_287_[4(6.18e-06)]_154_[6(1.34e-06)]_194_[6(2.84e-05)]_54_\
+    [4(8.45e-05)]_64_[7(6.50e-05)]_21_[7(2.72e-05)]_116_[4(2.64e-06)]_570
+ENSMUSG00000029843|trans         7.38e-04  133_[6(7.78e-06)]_1_[5(6.06e-06)]_\
+    40_[6(4.24e-06)]_131_[6(7.06e-07)]_525
+ENSMUSG00000030406|trans         5.05e-05  79_[2(2.78e-05)]_704_[2(6.86e-07)]_\
+    125_[4(6.18e-08)]_164_[2(2.15e-06)]_190
+ENSMUSG00000030790|trans         6.01e-04  102_[5(2.44e-06)]_235_[3(7.97e-07)]_\
+    293
+ENSMUSG00000030443|trans         1.37e-02  257_[5(7.16e-05)]_110_[6(2.06e-06)]_\
+    1_[6(2.06e-06)]_244
+ENSMUSG00000030862|trans         7.81e-05  169_[3(1.43e-06)]_3_[3(1.43e-06)]_\
+    464_[2(5.10e-07)]_49_[2(1.72e-05)]_348
+ENSMUSG00000062031|trans         1.25e-02  7_[2(3.51e-05)]_65_[7(2.72e-05)]_68_\
+    [7(9.07e-06)]_73_[5(1.46e-05)]_303_[7(9.07e-06)]_645_[7(9.07e-06)]_86
+ENSMUSG00000036634|trans         6.22e-06  197_[7(1.81e-05)]_16_[5(2.01e-05)]_\
+    87_[5(2.78e-05)]_55_[6(6.33e-06)]_27_[6(1.97e-07)]_101
+ENSMUSG00000019892|trans         2.82e-02  57_[2(6.45e-05)]_91
+ENSMUSG00000019850|trans         9.85e-04  279_[2(3.10e-05)]_44_[5(2.44e-06)]_\
+    245_[7(5.06e-05)]_567_[5(2.78e-05)]_12_[6(1.25e-05)]_411_[3(7.41e-05)]_200
+ENSMUSG00000078451|trans         2.67e-02  84
+ENSMUSG00000052837|trans         2.81e-08  2_[5(4.64e-05)]_9_[4(7.56e-07)]_13_\
+    [5(3.60e-06)]_4_[2(4.39e-06)]_56_[5(1.55e-06)]_57_[3(5.72e-06)]_57_\
+    [2(6.27e-06)]_69_[5(8.29e-06)]_129
+ENSMUSG00000031786|trans         1.12e-02  80_[5(1.20e-05)]_1_[5(5.70e-05)]_49
+ENSMUSG00000014846|trans         1.23e-03  76_[5(6.06e-06)]_91_[6(7.05e-06)]_\
+    154
+ENSMUSG00000037572|trans         1.32e-01  155_[3(5.72e-06)]_1_[3(6.41e-05)]_\
+    181_[3(7.97e-07)]_[3(7.97e-07)]_275_[3(7.91e-05)]_134
+ENSMUSG00000037544|trans         6.94e-03  186_[6(5.54e-06)]_109_[2(4.22e-05)]_\
+    710_[6(7.74e-05)]_430_[6(5.50e-07)]_390_[7(2.72e-05)]_616
+ENSMUSG00000056296|trans         7.62e-02  966_[3(3.66e-06)]_365_[3(2.94e-05)]_\
+    154_[6(6.56e-05)]_8_[3(4.10e-05)]_822
+ENSMUSG00000045655|trans         2.35e-02  422_[6(9.79e-05)]_169_[4(3.53e-05)]_\
+    304_[6(3.41e-05)]_338_[7(9.07e-06)]_449
+ENSMUSG00000010044|trans         2.02e-02  338_[2(6.13e-05)]_115_[7(4.35e-05)]_\
+    198_[2(6.13e-05)]_144_[7(7.94e-05)]_345_[2(7.49e-06)]_14_[2(3.10e-05)]_40
+ENSMUSG00000032359|trans         1.82e-03  171_[7(1.81e-05)]_39_[7(9.07e-06)]_\
+    259_[7(9.07e-06)]_236_[5(3.61e-05)]_272_[6(1.25e-05)]_77
+ENSMUSG00000040936|trans         4.57e-03  75_[2(7.49e-06)]_56_[7(9.07e-06)]_\
+    1002_[7(2.72e-05)]_768_[5(2.78e-05)]_26_[2(6.61e-06)]_100_[7(1.81e-05)]_79_\
+    [5(6.15e-05)]_479_[6(3.87e-05)]_784_[5(4.64e-05)]_121_[4(4.96e-06)]_275
+ENSMUSG00000036777|trans         3.15e-01  697_[7(7.94e-05)]_333
+ENSMUSG00000033491|trans         3.83e-05  1174_[2(2.37e-07)]_265_\
+    [3(7.97e-07)]_84_[6(3.69e-06)]_264_[3(1.02e-05)]_204
+ENSMUSG00000032372|trans         4.54e-01  333_[3(7.41e-05)]_207
+ENSMUSG00000032514|trans         5.71e-02  61_[2(4.22e-05)]_47
+ENSMUSG00000020937|trans         4.43e-01  537
+ENSMUSG00000020387|trans         1.31e-06  138_[7(6.50e-05)]_7_[5(3.51e-07)]_\
+    378_[7(9.07e-06)]_264_[3(1.22e-05)]_70_[7(5.06e-05)]_183_[5(1.02e-05)]_33_\
+    [2(1.83e-06)]_153_[5(1.20e-05)]_1_[5(2.78e-05)]_20_[6(7.78e-06)]_373_\
+    [7(5.78e-05)]_6_[7(9.07e-06)]_75_[5(1.70e-05)]_113_[3(7.97e-07)]_220_\
+    [4(3.88e-05)]_101_[5(8.90e-05)]_277_[6(7.05e-06)]_39_[5(6.15e-05)]_146_\
+    [2(9.85e-07)]_202_[7(4.35e-05)]_539_[5(2.01e-05)]_318_[3(9.17e-05)]_275
+ENSMUSG00000032782|trans         5.31e-05  95_[7(9.07e-06)]_249_[2(2.78e-05)]_\
+    345_[2(6.13e-05)]_140_[5(2.78e-05)]_62_[5(2.01e-05)]_212_[6(9.14e-05)]_58_\
+    [2(4.72e-06)]_21_[7(9.07e-06)]_53_[6(1.25e-05)]_96_[4(6.67e-06)]_356_\
+    [5(5.70e-05)]_60_[2(3.33e-05)]_1_[5(1.20e-05)]_282_[6(5.48e-05)]_65_\
+    [3(2.55e-05)]_156_[3(2.82e-05)]_82
+ENSMUSG00000020878|trans         2.64e-02  61
+ENSMUSG00000035105|trans         3.09e-06  831_[2(9.20e-06)]_506_[4(1.89e-07)]_\
+    8_[4(6.67e-06)]_3_[4(1.89e-07)]_9_[7(5.06e-05)]_5_[3(2.94e-05)]_44_\
+    [3(3.66e-06)]_160
+ENSMUSG00000020591|trans         2.56e-02  317
+ENSMUSG00000002799|trans         1.60e-06  40_[5(1.20e-05)]_296_[3(1.55e-05)]_\
+    58_[7(9.07e-06)]_30_[7(5.06e-05)]_11_[7(1.81e-05)]_11_[7(6.50e-05)]_47_\
+    [7(1.81e-05)]_49_[7(1.81e-05)]_103_[2(1.83e-06)]_143_[6(6.30e-05)]_44_\
+    [5(8.90e-05)]_34_[5(2.44e-06)]_90
+ENSMUSG00000022602|trans         3.33e-06  18_[5(1.02e-05)]_2_[4(6.29e-07)]_26_\
+    [7(7.94e-05)]_146_[6(9.35e-06)]_37_[4(1.85e-05)]_209_[5(6.06e-06)]_199_\
+    [4(5.24e-06)]_278_[5(1.02e-05)]_8_[5(7.16e-05)]_57_[5(3.04e-05)]_83_\
+    [5(1.75e-07)]_102_[5(8.02e-05)]_126_[6(8.44e-05)]_59_[2(9.38e-05)]_164
+ENSMUSG00000046380|trans         9.43e-04  280_[5(5.70e-05)]_123_[4(2.27e-05)]_\
+    132_[6(2.23e-05)]_183_[2(2.15e-06)]_22_[6(2.64e-05)]_182_[7(1.81e-05)]_598_\
+    [6(5.17e-05)]_288_[5(2.78e-05)]_232_[5(6.06e-06)]_201_[2(9.38e-05)]_597_\
+    [5(2.24e-05)]_18_[2(9.85e-07)]_82_[7(4.35e-05)]_384
+ENSMUSG00000054196|trans         3.76e-02  19_[5(4.21e-05)]_178_[3(1.93e-05)]_\
+    137
+ENSMUSG00000003955|trans         1.92e-01  162_[3(7.91e-05)]_65
+ENSMUSG00000022969|trans         6.40e-08  367_[5(8.02e-05)]_60_[5(2.01e-05)]_\
+    7_[4(4.28e-06)]_[4(4.89e-07)]_[4(4.89e-07)]_[4(4.89e-07)]_[4(3.68e-06)]_68_\
+    [3(4.88e-05)]_9_[6(2.84e-05)]_17_[3(1.43e-06)]_1_[3(7.97e-07)]_51_\
+    [3(3.02e-06)]_2_[3(7.91e-05)]_18_[6(4.25e-05)]_671_[6(9.14e-05)]_19_\
+    [7(9.07e-06)]_558_[2(1.44e-05)]_189_[2(2.37e-07)]_241
+ENSMUSG00000022805|trans         6.23e-06  71_[6(3.69e-06)]_16_[2(3.51e-05)]_\
+    184_[4(4.89e-07)]_85_[3(1.93e-05)]_170_[4(1.31e-06)]_30_[4(9.16e-05)]_569_\
+    [2(1.83e-06)]_251
+ENSMUSG00000001870|trans         1.41e-02  50_[2(5.46e-05)]_241_[3(7.97e-07)]_\
+    50_[3(4.88e-05)]_22_[3(5.72e-06)]_160_[2(1.54e-05)]_636
+ENSMUSG00000036533|trans         7.20e-02  23_[2(2.40e-05)]_440_[3(2.82e-05)]_\
+    513
+ENSMUSG00000103092|trans         1.62e-03  122_[6(3.02e-06)]_54_[6(2.06e-06)]_\
+    75_[5(3.61e-05)]_190_[7(7.94e-05)]_481_[5(5.70e-05)]_93_[5(3.61e-05)]_651_\
+    [3(7.97e-07)]_661
+--------------------------------------------------------------------------------
+
+********************************************************************************
+
+
+********************************************************************************
+Stopped because the next motif E-value > 2.00e-02.
+********************************************************************************
+
+CPU: daa4d2e9714a
+
+********************************************************************************

@@ -1,0 +1,102 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.5.8 (Release date: Thu May 15 15:01:46 2025 -0700)
+
+For further information on how to interpret these results please access http://localhost:8080/meme_5.5.8.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to
+discover motifs in biopolymers",
+Proceedings of the Second International Conference on Intelligent Systems
+for Molecular Biology, pp. 28-36, AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+CONTROL SEQUENCES= --none--
+ALPHABET= ACGU
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+ENSMUSG00000047361       1.0000    441  ENSMUSG00000027624       1.0000  20372  
+ENSMUSG00000027360       1.0000    294  ENSMUSG00000017754       1.0000    564  
+ENSMUSG00000053475       1.0000    715  ENSMUSG00000023224       1.0000    709  
+ENSMUSG00000014361       1.0000   1227  ENSMUSG00000026875       1.0000   3469  
+ENSMUSG00000031343       1.0000   2042  ENSMUSG00000025272       1.0000   1631  
+ENSMUSG00000015340       1.0000   3393  ENSMUSG00000043164       1.0000    127  
+ENSMUSG00000052415       1.0000   1023  ENSMUSG00000068874       1.0000   2463  
+ENSMUSG00000001021       1.0000    639  ENSMUSG00000001025       1.0000    690  
+ENSMUSG00000028476       1.0000   1441  ENSMUSG00000028718       1.0000   5543  
+ENSMUSG00000029468       1.0000   4497  ENSMUSG00000064280       1.0000    451  
+ENSMUSG00000029151       1.0000   1562  ENSMUSG00000053647       1.0000    771  
+ENSMUSG00000029504       1.0000   3266  ENSMUSG00000029442       1.0000   2082  
+ENSMUSG00000040473       1.0000   5889  ENSMUSG00000002930       1.0000   1133  
+ENSMUSG00000046192       1.0000   1192  ENSMUSG00000030111       1.0000    119  
+ENSMUSG00000030310       1.0000   4421  ENSMUSG00000029843       1.0000    874  
+ENSMUSG00000030406       1.0000   1802  ENSMUSG00000030790       1.0000    652  
+ENSMUSG00000030443       1.0000    674  ENSMUSG00000030862       1.0000   1244  
+ENSMUSG00000062031       1.0000   2904  ENSMUSG00000036634       1.0000   1063  
+ENSMUSG00000019892       1.0000    205  ENSMUSG00000019850       1.0000   3639  
+ENSMUSG00000078451       1.0000    166  ENSMUSG00000052837       1.0000    485  
+ENSMUSG00000031786       1.0000    152  ENSMUSG00000014846       1.0000    663  
+ENSMUSG00000037572       1.0000   2137  ENSMUSG00000037544       1.0000   4678  
+ENSMUSG00000056296       1.0000   5315  ENSMUSG00000045655       1.0000   3038  
+ENSMUSG00000010044       1.0000   1537  ENSMUSG00000032359       1.0000   1432  
+ENSMUSG00000040936       1.0000   6471  ENSMUSG00000036777       1.0000   1113  
+ENSMUSG00000033491       1.0000   2035  ENSMUSG00000032372       1.0000   1611  
+ENSMUSG00000032514       1.0000    119  ENSMUSG00000020937       1.0000   1074  
+ENSMUSG00000020387       1.0000  11031  ENSMUSG00000032782       1.0000   3616  
+ENSMUSG00000020878       1.0000     61  ENSMUSG00000035105       1.0000   1643  
+ENSMUSG00000020591       1.0000    574  ENSMUSG00000002799       1.0000   1070  
+ENSMUSG00000046380       1.0000   3460  ENSMUSG00000054196       1.0000    613  
+ENSMUSG00000003955       1.0000    391  ENSMUSG00000022969       1.0000   3690  
+ENSMUSG00000022805       1.0000   1786  ENSMUSG00000001870       1.0000   3545  
+ENSMUSG00000036533       1.0000    998  ENSMUSG00000103092       1.0000   2401  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 10 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order2.meme -evt 0.05 -minsites 10 -maxsites 300 -seed 11 -oc /data/meme_zoops_w6-12_seed11 
+
+model:  mod=         zoops    nmotifs=      1000    evt=          0.05
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+width:  minw=            6    maxw=           12
+nsites: minsites=       10    maxsites=       68    wnsites=       0.8
+theta:  spmap=         uni    spfuzz=        0.5
+em:     prior=   dirichlet    b=            0.01    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=          152128    N=              68
+sample: seed=           11    hsfrac=          0
+        searchsize= 100000    norand=         no    csites=       1000
+Letter frequencies in dataset:
+A 0.259 C 0.238 G 0.229 U 0.274 
+Background letter frequencies (from file /data/background_models/bfile_order2.meme):
+A 0.278 C 0.222 G 0.222 U 0.278 
+Background model order: 2
+********************************************************************************
+
+********************************************************************************
+Stopped because the next motif E-value > 5.00e-02.
+********************************************************************************
+
+CPU: ebe7ef68c521
+
+********************************************************************************

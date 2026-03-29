@@ -1,0 +1,1329 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!-- Document definition -->
+<!-- http://zlab.bu.edu/~phaverty/SupplementalData/CisML/cisml.dtd -->
+<!DOCTYPE cis-element-search[
+<!ELEMENT cis-element-search (program-name, parameters, (pattern | multi-pattern-scan)*)>
+<!ELEMENT program-name (#PCDATA)>
+<!ELEMENT parameters (
+  pattern-file, 
+  sequence-file, 
+  background-seq-file?,
+  pattern-pvalue-cutoff?,
+  sequence-pvalue-cutoff?,
+  site-pvalue-cutoff?,
+  sequence-filtering,
+  ANY*
+ )>
+<!ELEMENT command-line (#PCDATA)>
+<!ELEMENT pattern-file (#PCDATA)>
+<!ELEMENT sequence-file (#PCDATA)>
+<!ELEMENT background-seq-file (#PCDATA)>
+<!ELEMENT pattern-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-pvalue-cutoff (#PCDATA)>
+<!ELEMENT site-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-filtering EMPTY>
+<!ELEMENT multi-pattern-scan (pattern+, ANY*)>
+<!ELEMENT pattern (scanned-sequence+, ANY*)>
+<!ELEMENT scanned-sequence (matched-element*, ANY*)>
+<!ELEMENT matched-element (sequence)>
+<!ELEMENT sequence (#PCDATA)>
+<!ATTLIST cis-element-search
+xmlns:xsi CDATA #IMPLIED
+xmlns:mem CDATA #IMPLIED
+xsi:schemaLocation CDATA #IMPLIED
+>
+<!ATTLIST sequence-filtering
+on-off CDATA #REQUIRED
+type CDATA #IMPLIED
+>
+<!ATTLIST multi-pattern-scan
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+>
+<!ATTLIST pattern
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+pvalue CDATA #IMPLIED
+score CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST scanned-sequence
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+length CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST matched-element
+start CDATA #REQUIRED
+stop CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+clusterid CDATA #IMPLIED
+>
+
+]>
+<cis-element-search
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://zlab.bu.edu/schema/cisml cisml.xsd"
+  xmlns="http://zlab.bu.edu/schema/cisml"
+  xmlns:mem="http://noble.gs.washington.edu/meme"
+>
+<program-name>fimo</program-name>
+<parameters>
+<command-line>fimo --verbosity 1 --oc /out --max-stored-scores 500000 --norc /motifs/oRNAment_arc_rbp.meme /seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</command-line>
+<pattern-file>/motifs/oRNAment_arc_rbp.meme</pattern-file>
+<sequence-file>/seqs/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</sequence-file>
+<site-pvalue-cutoff>0.0001</site-pvalue-cutoff>
+<sequence-filtering on-off="off"/>
+</parameters>
+<pattern accession="YBX2" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+<matched-element start="114" stop="120" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+<matched-element start="1054" stop="1060" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+<matched-element start="601" stop="607" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+<matched-element start="604" stop="610" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+<matched-element start="85" stop="91" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+<matched-element start="1563" stop="1569" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+<matched-element start="829" stop="835" score="10.7133" pvalue="6.1e-05">
+<sequence>AACAACA</sequence>
+<mem:qvalue>0.765</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="YB1_(2)" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+<matched-element start="3200" stop="3206" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+<matched-element start="89" stop="95" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+<matched-element start="465" stop="471" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+<matched-element start="1100" stop="1106" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+<matched-element start="450" stop="456" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+<matched-element start="298" stop="304" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+<matched-element start="22" stop="28" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+<matched-element start="173" stop="179" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+<matched-element start="651" stop="657" score="12.0979" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.597</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="YB1_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+<matched-element start="3200" stop="3206" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+<matched-element start="89" stop="95" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+<matched-element start="465" stop="471" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+<matched-element start="1100" stop="1106" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+<matched-element start="450" stop="456" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+<matched-element start="298" stop="304" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+<matched-element start="22" stop="28" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+<matched-element start="173" stop="179" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+<matched-element start="651" stop="657" score="12.2028" pvalue="6.1e-05">
+<sequence>AACATCA</sequence>
+<mem:qvalue>0.602</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="PCBP2_(7)" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+<matched-element start="1574" stop="1580" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+<matched-element start="3050" stop="3056" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+<matched-element start="2731" stop="2737" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+<matched-element start="600" stop="606" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+<matched-element start="694" stop="700" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+<matched-element start="74" stop="80" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+<matched-element start="1259" stop="1265" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+<matched-element start="1574" stop="1580" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+<matched-element start="65" stop="71" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+<matched-element start="703" stop="709" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+<matched-element start="249" stop="255" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+<matched-element start="975" stop="981" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+<matched-element start="188" stop="194" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+<matched-element start="1896" stop="1902" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+<matched-element start="860" stop="866" score="9.85616" pvalue="6.1e-05">
+<sequence>CTTTCCC</sequence>
+<mem:qvalue>0.35</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="SRSF5_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+<matched-element start="1036" stop="1042" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+<matched-element start="72" stop="78" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+<matched-element start="704" stop="710" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+<matched-element start="846" stop="852" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+<matched-element start="875" stop="881" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+<matched-element start="392" stop="398" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+<matched-element start="88" stop="94" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+<matched-element start="1610" stop="1616" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+<matched-element start="1672" stop="1678" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+<matched-element start="218" stop="224" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+<matched-element start="630" stop="636" score="10.8218" pvalue="6.1e-05">
+<sequence>CCCCTCA</sequence>
+<mem:qvalue>0.487</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="TRNAU1AP_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000047361|transcript" name="ENSMUSG00000047361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027624|transcript" name="ENSMUSG00000027624|transcript">
+<matched-element start="2701" stop="2707" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="3218" stop="3224" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000027360|transcript" name="ENSMUSG00000027360|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000017754|transcript" name="ENSMUSG00000017754|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053475|transcript" name="ENSMUSG00000053475|transcript">
+<matched-element start="288" stop="294" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="314" stop="320" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="545" stop="551" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023224|transcript" name="ENSMUSG00000023224|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014361|transcript" name="ENSMUSG00000014361|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000026875|transcript" name="ENSMUSG00000026875|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031343|transcript" name="ENSMUSG00000031343|transcript">
+<matched-element start="1171" stop="1177" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000025272|transcript" name="ENSMUSG00000025272|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000015340|transcript" name="ENSMUSG00000015340|transcript">
+<matched-element start="2080" stop="2086" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2580" stop="2586" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000043164|transcript" name="ENSMUSG00000043164|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052415|transcript" name="ENSMUSG00000052415|transcript">
+<matched-element start="640" stop="646" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000068874|transcript" name="ENSMUSG00000068874|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001021|transcript" name="ENSMUSG00000001021|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001025|transcript" name="ENSMUSG00000001025|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028476|transcript" name="ENSMUSG00000028476|transcript">
+<matched-element start="124" stop="130" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="1102" stop="1108" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000028718|transcript" name="ENSMUSG00000028718|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029468|transcript" name="ENSMUSG00000029468|transcript">
+<matched-element start="1195" stop="1201" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="1202" stop="1208" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2231" stop="2237" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2398" stop="2404" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2691" stop="2697" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000064280|transcript" name="ENSMUSG00000064280|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029151|transcript" name="ENSMUSG00000029151|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000053647|transcript" name="ENSMUSG00000053647|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029504|transcript" name="ENSMUSG00000029504|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029442|transcript" name="ENSMUSG00000029442|transcript">
+<matched-element start="489" stop="495" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040473|transcript" name="ENSMUSG00000040473|transcript">
+<matched-element start="139" stop="145" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="403" stop="409" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002930|transcript" name="ENSMUSG00000002930|transcript">
+<matched-element start="746" stop="752" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="785" stop="791" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046192|transcript" name="ENSMUSG00000046192|transcript">
+<matched-element start="229" stop="235" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030111|transcript" name="ENSMUSG00000030111|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030310|transcript" name="ENSMUSG00000030310|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029843|transcript" name="ENSMUSG00000029843|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030406|transcript" name="ENSMUSG00000030406|transcript">
+<matched-element start="431" stop="437" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030790|transcript" name="ENSMUSG00000030790|transcript">
+<matched-element start="381" stop="387" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030443|transcript" name="ENSMUSG00000030443|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030862|transcript" name="ENSMUSG00000030862|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000062031|transcript" name="ENSMUSG00000062031|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036634|transcript" name="ENSMUSG00000036634|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019892|transcript" name="ENSMUSG00000019892|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000019850|transcript" name="ENSMUSG00000019850|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000078451|transcript" name="ENSMUSG00000078451|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000052837|transcript" name="ENSMUSG00000052837|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000031786|transcript" name="ENSMUSG00000031786|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000014846|transcript" name="ENSMUSG00000014846|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037572|transcript" name="ENSMUSG00000037572|transcript">
+<matched-element start="154" stop="160" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="166" stop="172" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="352" stop="358" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="596" stop="602" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000037544|transcript" name="ENSMUSG00000037544|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000056296|transcript" name="ENSMUSG00000056296|transcript">
+<matched-element start="430" stop="436" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="974" stop="980" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2246" stop="2252" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000045655|transcript" name="ENSMUSG00000045655|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000010044|transcript" name="ENSMUSG00000010044|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032359|transcript" name="ENSMUSG00000032359|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000040936|transcript" name="ENSMUSG00000040936|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036777|transcript" name="ENSMUSG00000036777|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000033491|transcript" name="ENSMUSG00000033491|transcript">
+<matched-element start="950" stop="956" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="1423" stop="1429" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="1881" stop="1887" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032372|transcript" name="ENSMUSG00000032372|transcript">
+<matched-element start="338" stop="344" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="461" stop="467" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032514|transcript" name="ENSMUSG00000032514|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020937|transcript" name="ENSMUSG00000020937|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020387|transcript" name="ENSMUSG00000020387|transcript">
+<matched-element start="819" stop="825" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="3134" stop="3140" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="3804" stop="3810" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="3871" stop="3877" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032782|transcript" name="ENSMUSG00000032782|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020878|transcript" name="ENSMUSG00000020878|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000035105|transcript" name="ENSMUSG00000035105|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000020591|transcript" name="ENSMUSG00000020591|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000002799|transcript" name="ENSMUSG00000002799|transcript">
+<matched-element start="132" stop="138" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="214" stop="220" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022602|transcript" name="ENSMUSG00000022602|transcript">
+<matched-element start="1449" stop="1455" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000046380|transcript" name="ENSMUSG00000046380|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000054196|transcript" name="ENSMUSG00000054196|transcript">
+<matched-element start="222" stop="228" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000003955|transcript" name="ENSMUSG00000003955|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022969|transcript" name="ENSMUSG00000022969|transcript">
+<matched-element start="711" stop="717" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="2134" stop="2140" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000022805|transcript" name="ENSMUSG00000022805|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000001870|transcript" name="ENSMUSG00000001870|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000036533|transcript" name="ENSMUSG00000036533|transcript">
+<matched-element start="158" stop="164" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="682" stop="688" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+<matched-element start="701" stop="707" score="10.3932" pvalue="6.1e-05">
+<sequence>TATTTTT</sequence>
+<mem:qvalue>0.104</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000103092|transcript" name="ENSMUSG00000103092|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+</cis-element-search>

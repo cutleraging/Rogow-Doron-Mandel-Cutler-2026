@@ -1,0 +1,246 @@
+---
+title: "Overlaps between analyses"
+output: html_document
+date: "2024-08-06"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Funtions
+```{r}
+library(ggvenn)
+
+venn_analysis <- function(x, output_file = "venn_analysis_results.csv") {
+  # Function to get all combinations of a vector
+  get_combinations <- function(vec) {
+    unlist(lapply(seq_along(vec), function(i) combn(vec, i, simplify = FALSE)), 
+           recursive = FALSE)
+  }
+  
+  # Get all possible combinations of set names
+  set_names <- names(x)
+  combinations <- get_combinations(set_names)
+  
+  # Function to get the overlap of specific sets
+  get_overlap <- function(sets) {
+    Reduce(intersect, x[sets])
+  }
+  
+  # Get overlaps
+  overlaps <- lapply(combinations, get_overlap)
+  
+  # Name the overlaps
+  names(overlaps) <- sapply(combinations, paste, collapse = " & ")
+  
+  # Get unique elements in each set
+  unique_elements <- lapply(set_names, function(set) setdiff(x[[set]], unlist(x[set_names != set])))
+  names(unique_elements) <- paste("Unique to", set_names)
+  
+  # Combine all results
+  all_results <- c(overlaps, unique_elements)
+  
+  # Remove empty sets
+  all_results <- all_results[sapply(all_results, length) > 0]
+  
+  # Create a data frame
+  result_df <- data.frame(
+    Category = names(all_results),
+    Elements = sapply(all_results, paste, collapse = ", "),
+    Count = sapply(all_results, length)
+  )
+  
+  # Add columns for each original set
+  for (set_name in set_names) {
+    result_df[[set_name]] <- sapply(all_results, function(elements) {
+      sum(elements %in% x[[set_name]])
+    })
+  }
+  
+  # Write to CSV
+  write.csv(result_df, file = output_file, row.names = FALSE)
+  
+  cat("Results have been written to", output_file, "\n")
+  
+  return(result_df)
+}
+```
+
+# Number of genes detected in actin and arc analyses
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+actin_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression/actin_vs_no_infect_scramble.csv")
+
+arc_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-arc-rep1-removed/differential_expression/arc_vs_no_infect_scramble.csv")
+
+df <- data.frame(Analysis = c("Actin", "Arc"), 
+                 Frequency = c(nrow(actin_vs_control), nrow(arc_vs_control)))
+
+pdf("actin_arc_genes_detected.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Analysis, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    labs(title = "Genes Detected")
+dev.off()
+```
+
+## Overlap of genes detected
+```{r}
+x <- list(
+  "Actin analysis" = arc_vs_control$external_gene_name,
+  "Arc analysis" = actin_vs_control$external_gene_name)
+
+
+pdf("actin_arc_genes_detected_overlap.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "actin_arc_genes_detected_overlap.csv")
+```
+
+
+
+# Actin vs Arc – Arc enriched & Arc vs control & Actin vs control
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+actin_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression/actin_vs_no_infect_scramble.csv")
+
+arc_vs_control <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-arc-rep1-removed/differential_expression/arc_vs_no_infect_scramble.csv")
+
+actin_vs_arc <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-strict-filter-arc-rep1-removed/differential_expression/actin_vs_arc_control_genes_filtered.csv")
+
+x <- list(
+  "Arc enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name)
+
+
+pdf("actin_vs_control_and_arc_vs_control.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "actin_vs_control_and_arc_vs_control.csv")
+```
+
+# Cajigas et al 2012
+- Combining Arc vs control and Actin vs Arc – Arc enriched
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+caligas <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/Cajigas et al 2012/table S10.csv")
+
+x <- list(
+"Arc enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Cajigas et al 2012 (Neuropil)" = caligas$Gene.Symbol)
+
+pdf("caligas_2012_neuropil.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "caligas_2012_neuropil.csv")
+```
+
+# Glock et al 2021
+- Combining Arc vs control and Actin vs Arc – Arc enriched
+
+## Ribo-seq
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+glock.ribo <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/Glock et al 2021/ribo-seq.csv")
+
+x <- list(
+  "Arc enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Glock et al 2021 (Neuropil)" = subset(glock.ribo, ribo_log2FC > 0 & ribo_padj < 0.05)$gene,
+"Glock et al 2021 (Somata)" = subset(glock.ribo, ribo_log2FC < 0 & ribo_padj < 0.05)$gene)
+
+pdf("glock_2021_ribo.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "firebrick"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "glock_2021_ribo.csv")
+```
+
+## RNA-seq
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+glock.rna <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/Glock et al 2021/rna-seq.csv")
+
+x <- list(
+  "Arc enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Glock et al 2021 (Neuropil)" = subset(glock.rna, rna_log2FC > 0 & rna_padj < 0.05)$gene,
+"Glock et al 2021 (Somata)" = subset(glock.rna, rna_log2FC < 0 & rna_padj < 0.05)$gene)
+
+pdf("glock_2021_rna.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "firebrick"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "glock_2021_rna.csv")
+```
+
+# Protein
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps")
+
+actin.protein <- read.table("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/protein/actin_unique_direct_comparison.txt")
+
+arc.protein <- read.table("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-overlaps/protein/arc_unique_direct_comparison.txt")
+
+x <- list(
+"Arc RNA enriched" = subset(arc_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Actin RNA enriched" = subset(actin_vs_control, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Arc Protein enriched" = arc.protein$V1,
+"Actin Protein enriched" = actin.protein$V1)
+
+pdf("rna_vs_protein.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "firebrick"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "rna_vs_protein.csv")
+```

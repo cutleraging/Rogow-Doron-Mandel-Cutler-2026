@@ -1,0 +1,8 @@
+Query_ID	Target_ID	Optimal_offset	p-value	E-value	q-value	Overlap	Query_consensus	Target_consensus	Orientation
+ACCUAAA	ANIA04546	1	0.000925176	0.0175783	0.0175783	6	ACCUAAA	AACCUAA	+
+UGACAAA	IGF2BP2_(2)	-2	0.000570973	0.0108485	0.0108485	5	UGACAAA	ACAAACA	+
+GACAGCAGAU	HNRNPL_(4)	-1	0.000755645	0.0143573	0.0143573	7	GACAGCAGAU	ACACAAA	+
+
+# Tomtom (Motif Comparison Tool): Version 5.5.8 compiled on May 16 2025 at 08:52:16
+# The format of this file is described at http://localhost:8080/meme_5.5.8/doc/tomtom-output-format.html.
+# tomtom -no-ssc -dist ed -thresh 0.05 --norc -oc /out /q/motifs_deduplicated.meme /db/oRNAment_actb_rbp.meme

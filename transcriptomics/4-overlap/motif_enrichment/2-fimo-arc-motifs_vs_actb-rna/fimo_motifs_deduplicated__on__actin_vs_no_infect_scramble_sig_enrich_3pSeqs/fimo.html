@@ -1,0 +1,1449 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:cis="http://zlab.bu.edu/schema/cisml" xmlns:fimo="http://noble.gs.washington.edu/schema/cisml" xmlns:mem="http://noble.gs.washington.edu/meme">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>FIMO Results</title>
+<style type="text/css">
+td.left {text-align: left;}
+td.right {text-align: right; padding-right: 1cm;}
+</style>
+</head>
+<body color="#000000">
+<a name="top_buttons"></a>
+<hr>
+<table summary="buttons" align="left" cellspacing="0">
+<tr>
+<td bgcolor="#00FFFF"><a href="#database_and_motifs"><b>Database and Motifs</b></a></td>
+<td bgcolor="#DDFFDD"><a href="#sec_i"><b>High-scoring Motif Occurences</b></a></td>
+<td bgcolor="#DDDDFF"><a href="#debugging_information"><b>Debugging Information</b></a></td>
+<td bgcolor="#FFDD00"><a href="fimo.tsv""><b>Results in TSV Format</b></a></td>
+<td bgcolor="#FFDDFF"><a href="fimo.gff""><b>Results in GFF3 Format</b></a></td>
+<td bgcolor="#00FFFF" id="best_site"><a href="best_site.narrowPeak""><b>Best Site per Sequence</b></a></td>
+<script>
+var new_icon_src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAQCAMAAAAyEe/dAAAACVBMVEX//wAAAAD////s2cV/AAAAdUlEQVQYlXVRBxLAIAhL+P+jC2HZhXcBZEWEldDsZcLIcAhHWWnK8SDcWQhMFUHdAQ1CqQ5+CWPmlHojl+nCJNRtzu4qRc3IUzmTVpXYK0nox0z0PI1stgchdK7lEv7ekhvalw8WW547Gyzedt/2/gLx8WXjXF/1AYFriNAWAAAAAElFTkSuQmCC";
+var new_icon = document.createElement("img");
+new_icon.src = new_icon_src;
+new_icon.alt = "NEW";
+const elem = document.getElementById("best_site");
+elem.appendChild(document.createTextNode("  "));
+elem.appendChild(new_icon);
+</script>
+</tr>
+</table>
+<br/>
+<br/>
+<hr/>
+<center><big><b>FIMO - Motif search tool</b></big></center>
+<hr>
+<p>
+FIMO version 5.5.8, (Release date: Thu May 15 15:01:46 2025 -0700)
+</p>
+<p>
+For further information on how to interpret these results please access <a href="http://localhost:8080/meme_5.5.8/doc/fimo-output-format.html">http://localhost:8080/meme_5.5.8/doc/fimo-output-format.html</a>.<br>
+To get a copy of the FIMO software please access <a href="https://meme-suite.org">https://meme-suite.org</a>
+
+</p>
+<p>If you use FIMO in your research, please cite the following paper:<br>
+Charles E. Grant, Timothy L. Bailey, and William Stafford Noble,
+"FIMO: Scanning for occurrences of a given motif",
+<i>Bioinformatics</i>, <b>27</b>(7):1017-1018, 2011.
+<a href="http://bioinformatics.oxfordjournals.org/content/27/7/1017">[full text]</a></p>
+<hr>
+<center><big><b><a name="database_and_motifs">DATABASE AND MOTIFS</a></b></big></center>
+<hr>
+<div style="padding-left: 0.75in; line-height: 1em; font-family: monospace;">
+<p>
+  DATABASE /seqs/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+  <br />
+  Database contains 7 sequences, 12904 residues
+</p>
+<p>
+  MOTIFS /motifs/motifs_deduplicated.meme (RNA)
+  <table>
+    <thead>
+      <tr>
+        <th style="border-bottom: 1px dashed;">MOTIF</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;">WIDTH</th>
+        <th style="border-bottom: 1px dashed; padding-left: 1em;text-align:left;" >
+         BEST POSSIBLE MATCH
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:right;">CUUCCU</td>
+        <td style="text-align:right;padding-left: 1em;">6</td>
+        <td style="text-align:left;padding-left: 1em;">CUUCCU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">GGRGDDGGRGG</td>
+        <td style="text-align:right;padding-left: 1em;">11</td>
+        <td style="text-align:left;padding-left: 1em;">GGGGGGGGAGG</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UUUUUUUUUUU</td>
+        <td style="text-align:right;padding-left: 1em;">11</td>
+        <td style="text-align:left;padding-left: 1em;">UUUUUUUUUUU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">MCACMCMCASMC</td>
+        <td style="text-align:right;padding-left: 1em;">12</td>
+        <td style="text-align:left;padding-left: 1em;">ACACACCCACAC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">SCCYRSCYSSC</td>
+        <td style="text-align:right;padding-left: 1em;">11</td>
+        <td style="text-align:left;padding-left: 1em;">CCCUGCCUGCC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CUCUSYCUBYC</td>
+        <td style="text-align:right;padding-left: 1em;">11</td>
+        <td style="text-align:left;padding-left: 1em;">CUCUGUCUGUC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">SCUGUGGC</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">GCUGUGGC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">AAUAAAW</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">AAUAAAU</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CGUCAACC</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">CGUCAACC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CGACCAG</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">CGACCAG</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CAAGUGCC</td>
+        <td style="text-align:right;padding-left: 1em;">8</td>
+        <td style="text-align:left;padding-left: 1em;">CAAGUGCC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CCCAAGA</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">CCCAAGA</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CAAUYCG</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">CAAUCCG</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">UCGACUC</td>
+        <td style="text-align:right;padding-left: 1em;">7</td>
+        <td style="text-align:left;padding-left: 1em;">UCGACUC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CCAGCCAAAC</td>
+        <td style="text-align:right;padding-left: 1em;">10</td>
+        <td style="text-align:left;padding-left: 1em;">CCAGCCAAAC</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">CCGAGGCAA</td>
+        <td style="text-align:right;padding-left: 1em;">9</td>
+        <td style="text-align:left;padding-left: 1em;">CCGAGGCAA</td>
+       </tr>
+      <tr>
+        <td style="text-align:right;">GCCAYGACC</td>
+        <td style="text-align:right;padding-left: 1em;">9</td>
+        <td style="text-align:left;padding-left: 1em;">GCCAUGACC</td>
+       </tr>
+    </tbody>
+  </table>
+</p>
+<p>
+Random model letter frequencies (--motif--):
+<br/>
+
+A 0.250 C 0.250 G 0.250 U 0.250 </p>
+</div>
+<hr>
+<center><big><b><a name="sec_i">SECTION I: HIGH-SCORING MOTIF OCCURENCES</a></b></big></center>
+<hr>
+<ul>
+<li>
+There were 107 motif occurences with a p-value less than 0.0001.
+
+The full set of motif occurences can be seen in the
+TSV (tab-delimited values) output file
+<a href="fimo.tsv">fimo.tsv</a>, 
+the GFF3 file 
+<a href="fimo.gff">fimo.gff</a> 
+which may be suitable for uploading to the 
+<a href="http://genome.ucsc.edu/cgi-bin/hgTables">UCSC Genome Table Browser</a>
+(assuming the FASTA input sequences included genomic coordinates in UCSC or Galaxy format),
+or the XML file 
+<a href="fimo.xml">fimo.xml</a>.
+</li>
+<li>
+The <i>p</i>-value of a motif occurrence is defined as the
+probability of a random sequence of the same length as the motif
+matching that position of the sequence with as good or better a score.
+</li>
+<li>
+The score for the match of a position in a sequence to a motif
+is computed by summing the appropriate entries from each column of
+the position-dependent scoring matrix that represents the motif.
+</li>
+<li>
+The q-value of a motif occurrence is defined as the
+false discovery rate if the occurrence is accepted as significant.
+</li>
+<li>The table is sorted by increasing <i>p</i>-value.</li>
+</ul>
+<table border="1">
+<thead>
+<tr>
+<th>Motif ID</th>
+<th>Alt ID</th>
+<th>Sequence Name</th>
+<th>Strand</th>
+<th>Start</th>
+<th>End</th>
+<th>p-value</th>
+<th>q-value</th>
+<th>Matched Sequence</th>
+</tr>
+</thead>
+<tbody>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">120</td>
+      <td style="text-align:left;">130</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">121</td>
+      <td style="text-align:left;">131</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">122</td>
+      <td style="text-align:left;">132</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">123</td>
+      <td style="text-align:left;">133</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">124</td>
+      <td style="text-align:left;">134</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">125</td>
+      <td style="text-align:left;">135</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">126</td>
+      <td style="text-align:left;">136</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">127</td>
+      <td style="text-align:left;">137</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">128</td>
+      <td style="text-align:left;">138</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">129</td>
+      <td style="text-align:left;">139</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">130</td>
+      <td style="text-align:left;">140</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">131</td>
+      <td style="text-align:left;">141</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">132</td>
+      <td style="text-align:left;">142</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">133</td>
+      <td style="text-align:left;">143</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">134</td>
+      <td style="text-align:left;">144</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">135</td>
+      <td style="text-align:left;">145</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">136</td>
+      <td style="text-align:left;">146</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">137</td>
+      <td style="text-align:left;">147</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">138</td>
+      <td style="text-align:left;">148</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">283</td>
+      <td style="text-align:left;">293</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">284</td>
+      <td style="text-align:left;">294</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">285</td>
+      <td style="text-align:left;">295</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">286</td>
+      <td style="text-align:left;">296</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">287</td>
+      <td style="text-align:left;">297</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">732</td>
+      <td style="text-align:left;">742</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">733</td>
+      <td style="text-align:left;">743</td>
+      <td style="text-align:left;">2.38e-07</td>
+      <td style="text-align:left;">9.52e-05</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">83</td>
+      <td style="text-align:left;">94</td>
+      <td style="text-align:left;">5.36e-07</td>
+      <td style="text-align:left;">0.00688</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCACACACACCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">278</td>
+      <td style="text-align:left;">288</td>
+      <td style="text-align:left;">7.15e-07</td>
+      <td style="text-align:left;">0.000275</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTGTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4761</td>
+      <td style="text-align:left;">4771</td>
+      <td style="text-align:left;">1.19e-06</td>
+      <td style="text-align:left;">0.000442</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTGTTTATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">119</td>
+      <td style="text-align:left;">129</td>
+      <td style="text-align:left;">1.91e-06</td>
+      <td style="text-align:left;">0.00066</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">282</td>
+      <td style="text-align:left;">292</td>
+      <td style="text-align:left;">1.91e-06</td>
+      <td style="text-align:left;">0.00066</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">104</td>
+      <td style="text-align:left;">114</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTTTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1771</td>
+      <td style="text-align:left;">1781</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1773</td>
+      <td style="text-align:left;">1783</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1775</td>
+      <td style="text-align:left;">1785</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1777</td>
+      <td style="text-align:left;">1787</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1779</td>
+      <td style="text-align:left;">1789</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1781</td>
+      <td style="text-align:left;">1791</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1783</td>
+      <td style="text-align:left;">1793</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1785</td>
+      <td style="text-align:left;">1795</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1787</td>
+      <td style="text-align:left;">1797</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1789</td>
+      <td style="text-align:left;">1799</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1791</td>
+      <td style="text-align:left;">1801</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1793</td>
+      <td style="text-align:left;">1803</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1795</td>
+      <td style="text-align:left;">1805</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1797</td>
+      <td style="text-align:left;">1807</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1799</td>
+      <td style="text-align:left;">1809</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1801</td>
+      <td style="text-align:left;">1811</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1803</td>
+      <td style="text-align:left;">1813</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1805</td>
+      <td style="text-align:left;">1815</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1807</td>
+      <td style="text-align:left;">1817</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1809</td>
+      <td style="text-align:left;">1819</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1811</td>
+      <td style="text-align:left;">1821</td>
+      <td style="text-align:left;">2.15e-06</td>
+      <td style="text-align:left;">0.00125</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">376</td>
+      <td style="text-align:left;">387</td>
+      <td style="text-align:left;">4.29e-06</td>
+      <td style="text-align:left;">0.0275</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCACCCCCACTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">94</td>
+      <td style="text-align:left;">104</td>
+      <td style="text-align:left;">5.72e-06</td>
+      <td style="text-align:left;">0.00186</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTGTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">279</td>
+      <td style="text-align:left;">289</td>
+      <td style="text-align:left;">5.72e-06</td>
+      <td style="text-align:left;">0.00186</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTGTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">120</td>
+      <td style="text-align:left;">130</td>
+      <td style="text-align:left;">1.07e-05</td>
+      <td style="text-align:left;">0.00596</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCTCCCTTCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1769</td>
+      <td style="text-align:left;">1779</td>
+      <td style="text-align:left;">1.14e-05</td>
+      <td style="text-align:left;">0.00609</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTCTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1958</td>
+      <td style="text-align:left;">1968</td>
+      <td style="text-align:left;">1.31e-05</td>
+      <td style="text-align:left;">0.00412</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTTTTTATTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">151</td>
+      <td style="text-align:left;">161</td>
+      <td style="text-align:left;">1.53e-05</td>
+      <td style="text-align:left;">0.00452</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTTTTTTTGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">730</td>
+      <td style="text-align:left;">740</td>
+      <td style="text-align:left;">1.53e-05</td>
+      <td style="text-align:left;">0.00452</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GATTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3640</td>
+      <td style="text-align:left;">3650</td>
+      <td style="text-align:left;">1.84e-05</td>
+      <td style="text-align:left;">0.00938</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTGTCCCTGCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000023963|ENSMUST00000170988|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">382</td>
+      <td style="text-align:left;">392</td>
+      <td style="text-align:left;">2.81e-05</td>
+      <td style="text-align:left;">0.00811</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TATTTTATATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000032567|ENSMUST00000189758|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">731</td>
+      <td style="text-align:left;">741</td>
+      <td style="text-align:left;">2.98e-05</td>
+      <td style="text-align:left;">0.00836</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTATAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">SCCYRSCYSSC</td>
+      <td style="text-align:left;">MEME-5</td>
+      <td style="text-align:left;">ENSMUSG00000023963|ENSMUST00000170988|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1332</td>
+      <td style="text-align:left;">1342</td>
+      <td style="text-align:left;">3.08e-05</td>
+      <td style="text-align:left;">0.395</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCCAGCCTGGC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">156</td>
+      <td style="text-align:left;">166</td>
+      <td style="text-align:left;">3.22e-05</td>
+      <td style="text-align:left;">0.00879</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTGTTTTGTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3956</td>
+      <td style="text-align:left;">3965</td>
+      <td style="text-align:left;">3.43e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCACCCCACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4730</td>
+      <td style="text-align:left;">4740</td>
+      <td style="text-align:left;">3.43e-05</td>
+      <td style="text-align:left;">0.00913</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TATTTAATTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">301</td>
+      <td style="text-align:left;">311</td>
+      <td style="text-align:left;">3.55e-05</td>
+      <td style="text-align:left;">0.00922</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTGTCTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">98</td>
+      <td style="text-align:left;">107</td>
+      <td style="text-align:left;">3.81e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCAGCCCACC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GGRGDDGGRGG</td>
+      <td style="text-align:left;">MEME-2</td>
+      <td style="text-align:left;">ENSMUSG00000032567|ENSMUST00000189758|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">525</td>
+      <td style="text-align:left;">535</td>
+      <td style="text-align:left;">4.2e-05</td>
+      <td style="text-align:left;">0.261</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GGATGAGGAGA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000034379|ENSMUST00000042203|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">503</td>
+      <td style="text-align:left;">514</td>
+      <td style="text-align:left;">4.25e-05</td>
+      <td style="text-align:left;">0.182</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACACACACAGTG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GGRGDDGGRGG</td>
+      <td style="text-align:left;">MEME-2</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">432</td>
+      <td style="text-align:left;">442</td>
+      <td style="text-align:left;">4.29e-05</td>
+      <td style="text-align:left;">0.261</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GGGTTGGGAGA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">SCUGUGGC</td>
+      <td style="text-align:left;">MEME-7</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4251</td>
+      <td style="text-align:left;">4258</td>
+      <td style="text-align:left;">4.58e-05</td>
+      <td style="text-align:left;">0.392</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GCTGAGGC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">630</td>
+      <td style="text-align:left;">640</td>
+      <td style="text-align:left;">5.56e-05</td>
+      <td style="text-align:left;">0.0273</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTTCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">673</td>
+      <td style="text-align:left;">682</td>
+      <td style="text-align:left;">5.63e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCAGCCATAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCCAAGA</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">530</td>
+      <td style="text-align:left;">536</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.385</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCCAAGA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCCAAGA</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000034379|ENSMUST00000042203|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1237</td>
+      <td style="text-align:left;">1243</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.385</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCCAAGA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">AAUAAAW</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000034379|ENSMUST00000042203|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">450</td>
+      <td style="text-align:left;">456</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.165</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">AATAAAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">AAUAAAW</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000023963|ENSMUST00000170988|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">854</td>
+      <td style="text-align:left;">860</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.165</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">AATAAAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">AAUAAAW</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000023963|ENSMUST00000170988|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">858</td>
+      <td style="text-align:left;">864</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.165</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">AATAAAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">AAUAAAW</td>
+      <td style="text-align:left;">STREME-1</td>
+      <td style="text-align:left;">ENSMUSG00000023963|ENSMUST00000170988|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">875</td>
+      <td style="text-align:left;">881</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.165</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">AATAAAT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">SCUGUGGC</td>
+      <td style="text-align:left;">MEME-7</td>
+      <td style="text-align:left;">ENSMUSG00000032567|ENSMUST00000189758|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">282</td>
+      <td style="text-align:left;">289</td>
+      <td style="text-align:left;">6.1e-05</td>
+      <td style="text-align:left;">0.392</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCTGAGGC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4583</td>
+      <td style="text-align:left;">4592</td>
+      <td style="text-align:left;">6.39e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCAGGCAAAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">99</td>
+      <td style="text-align:left;">109</td>
+      <td style="text-align:left;">6.68e-05</td>
+      <td style="text-align:left;">0.0169</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTAAATT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">235</td>
+      <td style="text-align:left;">244</td>
+      <td style="text-align:left;">6.77e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCCCCCAAAG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">132</td>
+      <td style="text-align:left;">142</td>
+      <td style="text-align:left;">6.94e-05</td>
+      <td style="text-align:left;">0.0328</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTCCCCCTTCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">558</td>
+      <td style="text-align:left;">567</td>
+      <td style="text-align:left;">7.25e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TCCCCCCAAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">100</td>
+      <td style="text-align:left;">110</td>
+      <td style="text-align:left;">7.25e-05</td>
+      <td style="text-align:left;">0.0179</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTAAATTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">506</td>
+      <td style="text-align:left;">516</td>
+      <td style="text-align:left;">7.87e-05</td>
+      <td style="text-align:left;">0.019</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTGTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">85</td>
+      <td style="text-align:left;">96</td>
+      <td style="text-align:left;">7.88e-05</td>
+      <td style="text-align:left;">0.209</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACACACACCCAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CCAGCCAAAC</td>
+      <td style="text-align:left;">STREME-2</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1203</td>
+      <td style="text-align:left;">1212</td>
+      <td style="text-align:left;">7.92e-05</td>
+      <td style="text-align:left;">0.145</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCAACCAAAG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GGRGDDGGRGG</td>
+      <td style="text-align:left;">MEME-2</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">599</td>
+      <td style="text-align:left;">609</td>
+      <td style="text-align:left;">8.15e-05</td>
+      <td style="text-align:left;">0.261</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GGGGGTTGAGG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GGRGDDGGRGG</td>
+      <td style="text-align:left;">MEME-2</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">1391</td>
+      <td style="text-align:left;">1401</td>
+      <td style="text-align:left;">8.15e-05</td>
+      <td style="text-align:left;">0.261</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GGATGTGGAGT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000030725|ENSMUST00000032967|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">383</td>
+      <td style="text-align:left;">393</td>
+      <td style="text-align:left;">8.34e-05</td>
+      <td style="text-align:left;">0.0197</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTAGGTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">2938</td>
+      <td style="text-align:left;">2948</td>
+      <td style="text-align:left;">8.75e-05</td>
+      <td style="text-align:left;">0.0399</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GTTTCCCTTCC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">281</td>
+      <td style="text-align:left;">291</td>
+      <td style="text-align:left;">8.99e-05</td>
+      <td style="text-align:left;">0.0202</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TGTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">SCCYRSCYSSC</td>
+      <td style="text-align:left;">MEME-5</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4431</td>
+      <td style="text-align:left;">4441</td>
+      <td style="text-align:left;">9.04e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CCCAGCCTGCA</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">731</td>
+      <td style="text-align:left;">741</td>
+      <td style="text-align:left;">9.04e-05</td>
+      <td style="text-align:left;">0.0202</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ATTTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4132</td>
+      <td style="text-align:left;">4143</td>
+      <td style="text-align:left;">9.05e-05</td>
+      <td style="text-align:left;">0.209</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACACCCTCACTG</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">CUCUSYCUBYC</td>
+      <td style="text-align:left;">MEME-6</td>
+      <td style="text-align:left;">ENSMUSG00000031133|ENSMUST00000033468|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">114</td>
+      <td style="text-align:left;">124</td>
+      <td style="text-align:left;">9.13e-05</td>
+      <td style="text-align:left;">0.0402</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CTTCCTCTCTC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">GCCAYGACC</td>
+      <td style="text-align:left;">STREME-4</td>
+      <td style="text-align:left;">ENSMUSG00000034379|ENSMUST00000042203|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">961</td>
+      <td style="text-align:left;">969</td>
+      <td style="text-align:left;">9.16e-05</td>
+      <td style="text-align:left;">1</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">GCCATGAAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">152</td>
+      <td style="text-align:left;">162</td>
+      <td style="text-align:left;">9.32e-05</td>
+      <td style="text-align:left;">0.0202</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTTGTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">153</td>
+      <td style="text-align:left;">163</td>
+      <td style="text-align:left;">9.32e-05</td>
+      <td style="text-align:left;">0.0202</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTTTTTGTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">UUUUUUUUUUU</td>
+      <td style="text-align:left;">MEME-3</td>
+      <td style="text-align:left;">ENSMUSG00000029580|ENSMUST00000100497|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">280</td>
+      <td style="text-align:left;">290</td>
+      <td style="text-align:left;">9.78e-05</td>
+      <td style="text-align:left;">0.0207</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">TTGTTTTTTTT</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">MCACMCMCASMC</td>
+      <td style="text-align:left;">MEME-4</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">4318</td>
+      <td style="text-align:left;">4329</td>
+      <td style="text-align:left;">9.8e-05</td>
+      <td style="text-align:left;">0.209</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">ACACCCAGACAC</td>
+   </tr>
+    <tr>
+      <td style="text-align:left;">SCCYRSCYSSC</td>
+      <td style="text-align:left;">MEME-5</td>
+      <td style="text-align:left;">ENSMUSG00000049791|ENSMUST00000058755|strand</td>
+      <td style="text-align:center;">+</td>
+      <td style="text-align:left;">3863</td>
+      <td style="text-align:left;">3873</td>
+      <td style="text-align:left;">9.99e-05</td>
+      <td style="text-align:left;">0.427</td>
+      <td style="text-align:left;font-size:x-large;font-family:monospace;">CGCTGGCTCCC</td>
+   </tr>
+</tbody>
+</table>
+
+<hr>
+<center><big><b><a name="debugging_information">DEBUGGING INFORMATION</a></b></big></center>
+<hr>
+<p>
+Command line:
+</p>
+<pre>
+fimo --verbosity 1 --oc /out --max-stored-scores 500000 --norc /motifs/motifs_deduplicated.meme /seqs/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta
+</pre>
+<p>
+Settings:
+</p>
+<pre>
+<table>
+  <tr>
+    <td style="padding-right: 2em">output_directory = /out</td>
+    <td style="padding-left: 5em; padding-right: 2em">MEME file name = /motifs/motifs_deduplicated.meme</td>
+    <td style="padding-left: 5em; padding-right: 2em">sequence file name = /seqs/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">background file name = --motif--</td>
+    <td style="padding-left: 5em; padding-right: 2em">alphabet = RNA</td>
+    <td style="padding-left: 5em; padding-right: 2em">max stored scores = 500000</td>
+  </tr>  <tr>
+    <td style="padding-right: 2em">allow clobber = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">compute q-values = true</td>
+    <td style="padding-left: 5em; padding-right: 2em">parse genomic coord. = true</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">text only = false</td>
+    <td style="padding-left: 5em; padding-right: 2em">scan both strands = false</td>
+    <td style="padding-left: 5em; padding-right: 2em">max strand = false</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">threshold type = p-value</td>
+    <td style="padding-left: 5em; padding-right: 2em">output theshold = 0.0001</td>
+    <td style="padding-left: 5em; padding-right: 2em">pseudocount = 0.1</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 2em">alpha = 1</td>
+    <td style="padding-left: 5em; padding-right: 2em">verbosity = 1</td>
+    <td style="padding-left: 5em; padding-right: 2em"></td>
+  </tr>
+
+</table>
+</pre>
+<p>
+This information can be useful in the event you wish to report a
+problem with the FIMO software.
+</p>
+<hr>
+<span style="background-color: #DDDDFF"><a href="#top_buttons"><b>Go to top</b></a></span>
+</body>
+</html>

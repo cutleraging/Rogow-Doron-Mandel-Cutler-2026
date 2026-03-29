@@ -1,0 +1,3012 @@
+---
+title: "Apex-Seq analysis - Batch 2, Actb"
+output: html_document
+date: "2023-09-27"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Notes
+- Batch 2 is the second library prep with higher RNA input and 16 cycles of amplification
+- Following analysis as presented here: Padrón, Alejandro et al. “Proximity RNA Labeling by APEX-Seq Reveals the Organization of Translation Initiation Complexes and Repressive RNA Granules.” Molecular cell vol. 75,4 (2019): 875-887.e5. doi:10.1016/j.molcel.2019.07.030
+- This analysis uses only the experimental actin 1 samples
+
+
+# Preparation
+
+## Load libraries
+```{r}
+library(biomaRt)
+library(msigdbr)
+
+library(SummarizedExperiment)
+library(DESeq2)
+library(PCAtools)
+library(genefilter)
+library(zFPKM)
+library(clusterProfiler)
+library(org.Mm.eg.db)
+
+library(ggplot2)
+library(PerformanceAnalytics)
+library(ggrepel)
+library(EnhancedVolcano)
+library(ComplexHeatmap)
+library(UpSetR)
+library(ggpubr)
+library(ggcorrplot)
+library(ggvenn)
+
+library(data.table)
+library(tibble)
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(stringr)
+
+library(viridis)
+library(RColorBrewer)
+```
+
+## Functions
+```{r}
+theme_Publication <- function(base_size=16, base_family="helvetica") {
+  library(grid)
+  library(ggthemes)
+  (theme_foundation(base_size=base_size, base_family = "")
+    + theme(plot.title = element_text(face = "bold",
+                                      size = rel(1.2), hjust = 0.5),
+            text = element_text(),
+            panel.background = element_rect(colour = NA),
+            plot.background = element_rect(colour = NA),
+            panel.border = element_rect(colour = NA),
+            axis.title = element_text(face = "bold",size = rel(1)),
+            axis.title.y = element_text(angle=90,vjust =2),
+            axis.title.x = element_text(vjust = -0.2),
+            axis.text = element_text(), 
+            axis.line = element_line(colour="black"),
+            axis.ticks = element_line(),
+            panel.grid.major = element_line(colour="#f0f0f0"),
+            panel.grid.minor = element_blank(),
+            legend.key = element_rect(colour = NA),
+            legend.position = "top",
+            legend.direction = "horizontal",
+            #legend.key.size= unit(0.2, "cm"),
+            legend.margin = unit(0, "cm"),
+            legend.title = element_text(face="italic"),
+            plot.margin=unit(c(10,5,5,5),"mm"),
+            strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+            strip.text = element_text(face="bold")
+    ))
+  
+}
+
+scale_fill_Publication <- function(...){
+  library(scales)
+  discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
+  
+}
+
+scale_colour_Publication <- function(...){
+  library(scales)
+  discrete_scale("colour","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
+  
+}
+
+venn_analysis <- function(x, output_file = "venn_analysis_results.csv") {
+  # Function to get all combinations of a vector
+  get_combinations <- function(vec) {
+    unlist(lapply(seq_along(vec), function(i) combn(vec, i, simplify = FALSE)), 
+           recursive = FALSE)
+  }
+  
+  # Get all possible combinations of set names
+  set_names <- names(x)
+  combinations <- get_combinations(set_names)
+  
+  # Function to get the overlap of specific sets
+  get_overlap <- function(sets) {
+    Reduce(intersect, x[sets])
+  }
+  
+  # Get overlaps
+  overlaps <- lapply(combinations, get_overlap)
+  
+  # Name the overlaps
+  names(overlaps) <- sapply(combinations, paste, collapse = " & ")
+  
+  # Get unique elements in each set
+  unique_elements <- lapply(set_names, function(set) setdiff(x[[set]], unlist(x[set_names != set])))
+  names(unique_elements) <- paste("Unique to", set_names)
+  
+  # Combine all results
+  all_results <- c(overlaps, unique_elements)
+  
+  # Remove empty sets
+  all_results <- all_results[sapply(all_results, length) > 0]
+  
+  # Create a data frame
+  result_df <- data.frame(
+    Category = names(all_results),
+    Elements = sapply(all_results, paste, collapse = ", "),
+    Count = sapply(all_results, length)
+  )
+  
+  # Add columns for each original set
+  for (set_name in set_names) {
+    result_df[[set_name]] <- sapply(all_results, function(elements) {
+      sum(elements %in% x[[set_name]])
+    })
+  }
+  
+  # Write to CSV
+  write.csv(result_df, file = output_file, row.names = FALSE)
+  
+  cat("Results have been written to", output_file, "\n")
+  
+  return(result_df)
+}
+
+#' Make a paired heatmap of scaled expression and gene-set overlaps
+#'
+#' @param dds DESeq2 object with counts, rowData(external_gene_name), and colData(group, condition, replicate).
+#' @param res_df Data.frame with columns 'external_gene_name', 'padj', 'log2FoldChange' used to order/filter rows.
+#' @param previous_hits Named list of character vectors; each element is a gene set.
+#' @param groups Character vector of sample groups to include (must match colData(dds)$group).
+#' @param padj_cutoff Numeric FDR threshold. Default 0.05.
+#' @param lfc_direction One of c("up","down","both"). Default "up".
+#' @param lfc_min Minimum |log2FC| for filtering when lfc_direction != "both". Default 0.
+#' @param sample_label_fun Function taking colData(dds) and returning character labels for columns.
+#'        Default: paste(df$condition, df$replicate).
+#' @param left_right_ratio Numeric length-2 vector giving width ratio for left:right heatmaps. Default c(2,1).
+#' @param rowname_fontsize Numeric row name font size for left heatmap. Default 7.
+#' @param pdf_file Optional output path; if NULL, no file is written. Default NULL.
+#' @param pdf_width,pdf_height Numeric PDF size in inches if pdf_file is set. Defaults 6, 3.5.
+#'
+#' @return Invisibly returns a list with components: ht (CombinedHeatmap), n_sig (row count), genes (character).
+#' @examples
+#' # ht_info <- make_overlap_heatmap(dds, actin_vs_no_infect_scramble, previous_hits,
+#' #                                 groups = c("control","actin"),
+#' #                                 pdf_file = "actin_vs_no_infect_scramble_sig_heatmap.pdf")
+make_overlap_heatmap <- function(
+  dds,
+  res_df,
+  previous_hits,
+  groups = c("control","actin"),
+  padj_cutoff = 0.05,
+  lfc_direction = "up",
+  lfc_min = 0,
+  sample_label_fun = function(df) paste(df$condition, df$replicate),
+  left_right_ratio = c(2,1),
+  rowname_fontsize = 7,
+  pdf_file = NULL,
+  pdf_width = 6,
+  pdf_height = 3.5
+) {
+  stopifnot(all(c("external_gene_name","padj","log2FoldChange") %in% colnames(res_df)))
+  stopifnot(length(left_right_ratio) == 2)
+
+  # ---- libraries
+  requireNamespace("DESeq2")
+  requireNamespace("ComplexHeatmap")
+  requireNamespace("circlize")
+  requireNamespace("grid")
+
+  # ---- normalized counts for selected groups
+  keep_cols <- colData(dds)$group %in% groups
+  if (!any(keep_cols)) stop("No columns match 'groups'.")
+  mat <- as.matrix(DESeq2::counts(dds, normalized = TRUE)[, keep_cols, drop = FALSE])
+  colnames(mat) <- sample_label_fun(as.data.frame(S4Vectors::DataFrame(colData(dds)))[keep_cols, , drop = FALSE])
+  rownames(mat) <- S4Vectors::mcols(dds)$external_gene_name
+
+  # ---- order to match res_df
+  ord_idx <- match(res_df$external_gene_name, rownames(mat))
+  ord_idx <- ord_idx[!is.na(ord_idx)]
+  if (length(ord_idx) == 0) stop("No gene names in res_df match rownames(mat).")
+  mat_order <- mat[ord_idx, , drop = FALSE]
+
+  # ---- significance/filtering
+  sig_idx <- !is.na(res_df$padj) & res_df$padj < padj_cutoff
+  if (lfc_direction == "up")  sig_idx <- sig_idx & (res_df$log2FoldChange >  lfc_min)
+  if (lfc_direction == "down") sig_idx <- sig_idx & (res_df$log2FoldChange < -lfc_min)
+  # "both" ignores sign threshold besides padj
+  sig_genes <- res_df$external_gene_name[sig_idx]
+  sig_genes <- sig_genes[!is.na(sig_genes)]
+  mat_sig <- mat_order[rownames(mat_order) %in% sig_genes, , drop = FALSE]
+  # guard
+  if (nrow(mat_sig) == 0) stop("No significant genes after filtering.")
+
+  # ---- overlap matrix vs gene sets
+  if (is.null(names(previous_hits))) names(previous_hits) <- paste0("Set", seq_along(previous_hits))
+  ov_logical <- sapply(previous_hits, function(gs) rownames(mat_sig) %in% gs)
+  ov_df <- as.data.frame(ov_logical, check.names = FALSE)
+
+  # ---- scale per gene (row-wise z-score)
+  mat_sig_scaled <- t(scale(t(mat_sig)))
+  rownames(mat_sig_scaled) <- rownames(mat_sig)  # keep names if scale drops them
+
+  # ---- sanity
+  stopifnot(identical(rownames(mat_sig_scaled), rownames(ov_df)))
+
+  # ---- palettes
+  overlap_cols <- c("TRUE" = "#2CA02C", "FALSE" = "ivory2")
+  set_cols <- stats::setNames(circlize::hcl.colors(ncol(ov_df), "Set2"), colnames(ov_df))
+
+  # ---- categorical overlap strings
+  ov_chr <- ifelse(as.matrix(ov_df), "TRUE", "FALSE")
+  storage.mode(ov_chr) <- "character"
+  dimnames(ov_chr) <- list(rownames(mat_sig_scaled), colnames(ov_df))
+
+  # ---- annotations
+  gs_factor <- factor(colnames(ov_chr), levels = colnames(ov_chr))
+  top_anno_right <- ComplexHeatmap::HeatmapAnnotation(
+    GeneSet = gs_factor,
+    col = list(GeneSet = set_cols),
+    which = "column",
+    annotation_name_side = "left",
+    show_legend = FALSE
+  )
+
+  cond_all <- as.character(colData(dds)$group)[keep_cols]
+  cond_fac <- factor(cond_all, levels = unique(groups), labels = c("Ctrl","Actb")[seq_along(unique(groups))])
+  ha <- ComplexHeatmap::HeatmapAnnotation(
+    Condition = cond_fac,
+    col = list(Condition = stats::setNames(c("grey", "#63E6BE")[seq_along(unique(groups))],
+                                           levels(cond_fac)))
+  )
+
+  # ---- single legends
+  lg_overlap <- ComplexHeatmap::Legend(
+    title = "Overlap",
+    at = c("TRUE","FALSE"),
+    labels = c("TRUE","FALSE"),
+    legend_gp = grid::gpar(fill = c("#2CA02C","ivory2"))
+  )
+  lg_sets <- ComplexHeatmap::Legend(
+    title = "Gene sets",
+    at = names(set_cols),
+    legend_gp = grid::gpar(fill = unname(set_cols))
+  )
+
+  # ---- widths
+  left_w  <- grid::unit(left_right_ratio[1], "null")
+  right_w <- grid::unit(left_right_ratio[2], "null")
+
+  # ---- heatmaps
+  ht_left <- ComplexHeatmap::Heatmap(
+    mat_sig_scaled,
+    name = "Z-score",
+    top_annotation = ha,
+    border = TRUE,
+    cluster_rows = TRUE,
+    cluster_columns = TRUE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    show_row_names = TRUE,
+    row_names_side = "left",
+    row_names_gp = grid::gpar(fontsize = rowname_fontsize),
+    show_column_names = FALSE,
+    width = left_w
+  )
+
+  ht_right <- ComplexHeatmap::Heatmap(
+    ov_chr,
+    name = "Overlap",
+    col = overlap_cols,
+    cluster_rows = FALSE,
+    cluster_columns = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    show_row_names = FALSE,
+    show_column_names = FALSE,
+    rect_gp = grid::gpar(col = NA),
+    width = right_w,
+    top_annotation = top_anno_right,
+    show_heatmap_legend = FALSE
+  )
+
+  combined <- ht_left + ht_right
+
+  # ---- draw (optionally to PDF)
+  if (!is.null(pdf_file)) {
+    grDevices::pdf(pdf_file, width = pdf_width, height = pdf_height)
+    on.exit(try(grDevices::dev.off(), silent = TRUE), add = TRUE)
+  }
+  ComplexHeatmap::draw(
+    combined,
+    heatmap_legend_side = "right",
+    annotation_legend_side = "right",
+    annotation_legend_list = list(lg_overlap, lg_sets)
+  )
+
+  invisible(list(ht = combined,
+                 n_sig = nrow(mat_sig_scaled),
+                 genes = rownames(mat_sig_scaled)))
+}
+
+```
+
+## Load previous data
+```{r}
+glock.rna <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/previous_sutdies/Glock et al 2021/rna-seq.csv")
+
+caligas <- read.csv("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/previous_sutdies/Cajigas et al 2012/table S10.csv")
+
+previous_hits <- list(
+"Cajigas et al 2012 (Neuropil)" = caligas$Gene.Symbol,
+"Glock et al 2021 (Neuropil)" = subset(glock.rna, rna_log2FC > 0 & rna_padj < 0.05)$gene,
+"Glock et al 2021 (Somata)" = subset(glock.rna, rna_log2FC < 0 & rna_padj < 0.05)$gene)
+```
+
+
+## Load RNA-Seq data
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis")
+
+# metadata
+metadata <- read.csv('sample_table.csv', header = TRUE, row.names = 1)
+
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/results/with-virus-and-stem-loop")
+
+tpm <- read.table('rsem.merged.gene_tpm.tsv', header = TRUE, row.names = 1)
+tpm$transcript_id.s. <- NULL
+colnames(tpm) <- sub("_(.*)$", "", colnames(tpm))
+tpm <- tpm[,rownames(metadata)]
+
+
+counts <- read.table('rsem.merged.gene_counts.tsv', header = TRUE, row.names = 1)
+counts$transcript_id.s. <- NULL
+colnames(counts) <- sub("_(.*)$", "", colnames(counts))
+counts <- counts[,rownames(metadata)]
+
+se <- SummarizedExperiment(assays=SimpleList(counts = as.matrix(round(counts)),
+                                             tpm = as.matrix(tpm)),
+                                             colData = metadata)
+
+# remove version from gene name
+rownames(se) <- lapply(rownames(se), sub, pattern = "\\.\\d+$", replacement = "")
+```
+
+## Subset to batch 2
+```{r}
+se <- se[, se$library.prep.batch == "2"]
+```
+
+## Subset to exclude libraries from batch 1 re-prepped in batch 2
+```{r}
+se <- se[, se$from.first.batch == "0"]
+```
+
+## Subset to exclude arc samples
+```{r}
+se <- se[, se$condition != "arc"]
+```
+
+## Rename samples for display on figures
+```{r}
+se$sample.name <- c("Uninfected Cntrl",
+                    "Actin Rep. 1",
+                    "Scramble Cntrl Rep. 1",
+                    "Scramble Cntrl Rep. 2",
+                    "Actin Rep. 2",
+                    "Background Cntrl Rep. 1",
+                    "Background Cntrl Rep. 2"
+                    )
+```
+
+## Save
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin")
+
+saveRDS(se, "se.RDS")
+```
+
+# Quality Control
+
+## Raw genes expressed per sample
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+df <- data.frame(Sample = paste(se$sample.description, se$replicate), 
+                 Frequency = colSums(assay(se, "tpm") > 1)) 
+
+pdf("raw_counts_genes_expressed_tpm_1.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 1")
+dev.off()
+
+df <- data.frame(Sample = paste(se$sample.description, se$replicate), 
+                 Frequency = colSums(assay(se, "tpm") > 5)) 
+
+pdf("raw_counts_genes_expressed_tpm_5.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 5")
+dev.off()
+
+df <- data.frame(Sample = paste(se$sample.description, se$replicate), 
+                 Frequency = colSums(assay(se, "tpm") > 10)) 
+
+pdf("raw_counts_genes_expressed_tpm_10.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 10")
+dev.off()
+```
+
+## Distribution of raw counts
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("raw_count_distribution.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.7) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "log2(Counts + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Raw Counts",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("raw_tpm_distribution.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.7) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "log2(TPM + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Raw TPM ",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Expression of stem loop sequences
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+stem_loop_seq <- c("24xMS2_gene", 
+                  "24xpp7_gene", 
+                  "actb_5-UTR_EXONS_3-UTR_24xms2_3-UTR_gene", 
+                  "arc_5-UTR_EXONS_3-UTR_24xpp7v3_3-UTR_gene", 
+                  "MS20_LK20_gene",
+                  "MS2_LK51-1_gene",
+                  "MS2_LK51-2_gene")
+
+# counts
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_counts.pdf",
+    width = 10,
+    height = 10)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(counts)") +
+  facet_wrap(~gene)
+dev.off()
+
+# tpm
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_tpm.pdf",
+    width = 10,
+    height = 10)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(tpm)") +
+  facet_wrap(~gene)
+dev.off()
+```
+
+### Filter arc and actb
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+stem_loop_seq <- c("actb_5-UTR_EXONS_3-UTR_24xms2_3-UTR_gene", 
+                  "arc_5-UTR_EXONS_3-UTR_24xpp7v3_3-UTR_gene") 
+
+# counts
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_counts-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(counts)") +
+  facet_wrap(~gene)
+dev.off()
+
+# tpm
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_tpm-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(tpm)") +
+  facet_wrap(~gene)
+dev.off()
+```
+
+## Expression of stem loop sequences
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+stem_loop_seq <- c("24xMS2_gene", 
+                  "24xpp7_gene", 
+                  "actb_5-UTR_EXONS_3-UTR_24xms2_3-UTR_gene", 
+                  "arc_5-UTR_EXONS_3-UTR_24xpp7v3_3-UTR_gene", 
+                  "MS20_LK20_gene",
+                  "MS2_LK51-1_gene",
+                  "MS2_LK51-2_gene")
+
+# counts
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_counts.pdf",
+    width = 10,
+    height = 10)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(counts)") +
+  facet_wrap(~gene)
+dev.off()
+
+# tpm
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_tpm.pdf",
+    width = 10,
+    height = 10)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(tpm)") +
+  facet_wrap(~gene)
+dev.off()
+```
+
+## Expression of virus sequences
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+stem_loop_seq <- c("MCP_gene", 
+                  "yGFP_gene", 
+                  "PCP-APEX-P2A-yGFP_gene", 
+                  "PCP_gene", 
+                  "MCP-APEX-p2a-yGFP_gene")
+
+# counts
+df <- as.data.frame(log2(assay(se) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("virus_counts.pdf",
+    width = 15,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(counts)") +
+  facet_wrap(~gene, 
+             nrow = 1)
+dev.off()
+
+# tpm
+df <- as.data.frame(log2(assay(se, "tpm") + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("virus_tpm.pdf",
+    width = 15,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(tpm)") +
+  facet_wrap(~gene, 
+             nrow = 1)
+dev.off()
+```
+
+## Filter genes
+- Keep genes which have at least 1 TPM in both actin samples
+```{r}
+se.filter <- se[rowSums(assay(se, "tpm")[,se$condition %in% c("actin")] > 1) == 2,]
+```
+
+## Filtered genes expressed per sample
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+df <- data.frame(Sample = paste(se.filter$sample.description, se.filter$replicate), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 1)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_1.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 1")
+dev.off()
+
+df <- data.frame(Sample = paste(se.filter$sample.description, se.filter$replicate), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 5)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_5.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 5")
+dev.off()
+
+df <- data.frame(Sample = paste(se.filter$sample.description, se.filter$replicate), 
+                 Frequency = colSums(assay(se.filter, "tpm") > 10)) 
+
+pdf("filtered_counts_genes_expressed_filterd_tpm_10.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Frequency)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(subtitle = "TPM > 10")
+dev.off()
+```
+
+## Distribution of filtered counts
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+df <- as.data.frame(log2(assay(se.filter) + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("filtered_count_distribution.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.5) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "Log2(counts + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Post-filtering",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+
+df <- as.data.frame(log2(assay(se.filter, "tpm") + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("filtered_tpm_distribution.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +  # Use Value for density and Sample for color fill
+    geom_density(alpha = 0.5) +  # Adjust alpha for transparency
+    theme_Publication() +
+    labs(x = "Log2(tpm + 1)",  # Adjust the x-axis label for the density plot
+         subtitle = "Post-filtering",
+         y = "Density") +  # Density plots typically have "Density" as the y-axis label
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Sample Correlation
+
+### All samples
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+# tpm
+df <- log2(assay(se.filter, "tpm") + 1)
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+
+pdf("sample_correlation.pdf",
+    width = 10,
+    height = 10)
+chart.Correlation(df, histogram=TRUE, pch=19)
+dev.off()
+```
+
+### scrmbl
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+# tpm
+df <- log2(assay(se.filter, "tpm") + 1)
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  as.data.frame() %>%
+  select(contains("scramble"))
+
+pdf("scramble_correlation.pdf",
+    width = 5,
+    height = 5)
+chart.Correlation(df, histogram=TRUE, pch=19)
+dev.off()
+```
+
+### ref transcriptome
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+# tpm
+df <- log2(assay(se.filter, "tpm") + 1)
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  as.data.frame() %>%
+  select(contains("transcriptome"))
+
+pdf("ref-transcriptome_correlation.pdf",
+    width = 5,
+    height = 5)
+chart.Correlation(df, histogram=TRUE, pch=19)
+dev.off()
+```
+
+### actin
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+# tpm
+df <- log2(assay(se.filter, "tpm") + 1)
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  as.data.frame() %>%
+  select(contains("actin"))
+
+pdf("actin_correlation.pdf",
+    width = 5,
+    height = 5)
+chart.Correlation(df, histogram=TRUE, pch=19)
+dev.off()
+```
+
+## Overlap analysis
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+
+binary_expr <- as.data.frame(t(apply(assay(se.filter, "tpm"), 1, function(x) as.integer(x > 0))))
+colnames(binary_expr) <- se.filter$sample.description
+
+pdf("overlap_expressed_genes_all.pdf",
+    width = 10,
+    height = 7)
+upset(binary_expr, 
+      sets = colnames(binary_expr),
+      text.scale = 1.25,
+      #nintersects = 10,
+      order.by = "freq",
+      show.numbers = FALSE)
+dev.off()
+
+pdf("overlap_expressed_genes_top_10.pdf",
+    width = 10,
+    height = 7)
+upset(binary_expr, 
+      sets = colnames(binary_expr),
+      text.scale = 1.25,
+      nintersects = 10,
+      order.by = "freq",
+      show.numbers = FALSE)
+dev.off()
+```
+
+## Map gene IDs
+```{r}
+# get database
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
+                dataset = "mmusculus_gene_ensembl")
+
+# mapping
+names <- getBM(attributes = c('ensembl_gene_id', 
+                              'external_gene_name', 
+                              'entrezgene_id',
+                              'gene_biotype',
+                              'chromosome_name',
+                              'start_position',
+                              'end_position',
+                              'percentage_gene_gc_content'),
+                filters = 'ensembl_gene_id',
+                values = rownames(se.filter),
+                mart = mart)
+
+# remove duplicates - 133
+sum(duplicated(names$external_gene_name))
+names <- names %>%
+  distinct(external_gene_name, .keep_all = TRUE)
+
+# match to genes in dataset
+names.match <- names[match(rownames(se.filter), names$ensembl_gene_id),]
+
+# add to se object row data
+rowData(se.filter) <- names.match
+all(rownames(rowData(se.filter)) == rowData(se.filter)$ensembl_gene_id)
+```
+
+## Save
+```{r}
+# counts
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/quality-control")
+write.csv(merge(rowData(se.filter), assay(se.filter, "counts"), by = 'row.names'), "filtered.counts.csv")
+write.csv(merge(rowData(se.filter), assay(se.filter, "tpm"), by = 'row.names'), "filtered.tpm.csv")
+
+# object
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/")
+saveRDS(se.filter, "se.filter.RDS")
+se.filter <- readRDS("se.filter.RDS")
+```
+
+# Normalization
+- Consider normalizing after taking out the virus and stem-loop sequences
+- Consider normalizing to the amount of virus that is expressed
+- Also consider normalizing without no infect controls as their pull down should be empty
+
+## With virus and stem-loop sequences
+
+### DeSeq2 normalization and modeling
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~condition)
+
+dds <- DESeq(dds)
+```
+
+## Save and output normalized counts
+```{r}
+saveRDS(dds, "dds.RDS")
+dds <- readRDS("dds.RDS")
+
+dds.counts <- counts(dds, normalized = TRUE)
+colnames(dds.counts) <- paste(dds$sample.description, dds$replicate, sep = " ")
+dds.counts <- merge(dds.counts, rowData(dds), by = "row.names")
+
+write.csv(dds.counts, "normalized.counts.csv")
+```
+
+## DESeq2 model estimates
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+# Mean and variance relationship
+pdf("mean-variance.pdf",
+    width = 5,
+    height = 5)
+norm.counts <- counts(dds, normalized=TRUE) 
+mean.counts <- rowMeans(norm.counts)
+variance.counts <- apply(norm.counts, MARGIN = 1, var)
+mean.var.col <- densCols(x=log2(mean.counts), y=log2(variance.counts)) 
+plot(x=log2(mean.counts), y=log2(variance.counts), pch=16, cex=0.5,
+col=mean.var.col, main="Mean-variance relationship", xlab="Mean log2(normalized counts) per gene", ylab="Variance of log2(normalized counts)", panel.first = grid())
+abline(a=1, b=1, col="red") # a linear line to compare against 
+dev.off()
+
+# dispersion
+pdf("dispersion.pdf",
+    width = 5,
+    height = 5)
+plotDispEsts(dds)
+dev.off()
+```
+
+## Distribution of normalized counts
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- gather(df, key = "Sample", value = "Value")
+
+pdf("normalized_count_distribution_box.pdf",
+    width = 5,
+    height = 5)
+ggplot(df, aes(x = Sample, y = Value)) +
+    geom_boxplot() +
+    theme_Publication() +
+    coord_flip() +
+    labs(y = "Log2(counts + 1)",
+         subtitle = "Normalized counts")
+dev.off()
+
+pdf("normalized_count_distribution_density.pdf",
+    width = 6,
+    height = 5)
+ggplot(df, aes(x = Value, fill = Sample)) +
+    geom_density(alpha = 0.5) +
+    theme_Publication() +
+    labs(x = "Log2(counts + 1)",
+         subtitle = "Normalized counts") +
+    theme(legend.position = "right",
+          legend.direction = "vertical")
+dev.off()
+```
+
+## Sample correlations
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df.cor <- cor(df)
+df.cor <- df.cor[order(rownames(df.cor)), order(colnames(df.cor))]
+
+pdf("sample_correlations.pdf",
+    width = 8,
+    height = 8)
+ggcorrplot(df.cor, 
+           hc.order = FALSE, 
+           type = "lower",
+           lab = TRUE)
+dev.off()
+```
+
+## Clustering
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+# Transform counts to stabalize mean-variance
+dds_vst <- vst(dds, blind = FALSE)
+
+# PCA
+dds$replicate <- factor(dds$replicate)
+p <- pca(assay(dds_vst), metadata = colData(dds), removeVar = 0.1)
+
+pdf("screeplot.pdf",
+    width = 5,
+    height = 5)
+screeplot(p)
+dev.off()
+
+pdf("eingencor.pdf",
+    width = 5,
+    height = 5)
+eigencorplot(p,
+             components = getComponents(p, seq_len(7)),
+             main = "Principle component correlations",
+             cexMain = 1.5,
+             metavars = c("condition", "replicate"),
+             col = viridis(100),
+             colCorval = 'firebrick',
+             fontCorval = 2,
+             cexCorval = 0.5,
+             rotLabX = 45,
+             posColKey = 'top')
+dev.off()
+
+pdf("PCA.pdf",
+    width = 6,
+    height = 5)
+biplot(p,
+       colby = "condition",
+       shape = "replicate",
+       # hline = 0, 
+       # vline = 0,
+       gridlines.major = FALSE, 
+       gridlines.minor = FALSE,
+       max.overlaps = Inf,
+       lab = dds$sample.description) +
+       theme_Publication() +
+       theme(legend.position = "right",
+             legend.box="vertical",
+             legend.direction = "vertical",
+             legend.margin=margin())
+dev.off()
+
+pdf("PCA_no_labels.pdf",
+    width = 6,
+    height = 5)
+biplot(p,
+       colby = "condition",
+       shape = "replicate",
+       hline = 0, 
+       vline = 0,
+       gridlines.major = FALSE, 
+       gridlines.minor = FALSE,
+       lab = NULL) +
+       theme_Publication() +
+       theme(legend.position = "right",
+             legend.box="vertical",
+             legend.direction = "vertical",
+             legend.margin=margin())
+dev.off()
+```
+
+### Without background samples
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+# Transform counts to stabalize mean-variance
+dds_vst <- vst(dds, blind = FALSE)
+
+# remove background samples
+dds_vst.sub <- dds_vst[,dds_vst$condition != "background"]
+
+# PCA
+dds_vst.sub$replicate <- factor(dds_vst.sub$replicate)
+p <- pca(assay(dds_vst.sub), metadata = colData(dds_vst.sub), removeVar = 0.1)
+
+pdf("screeplot_background_removed.pdf",
+    width = 5,
+    height = 5)
+screeplot(p)
+dev.off()
+
+pdf("eingencor_background_removed.pdf",
+    width = 5,
+    height = 5)
+eigencorplot(p,
+             components = getComponents(p, seq_len(5)),
+             main = "Principle component correlations",
+             cexMain = 1.5,
+             metavars = c("condition", "replicate"),
+             col = viridis(100),
+             colCorval = 'firebrick',
+             fontCorval = 2,
+             cexCorval = 0.5,
+             rotLabX = 45,
+             posColKey = 'top')
+dev.off()
+
+pdf("PCA_background_removed.pdf",
+    width = 6,
+    height = 5)
+biplot(p,
+       colby = "condition",
+       shape = "replicate",
+       # hline = 0, 
+       # vline = 0,
+       gridlines.major = FALSE, 
+       gridlines.minor = FALSE,
+       max.overlaps = Inf,
+       lab = dds_vst.sub$sample.description) +
+       theme_Publication() +
+       theme(legend.position = "right",
+             legend.box="vertical",
+             legend.direction = "vertical",
+             legend.margin=margin())
+dev.off()
+
+pdf("PCA_no_labels.pdf",
+    width = 6,
+    height = 5)
+biplot(p,
+       colby = "condition",
+       shape = "replicate",
+       hline = 0, 
+       vline = 0,
+       gridlines.major = FALSE, 
+       gridlines.minor = FALSE,
+       lab = NULL) +
+       theme_Publication() +
+       theme(legend.position = "right",
+             legend.box="vertical",
+             legend.direction = "vertical",
+             legend.margin=margin())
+dev.off()
+```
+
+## Plot expression of genes
+
+### Virus sequences
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+stem_loop_seq <- c("yGFP_gene", 
+                  "PCP-APEX-P2A-yGFP_gene", 
+                  "MCP-APEX-p2a-yGFP_gene")
+
+# counts
+df <- as.data.frame(counts(dds, normalized=TRUE))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("virus_norm_counts.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "normalized counts") +
+  facet_wrap(~gene, 
+             nrow = 1)
+dev.off()
+
+# counts log2
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- paste(se$sample.description, se$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("virus_norm_counts_log2.pdf",
+    width = 10,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(normalized counts)") +
+  facet_wrap(~gene, 
+             nrow = 1)
+dev.off()
+```
+
+### Stem loop sequences
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+stem_loop_seq <- c("actb_5-UTR_EXONS_3-UTR_24xms2_3-UTR_gene", 
+                  "arc_5-UTR_EXONS_3-UTR_24xpp7v3_3-UTR_gene") 
+
+# counts
+df <- as.data.frame(counts(dds, normalized=TRUE))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_norm_counts-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Normalized counts") +
+  facet_wrap(~gene)
+dev.off()
+
+
+# counts log2
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% stem_loop_seq) %>%
+  mutate(gene = gsub("_gene", "", gene)) %>%
+  mutate(gene = gsub("_", " ", gene))
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("stem-loop_norm_counts_log2-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(normalized counts)") +
+  facet_wrap(~gene)
+dev.off()
+```
+
+### Endogenous actin and arc
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/normalization")
+
+endogenous <- c("ENSMUSG00000029580", 
+                "ENSMUSG00000022602")
+
+gene_names <- c("ENSMUSG00000029580" = "Actb", 
+                "ENSMUSG00000022602" = "Arc")
+
+# counts
+df <- as.data.frame(counts(dds, normalized=TRUE))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% endogenous) %>%
+  mutate(gene_name = gene_names[gene])
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("endogenous_norm_counts-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Normalized counts") +
+  facet_wrap(~gene_name)
+dev.off()
+
+
+# counts log2
+df <- as.data.frame(log2(counts(dds, normalized=TRUE) + 1))
+colnames(df) <- paste(se.filter$sample.description, se.filter$replicate)
+df <- df %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "value") %>%
+  filter(gene %in% endogenous) %>%
+  mutate(gene_name = gene_names[gene])
+
+df$gene <- str_wrap(df$gene, width = 15)
+
+pdf("endogenous_norm_counts_log2-arc-actb.pdf",
+    width = 8,
+    height = 5)
+ggplot(df, aes(x = sample, y = value)) +
+    geom_col() + 
+    theme_Publication() +
+    coord_flip() +
+    labs(x = "",
+         y = "Log2(normalized counts)") +
+  facet_wrap(~gene_name)
+dev.off()
+```
+
+
+## No infect vs background (ref transcriptome)
+- Control for effect of pull down
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+
+# get results
+noinfect_vs_background <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("condition", "no infect", "background"))
+
+# get a summary of the amount of significantly DEG 
+summary(noinfect_vs_background, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# noinfect_vs_background <- lfcShrink(dds = dds, 
+#                               res = noinfect_vs_background, 
+#                               contrast = c("condition", "no infect", "background"),
+#                               type = "ashr")
+
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+noinfect_vs_background <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(noinfect_vs_background),
+                         by = "row.names")
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+noinfect_vs_background <- merge(noinfect_vs_background, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+noinfect_vs_background$ensembl_gene_id <- NULL
+colnames(noinfect_vs_background)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(noinfect_vs_background, "noinfect_vs_background.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("noinfect_vs_background_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(noinfect_vs_background$pvalue, 
+     main = "P-value distribution", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+noinfect_vs_background <- noinfect_vs_background %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & noinfect_vs_background$padj < 0.05 ~ "sig.up",
+                         log2FoldChange < 0 & noinfect_vs_background$padj < 0.05 ~ "sig.down",
+                         .default = "")
+         )
+
+pdf("noinfect_vs_background_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(noinfect_vs_background, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "No infect vs Background",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+noinfect_vs_background$volcano.label <- ""
+noinfect_vs_background$volcano.score <- abs(noinfect_vs_background$log2FoldChange) * -log10(noinfect_vs_background$pvalue)
+noinfect_vs_background <- noinfect_vs_background[order(noinfect_vs_background$volcano.score, decreasing = TRUE),]
+noinfect_vs_background$volcano.label[1:10] <- noinfect_vs_background$external_gene_name[1:10]
+
+pdf("noinfect_vs_background_volcano.pdf",
+    width = 5,
+    height = 5)
+EnhancedVolcano(noinfect_vs_background,
+                lab = noinfect_vs_background$external_gene_name,
+                title = "Uninfected Cntrl vs.\nBackground Cntrl",
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                #selectLab = noinfect_vs_background$volcano.label,
+                labSize = 2,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 0.5,
+                colConnectors = 'black',
+                max.overlaps = 20,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Condition = subset(colData(dds), condition %in% c("background", "no infect"))$condition,
+                        Replicate = as.factor(subset(colData(dds), condition %in% c("background", "no infect"))$replicate))
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$condition %in% c("background", "no infect")])
+
+# order by results
+mat.order <- mat[match(noinfect_vs_background$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[noinfect_vs_background$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("noinfect_vs_background_sig_heatmap.pdf",
+    width = 4,
+    height = 5)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Scramble vs background
+- Control for effect of infection
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+
+# get results
+scramble_vs_background <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("condition", "scramble", "background"))
+
+# get a summary of the amount of significantly DEG 
+summary(scramble_vs_background, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# scramble_vs_background <- lfcShrink(dds = dds, 
+#                               res = scramble_vs_background, 
+#                               contrast = c("condition", "background", "background"),
+#                               type = "ashr")
+
+# merge
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+scramble_vs_background <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(scramble_vs_background),
+                         by = "row.names")
+
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+scramble_vs_background <- merge(scramble_vs_background, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+scramble_vs_background$ensembl_gene_id <- NULL
+colnames(scramble_vs_background)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(scramble_vs_background, "scramble_vs_background.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("scramble_vs_background_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(scramble_vs_background$pvalue, 
+     main = "P-value distribution", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+scramble_vs_background <- scramble_vs_background %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & scramble_vs_background$padj < 0.05 ~ "sig.up",
+                         log2FoldChange < 0 & scramble_vs_background$padj < 0.05 ~ "sig.down",
+                         .default = "")
+         )
+
+pdf("scramble_vs_background_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(scramble_vs_background, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "scramble vs Background",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+scramble_vs_background$volcano.label <- ""
+scramble_vs_background$volcano.score <- abs(scramble_vs_background$log2FoldChange) * -log10(scramble_vs_background$pvalue)
+scramble_vs_background <- scramble_vs_background[order(scramble_vs_background$volcano.score, decreasing = TRUE),]
+scramble_vs_background$volcano.label[1:10] <- scramble_vs_background$external_gene_name[1:10]
+
+pdf("scramble_vs_background_volcano.pdf",
+    width = 5,
+    height = 5)
+EnhancedVolcano(scramble_vs_background,
+                lab = scramble_vs_background$external_gene_name,
+                title = "Scramble vs Background",
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = scramble_vs_background$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+png("scramble_vs_background_volcano.png",
+    width = 5,
+    height = 5,
+    units = "in",
+    res = 300)
+EnhancedVolcano(scramble_vs_background,
+                lab = scramble_vs_background$external_gene_name,
+                title = "Scramble vs Background",
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = scramble_vs_background$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Condition = subset(colData(dds), condition %in% c("background", "scramble"))$condition,
+                        Replicate = subset(colData(dds), condition %in% c("background", "scramble"))$replicate)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$condition %in% c("background", "scramble")])
+
+# order by results
+mat.order <- mat[match(scramble_vs_background$ensembl_gene_id, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[scramble_vs_background$padj < 0.05,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# remove NA
+
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("scramble_vs_background_sig_heatmap.pdf",
+    width = 4,
+    height = 5)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = FALSE,
+        show_column_names = FALSE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+## Actin vs no infect + scramble (MS2)
+- Using same genetic background for controls
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+
+# group experimental and controls
+se.filter$group <- c("control",
+                     "actin",
+                     "background",
+                     "control",
+                     "actin",
+                     "background",
+                     "background")
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~group)
+
+dds <- DESeq(dds)
+
+# get results
+actin_vs_no_infect_scramble <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("group", "actin", "control"))
+
+# get a summary of the amount of significantly DEG 
+summary(actin_vs_no_infect_scramble, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# actin_vs_no_infect_scramble <- lfcShrink(dds = dds,
+#                               res = actin_vs_no_infect_scramble,
+#                               contrast = c("condition", "actin", "scramble"),
+#                               type = "ashr")
+
+# merge
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+actin_vs_no_infect_scramble <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(actin_vs_no_infect_scramble),
+                         by = "row.names")
+
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+actin_vs_no_infect_scramble <- merge(actin_vs_no_infect_scramble, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+actin_vs_no_infect_scramble$ensembl_gene_id <- NULL
+colnames(actin_vs_no_infect_scramble)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(actin_vs_no_infect_scramble, "actin_vs_no_infect_scramble.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("actin_vs_no_infect_scramble_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(actin_vs_no_infect_scramble$pvalue, 
+     main = "P-value distribution", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+actin_vs_no_infect_scramble <- actin_vs_no_infect_scramble %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & actin_vs_no_infect_scramble$padj < 0.05 ~ "sig.up",
+                         log2FoldChange < 0 & actin_vs_no_infect_scramble$padj < 0.05 ~ "sig.down",
+                         .default = "")
+         )
+
+pdf("actin_vs_no_infect_scramble_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(actin_vs_no_infect_scramble, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Actin vs Control",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+actin_vs_no_infect_scramble$volcano.label <- ""
+actin_vs_no_infect_scramble$volcano.score <- actin_vs_no_infect_scramble$log2FoldChange * -log10(actin_vs_no_infect_scramble$pvalue)
+actin_vs_no_infect_scramble <- actin_vs_no_infect_scramble[order(actin_vs_no_infect_scramble$volcano.score, decreasing = TRUE),]
+actin_vs_no_infect_scramble$volcano.label[1:10] <- actin_vs_no_infect_scramble$external_gene_name[1:10]
+
+pdf("actin_vs_no_infect_scramble_volcano.pdf",
+    width = 5,
+    height = 5)
+EnhancedVolcano(actin_vs_no_infect_scramble,
+                lab = actin_vs_no_infect_scramble$external_gene_name,
+                title = expression("RNA-Seq:" ~ italic("Actb") ~ "vs Control"),
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = actin_vs_no_infect_scramble$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold.italic',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE,
+                ylim = c(0, 13),
+                xlim = c(-5, 25))
+dev.off()
+
+png("actin_vs_no_infect_scramble_volcano.png",
+    width = 5,
+    height = 5,
+    units = "in",
+    res = 300)
+EnhancedVolcano(actin_vs_no_infect_scramble,
+                lab = actin_vs_no_infect_scramble$external_gene_name,
+                title = expression("RNA-Seq" ~ italic("Actb") ~ "vs Control"),
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = actin_vs_no_infect_scramble$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Condition = subset(colData(dds), group %in% c("control", "actin"))$group)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$group %in% c("control", "actin")])
+colnames(mat) <- paste(dds$condition, dds$replicate)[colData(se.filter)$group %in% c("control", "actin")]
+rownames(mat) <- rowData(dds)$external_gene_name
+
+# order by results
+mat.order <- mat[match(actin_vs_no_infect_scramble$external_gene_name, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[actin_vs_no_infect_scramble$padj < 0.05 & actin_vs_no_infect_scramble$log2FoldChange > 0,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("actin_vs_no_infect_scramble_sig_heatmap.pdf",
+    width = 5,
+    height = 8)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = TRUE,
+        show_column_names = TRUE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+
+png("actin_vs_no_infect_scramble_sig_heatmap.png",
+    width = 5,
+    height = 8,
+    res = 300,
+    units = "in")
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = TRUE,
+        show_column_names = TRUE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+
+
+# heatmap of significant changes
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$group %in% c("control", "actin")])
+colnames(mat) <- paste(dds$condition, dds$replicate)[colData(se.filter)$group %in% c("control", "actin")]
+rownames(mat) <- rowData(dds)$external_gene_name
+
+# order by results
+mat.order <- mat[match(actin_vs_no_infect_scramble$external_gene_name, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[actin_vs_no_infect_scramble$padj < 0.05 & actin_vs_no_infect_scramble$log2FoldChange > 0,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# overlap with previous hits
+ov <- sapply(previous_hits, function(gs) rownames(mat.sig) %in% gs)      # genes x lists (logical)
+ov_df <- as.data.frame(ov)
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+stopifnot(identical(rownames(mat.sig.scaled), rownames(ov_df)))
+
+## Colors
+overlap_cols <- c("TRUE" = "#2CA02C", "FALSE" = "ivory2")        # green / grey
+set_cols     <- setNames(hcl.colors(ncol(ov_df), "Set2"), colnames(ov_df))
+
+## Overlap matrix as "TRUE"/"FALSE" strings (for discrete legend)
+ov_chr <- ifelse(as.matrix(ov_df), "TRUE", "FALSE")
+storage.mode(ov_chr) <- "character"
+dimnames(ov_chr) <- list(rownames(mat.sig.scaled), colnames(ov_df))
+
+## Column annotation for RIGHT heatmap (one color per gene set/column)
+gs_factor <- factor(colnames(ov_chr), levels = colnames(ov_chr))
+top_anno_right <- HeatmapAnnotation(
+  GeneSet = gs_factor,
+  col = list(GeneSet = set_cols),
+  which = "column",
+  annotation_name_side = "left",
+  show_legend = FALSE                               # avoid duplicate legend
+)
+
+## Column annotation for left heatmap (sample conditions)
+cond <- subset(colData(dds), group %in% c("control", "actin"))$group
+cond <- factor(cond, levels = c("control", "actin"), labels = c("Ctrl", "Actb"))
+ha <- HeatmapAnnotation(
+  Condition = cond,
+  col = list(
+    Condition = c("Ctrl" = "grey",
+                  "Actb"   = "#63E6BE")
+  )
+)
+
+## Custom legends (single instances)
+lg_overlap <- Legend(
+  title = "Overlap",
+  at = c("TRUE","FALSE"), labels = c("TRUE","FALSE"),
+  legend_gp = gpar(fill = c("#2CA02C","ivory2"))
+)
+lg_sets <- Legend(
+  title = "Gene sets",
+  at = names(set_cols),
+  legend_gp = gpar(fill = unname(set_cols))
+)
+
+## LEFT: Z-score heatmap (drives row order); keep its legend
+ht_left <- Heatmap(
+  mat.sig.scaled,
+  name = "Z-score",
+  top_annotation = ha,
+  border = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  show_row_dend = FALSE,
+  show_column_dend = FALSE,
+  show_row_names = TRUE,                # put row names here
+  row_names_side = "left",
+  row_names_gp = gpar(fontsize = 7),
+  show_column_names = FALSE,
+  width = unit(2, "null")               # ← 2 parts
+)
+
+## RIGHT: binary overlap heatmap (inherits row order); no duplicate legends
+ht_right <- Heatmap(
+  ov_chr,
+  name = "Overlap",
+  col = overlap_cols,
+  cluster_rows = FALSE,                  # inherit row order from ht_left
+  cluster_columns = FALSE,
+  show_row_dend = FALSE,
+  show_column_dend = FALSE,
+  show_row_names = FALSE,                # avoid repeating row names
+  show_column_names = FALSE,
+  rect_gp = gpar(col = NA),
+  width = unit(1, "null"),               # ← 1 part (so left:right = 2:1)
+  top_annotation = top_anno_right,
+  show_heatmap_legend = FALSE            # legend supplied via lg_overlap
+)
+
+pdf("actin_vs_no_infect_scramble_sig_heatmap.pdf", width = 5, height = 3)
+ht <- ht_left + ht_right
+draw(
+  ht,
+  heatmap_legend_side = "right",
+  annotation_legend_side = "right",
+  annotation_legend_list = list(lg_overlap, lg_sets) # single, non-redundant legends
+)
+dev.off()
+```
+
+### Actin rep 1 sample removed
+- This is because this appear to be an outlier sample due to low gene detection
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+
+# group experimental and controls
+se.filter$group <- c("control",
+                     "background",
+                     "background",
+                     "control",
+                     "actin",
+                     "background",
+                     "background")
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~group)
+
+dds <- DESeq(dds)
+
+# get results
+actin_vs_no_infect_scramble_rep1_removed <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("group", "actin", "control"))
+
+# get a summary of the amount of significantly DEG 
+summary(actin_vs_no_infect_scramble_rep1_removed, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# actin_vs_no_infect_scramble_rep1_removed <- lfcShrink(dds = dds,
+#                               res = actin_vs_no_infect_scramble_rep1_removed,
+#                               contrast = c("condition", "actin", "scramble"),
+#                               type = "ashr")
+
+# merge
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+actin_vs_no_infect_scramble_rep1_removed <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(actin_vs_no_infect_scramble_rep1_removed),
+                         by = "row.names")
+
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+actin_vs_no_infect_scramble_rep1_removed <- merge(actin_vs_no_infect_scramble_rep1_removed, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+actin_vs_no_infect_scramble_rep1_removed$ensembl_gene_id <- NULL
+colnames(actin_vs_no_infect_scramble_rep1_removed)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(actin_vs_no_infect_scramble_rep1_removed, "actin_vs_no_infect_scramble_rep1_removed.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("actin_vs_no_infect_scramble_rep1_removed_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(actin_vs_no_infect_scramble_rep1_removed$pvalue, 
+     main = "P-value distribution", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+actin_vs_no_infect_scramble_rep1_removed <- actin_vs_no_infect_scramble_rep1_removed %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & actin_vs_no_infect_scramble_rep1_removed$padj < 0.05 ~ "sig.up",
+                         log2FoldChange < 0 & actin_vs_no_infect_scramble_rep1_removed$padj < 0.05 ~ "sig.down",
+                         .default = "")
+         )
+
+pdf("actin_vs_no_infect_scramble_rep1_removed_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(actin_vs_no_infect_scramble_rep1_removed, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Actin vs Control",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+actin_vs_no_infect_scramble_rep1_removed$volcano.label <- ""
+actin_vs_no_infect_scramble_rep1_removed$volcano.score <- actin_vs_no_infect_scramble_rep1_removed$log2FoldChange * -log10(actin_vs_no_infect_scramble_rep1_removed$pvalue)
+actin_vs_no_infect_scramble_rep1_removed <- actin_vs_no_infect_scramble_rep1_removed[order(actin_vs_no_infect_scramble_rep1_removed$volcano.score, decreasing = TRUE),]
+actin_vs_no_infect_scramble_rep1_removed$volcano.label[1:10] <- actin_vs_no_infect_scramble_rep1_removed$external_gene_name[1:10]
+
+pdf("actin_vs_no_infect_scramble_rep1_removed_volcano.pdf",
+    width = 5,
+    height = 5)
+EnhancedVolcano(actin_vs_no_infect_scramble_rep1_removed,
+                lab = actin_vs_no_infect_scramble_rep1_removed$external_gene_name,
+                title = "Actin vs Control",
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = actin_vs_no_infect_scramble_rep1_removed$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Condition = subset(colData(dds), group %in% c("control", "actin"))$group)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$group %in% c("control", "actin")])
+colnames(mat) <- paste(dds$condition, dds$replicate)[colData(se.filter)$group %in% c("control", "actin")]
+rownames(mat) <- rowData(dds)$external_gene_name
+
+# order by results
+mat.order <- mat[match(actin_vs_no_infect_scramble_rep1_removed$external_gene_name, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[actin_vs_no_infect_scramble_rep1_removed$padj < 0.05 & actin_vs_no_infect_scramble_rep1_removed$log2FoldChange > 0,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("actin_vs_no_infect_scramble_rep1_removed_sig_heatmap.pdf",
+    width = 5,
+    height = 8)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = TRUE,
+        show_column_names = TRUE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+### Actin rep 2 sample removed
+- This is to compare with the results when rep 1 was removed
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/differential_expression")
+
+# group experimental and controls
+se.filter$group <- c("control",
+                     "actin",
+                     "background",
+                     "control",
+                     "background",
+                     "background",
+                     "background")
+
+# run deseq
+dds <- DESeqDataSet(se.filter, design = ~group)
+
+dds <- DESeq(dds)
+
+# get results
+actin_vs_no_infect_scramble_rep2_removed <- results(dds, 
+                  alpha = 0.05, 
+                  contrast = c("group", "actin", "control"))
+
+# get a summary of the amount of significantly DEG 
+summary(actin_vs_no_infect_scramble_rep2_removed, 
+        alpha = 0.05)
+
+# get shrunken fold change
+# actin_vs_no_infect_scramble_rep2_removed <- lfcShrink(dds = dds,
+#                               res = actin_vs_no_infect_scramble_rep2_removed,
+#                               contrast = c("condition", "actin", "scramble"),
+#                               type = "ashr")
+
+# merge
+cols <- c("ensembl_gene_id",
+          "external_gene_name",
+          "entrezgene_id",
+          "gene_biotype",
+          "chromosome_name",
+          "start_position",
+          "end_position",
+          "percentage_gene_gc_content")
+
+actin_vs_no_infect_scramble_rep2_removed <- merge(as.data.frame(rowData(dds)[,cols]),
+                         as.data.frame(actin_vs_no_infect_scramble_rep2_removed),
+                         by = "row.names")
+
+
+counts <- counts(dds, normalized = TRUE)
+colnames(counts) <- dds$sample.description
+actin_vs_no_infect_scramble_rep2_removed <- merge(actin_vs_no_infect_scramble_rep2_removed, 
+                         counts,
+                         by.x = "Row.names",
+                         by = "row.names")
+
+actin_vs_no_infect_scramble_rep2_removed$ensembl_gene_id <- NULL
+colnames(actin_vs_no_infect_scramble_rep2_removed)[1] <- "ensembl_gene_id"
+
+# write results
+write.csv(actin_vs_no_infect_scramble_rep2_removed, "actin_vs_no_infect_scramble_rep2_removed.csv",
+          row.names = FALSE)
+
+# p-value distribution histogram
+pdf("actin_vs_no_infect_scramble_rep2_removed_pvalue_distribution.pdf",
+    width = 5,
+    height = 5)
+hist(actin_vs_no_infect_scramble_rep2_removed$pvalue, 
+     main = "P-value distribution", 
+     xlab = "P-value", 
+     ylab = "Frequency")
+dev.off()
+
+
+# ma plot
+actin_vs_no_infect_scramble_rep2_removed <- actin_vs_no_infect_scramble_rep2_removed %>%
+  as.data.frame() %>%
+  mutate(sig = case_when(log2FoldChange > 0 & actin_vs_no_infect_scramble_rep2_removed$padj < 0.05 ~ "sig.up",
+                         log2FoldChange < 0 & actin_vs_no_infect_scramble_rep2_removed$padj < 0.05 ~ "sig.down",
+                         .default = "")
+         )
+
+pdf("actin_vs_no_infect_scramble_rep2_removed_ma_log2.pdf",
+    width = 5,
+    height = 5)
+ggplot(actin_vs_no_infect_scramble_rep2_removed, aes(log2(baseMean + 1), log2FoldChange, color = sig)) +
+  geom_point(alpha = 0.5, size = 4) +
+  theme_Publication() +
+  scale_colour_manual(values = c("grey", "blue", "red")) +
+  geom_hline(yintercept= 0, 
+             size=1,
+             linetype = "dashed") +
+  labs(title = "Actin vs Control",
+       x = "Average Normalized Log2(counts) + 1",
+       y = "Log2(fold change)")
+dev.off()
+
+# volcano plot
+actin_vs_no_infect_scramble_rep2_removed$volcano.label <- ""
+actin_vs_no_infect_scramble_rep2_removed$volcano.score <- actin_vs_no_infect_scramble_rep2_removed$log2FoldChange * -log10(actin_vs_no_infect_scramble_rep2_removed$pvalue)
+actin_vs_no_infect_scramble_rep2_removed <- actin_vs_no_infect_scramble_rep2_removed[order(actin_vs_no_infect_scramble_rep2_removed$volcano.score, decreasing = TRUE),]
+actin_vs_no_infect_scramble_rep2_removed$volcano.label[1:10] <- actin_vs_no_infect_scramble_rep2_removed$external_gene_name[1:10]
+
+pdf("actin_vs_no_infect_scramble_rep2_removed_volcano.pdf",
+    width = 5,
+    height = 5)
+EnhancedVolcano(actin_vs_no_infect_scramble_rep2_removed,
+                lab = actin_vs_no_infect_scramble_rep2_removed$external_gene_name,
+                title = "Actin vs Control",
+                subtitle = NULL,
+                caption = "FC > 2; padj < 0.05",
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                pointSize = 2,
+                colAlpha = 0.5,
+                legendPosition = "none",
+                FCcutoff = 2,
+                pCutoff = 0.05,
+                pCutoffCol = 'padj',
+                selectLab = actin_vs_no_infect_scramble_rep2_removed$volcano.label,
+                labSize = 3,
+                labCol = 'black',
+                labFace = 'bold',
+                boxedLabels = TRUE,
+                drawConnectors = TRUE,
+                widthConnectors = 1.0,
+                colConnectors = 'black',
+                max.overlaps = Inf,
+                gridlines.major = FALSE,
+                gridlines.minor = FALSE)
+dev.off()
+
+# heatmap of significant changes
+ha <- HeatmapAnnotation(Condition = subset(colData(dds), group %in% c("control", "actin"))$group)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$group %in% c("control", "actin")])
+colnames(mat) <- paste(dds$condition, dds$replicate)[colData(se.filter)$group %in% c("control", "actin")]
+rownames(mat) <- rowData(dds)$external_gene_name
+
+# order by results
+mat.order <- mat[match(actin_vs_no_infect_scramble_rep2_removed$external_gene_name, rownames(mat)),]
+
+# get significant genes
+mat.sig <- mat.order[actin_vs_no_infect_scramble_rep2_removed$padj < 0.05 & actin_vs_no_infect_scramble_rep2_removed$log2FoldChange > 0,]
+mat.sig <- mat.sig[!is.na(row.names(mat.sig)),]
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("actin_vs_no_infect_scramble_rep2_removed_sig_heatmap.pdf",
+    width = 5,
+    height = 8)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = TRUE,
+        show_column_names = TRUE,
+        row_dend_width = unit(20, "mm"))
+dev.off()
+```
+
+# Correlation Actin rep 1 sample removed vs Actin rep 2 sample removed
+
+## Scatter plot
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/correlate")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/correlate")
+
+# scatter plot
+df <- left_join(actin_vs_no_infect_scramble_rep1_removed, 
+                actin_vs_no_infect_scramble_rep2_removed,
+                by = "ensembl_gene_id")
+df.plot <- data.frame("With good replicate (rep 2)" = df$log2FoldChange.x,
+                 "Without good replicate (rep 1)" = df$log2FoldChange.y,
+                 genes = df$external_gene_name.x) %>%
+  mutate(label_this = With.good.replicate..rep.2. > 5 & Without.good.replicate..rep.1. > 5)
+
+pdf("actin_rep1_vs_rep2_log2fc.pdf",
+    width = 5,
+    height = 5)
+ggplot(df.plot, aes(x=With.good.replicate..rep.2., y=Without.good.replicate..rep.1.)) +
+  geom_hline(yintercept = 0,
+             linetype="dashed") +
+  geom_vline(xintercept = 0,
+             linetype="dashed") +
+  geom_point(alpha = 0.25) +
+  geom_density_2d() +
+  geom_smooth(method=lm) +
+  stat_cor() +
+  geom_text_repel(
+    data = subset(df.plot, label_this),
+    aes(label = genes),
+    max.overlaps = 20) +
+  theme_Publication() +
+  labs(title = "Correlation of log2FC",
+       x = "With good replicate (rep 2)",
+       y = "Without good replicate (rep 1)")
+dev.off()
+```
+
+## Heatmap
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/correlate")
+
+# heatmap with significant genes from all 3 comparisons
+se.filter$group <- c("control",
+                     "actin",
+                     "background",
+                     "control",
+                     "actin",
+                     "background",
+                     "background")
+
+ha <- HeatmapAnnotation(Condition = subset(colData(se.filter), group %in% c("control", "actin"))$group)
+
+# get normalized counts
+mat <- as.matrix(counts(dds, normalized = TRUE)[,colData(se.filter)$group %in% c("control", "actin")])
+colnames(mat) <- paste(dds$condition, dds$replicate)[colData(se.filter)$group %in% c("control", "actin")]
+rownames(mat) <- rowData(dds)$external_gene_name
+
+# subset by significant genes from all 3 comparisons
+mat.sig <- subset(mat, rownames(mat) %in% c(subset(actin_vs_no_infect_scramble, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+                                        subset(scramble_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+                                        subset(noinfect_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name))
+
+# scale and center normalized counts
+mat.sig.scaled <- t(scale(t(mat.sig)))
+
+pdf("actin_vs_no_infect_scramble_sig_genes_both_reps_and_reps_removed_heatmap.pdf",
+    width = 4,
+    height = 10)
+Heatmap(mat.sig.scaled, 
+        name = "Z-score",
+        top_annotation = ha,
+        border = TRUE,
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        show_row_names = TRUE,
+        show_column_names = TRUE,
+        column_split = subset(colData(se.filter), group %in% c("control", "actin"))$group,
+        row_dend_width = unit(10, "mm"),
+        row_names_gp = gpar(fontsize = 7))
+dev.off()
+```
+
+
+
+# Overlaps
+
+## No infect vs Background & Scramble vs Background
+- Together this is the control gene set
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/overlaps")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/overlaps")
+
+x <- list(
+"No infect vs Background" = subset(noinfect_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"Scramble vs Background" = subset(scramble_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name)
+
+pdf("noinfect_vs_background_and_scramble_vs_background_overlap.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "noinfect_vs_background_and_scramble_vs_background_overlap.csv")
+```
+
+## actin vs no infect + scramble (MS2) & control gene set
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/overlaps")
+
+x <- list(
+"actin vs no infect + scramble" = subset(actin_vs_no_infect_scramble, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"control gene set" = c(subset(scramble_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+                       subset(noinfect_vs_background, log2FoldChange > 0 & padj < 0.05)$external_gene_name)
+)
+
+pdf("actin_vs_no_infect_scramble_and_control_gene_set_overlap.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "actin_vs_no_infect_scramble_and_control_gene_set_overlap.csv")
+```
+
+## actin (both reps) vs no infect + actin rep 1 removed vs no infect + actin rep 2 removed vs no infect
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/overlaps")
+
+x <- list(
+"actin (both reps)" = subset(actin_vs_no_infect_scramble, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"actin (rep 1 removed)" = subset(actin_vs_no_infect_scramble_rep1_removed, log2FoldChange > 0 & padj < 0.05)$external_gene_name,
+"actin (rep 2 removed)" = subset(actin_vs_no_infect_scramble_rep2_removed, log2FoldChange > 0 & padj < 0.05)$external_gene_name
+)
+
+pdf("actin_vs_no_infect_scramble_and_actin_reps_removed.pdf",
+    width = 5,
+    height = 5)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+dev.off()
+
+venn_analysis(x, "actin_vs_no_infect_scramble_and_actin_reps_removed.csv")
+```
+
+# Gene set enrichment analysis
+
+## No infect vs Background
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+# get score to use in enrichment
+noinfect_vs_background$score <- sign(noinfect_vs_background$log2FoldChange) * -log10(noinfect_vs_background$pvalue)
+res.sorted <- noinfect_vs_background[order(noinfect_vs_background$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+```
+
+### Biological process
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+write.csv(bp.simple@result, "noinfect_vs_background_go_bp.csv")
+
+pdf("noinfect_vs_background_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "No infect vs Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+write.csv(mf.simple@result, "noinfect_vs_background_go_mf.csv")
+
+pdf("noinfect_vs_background_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "No infect vs Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+write.csv(cc.simple@result, "noinfect_vs_background_go_cc.csv")
+
+pdf("noinfect_vs_background_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "No infect", "vs", "Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Scramble vs Background
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+# get score to use in enrichment
+scramble_vs_background$score <- sign(scramble_vs_background$log2FoldChange) * -log10(scramble_vs_background$pvalue)
+res.sorted <- scramble_vs_background[order(scramble_vs_background$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+```
+
+### Biological process
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+write.csv(bp.simple@result, "scramble_vs_background_go_bp.csv")
+
+pdf("scramble_vs_background_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Scramble vs Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+write.csv(mf.simple@result, "scramble_vs_background_go_mf.csv")
+
+pdf("scramble_vs_background_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Scramble vs Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+write.csv(cc.simple@result, "scramble_vs_background_go_cc.csv")
+
+pdf("scramble_vs_background_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Scramble vs Background", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+## Actin vs no infect + scramble (MS2)
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+# get score to use in enrichment
+actin_vs_no_infect_scramble$score <- sign(actin_vs_no_infect_scramble$log2FoldChange) * -log10(actin_vs_no_infect_scramble$pvalue)
+res.sorted <- actin_vs_no_infect_scramble[order(actin_vs_no_infect_scramble$score, decreasing = TRUE),]
+res.list <- res.sorted$score
+names(res.list) <- res.sorted$entrezgene_id
+res.list <- res.list[!is.na(names(res.list))] # remove genes witn no ID
+res.list <- res.list[!is.na(res.list)] # remove genes with no score
+```
+
+### Biological process
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+bp <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "BP",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+bp.simple <- clusterProfiler::simplify(bp)
+
+write.csv(bp.simple@result, "actin_vs_no_infect_scramble_go_bp.csv")
+
+pdf("actin_vs_no_infect_scramble_go_bp.pdf",
+    width = 6,
+    height = 5)
+dotplot(bp.simple, 
+        showCategory=10, 
+        title = paste("GSE GO BP", "Actin vs no infect + scramble", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Moelcular function
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+mf <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "MF",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+mf.simple <- clusterProfiler::simplify(mf)
+
+write.csv(mf.simple@result, "actin_vs_no_infect_scramble_go_mf.csv")
+
+pdf("actin_vs_no_infect_scramble_go_mf.pdf",
+    width = 6,
+    height = 5)
+dotplot(mf.simple, 
+        showCategory=10, 
+        title = paste("GSE GO MF", "Actin vs no infect + scramble", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+### Cellular component
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/functional_enrichment")
+
+cc <- gseGO(geneList     = res.list,
+            OrgDb        = org.Mm.eg.db,
+            ont          = "CC",
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            verbose      = FALSE)
+cc.simple <- clusterProfiler::simplify(cc)
+
+write.csv(cc.simple@result, "actin_vs_no_infect_scramble_go_cc.csv")
+
+pdf("actin_vs_no_infect_scramble_go_cc.pdf",
+    width = 6,
+    height = 5)
+dotplot(cc.simple, 
+        showCategory=10, 
+        title = paste("GSE GO CC", "Actin vs no infect + scramble", sep = " "), 
+        split=".sign",
+        x = "NES", 
+        font.size = 10,
+        label_format = 50) +
+        geom_vline(xintercept = 0, linetype="dotted", color = "#444444", size=1) +
+        scale_color_viridis(option = "viridis", direction = 1) +
+        labs(fill = "test")
+dev.off()
+```
+
+# Over representation enrichment analysis
+
+## No infect vs Background
+
+### Upregulated
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+
+enrich_up <- enrichGO(gene = subset(noinfect_vs_background, noinfect_vs_background$pvalue < 0.05 & noinfect_vs_background$log2FoldChange > 0)$entrezgene_id,
+            universe = as.character(noinfect_vs_background$entrezgene_id),
+            OrgDb = org.Mm.eg.db,
+            ont = "ALL",
+            pool = TRUE,
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            readable = TRUE)
+
+enrich_up.simple <- clusterProfiler::simplify(enrich_up)
+
+write.csv(enrich_up.simple@result, "noinfect_vs_background_enrich_up.csv")
+
+pdf("noinfect_vs_background_enrich_up.pdf",
+    width = 10,
+    height = 5)
+dotplot(enrich_up.simple, 
+        showCategory=10, 
+        title = paste("GSE GO", "No infect vs Background", "Upregulated", sep = " "), 
+        font.size = 10,
+        label_format = 50,
+        split = "ONTOLOGY") +
+  facet_wrap(~ONTOLOGY)
+dev.off()
+```
+
+### Downregulated
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+
+enrich_down <- enrichGO(gene = subset(noinfect_vs_background, noinfect_vs_background$pvalue < 0.05 & noinfect_vs_background$log2FoldChange < 0)$entrezgene_id,
+            universe = as.character(noinfect_vs_background$entrezgene_id),
+            OrgDb = org.Mm.eg.db,
+            ont = "ALL",
+            pool = TRUE,
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            readable = TRUE)
+
+enrich_down.simple <- clusterProfiler::simplify(enrich_down)
+
+write.csv(enrich_down.simple@result, "noinfect_vs_background_enrich_down.csv")
+
+pdf("noinfect_vs_background_enrich_down.pdf",
+    width = 10,
+    height = 5)
+dotplot(enrich_down.simple, 
+        showCategory=10, 
+        title = paste("GSE GO", "No infect vs Background", "Downregulated", sep = " "), 
+        font.size = 10,
+        label_format = 50,
+        split = "ONTOLOGY") +
+  facet_wrap(~ONTOLOGY)
+dev.off()
+```
+
+## Scramble vs Background
+
+### Upregulated
+```{r}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+
+enrich_up <- enrichGO(gene = subset(scramble_vs_background, scramble_vs_background$pvalue < 0.05 & scramble_vs_background$log2FoldChange > 0)$entrezgene_id,
+            universe = as.character(scramble_vs_background$entrezgene_id),
+            OrgDb = org.Mm.eg.db,
+            ont = "ALL",
+            pool = TRUE,
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            readable = TRUE)
+
+enrich_up.simple <- clusterProfiler::simplify(enrich_up)
+
+write.csv(enrich_up.simple@result, "scramble_vs_background_enrich_up.csv")
+
+pdf("scramble_vs_background_enrich_up.pdf",
+    width = 10,
+    height = 5)
+dotplot(enrich_up.simple, 
+        showCategory=10, 
+        title = paste("GSE GO", "Scramble vs Background", "Upregulated", sep = " "), 
+        font.size = 10,
+        label_format = 50,
+        split = "ONTOLOGY") +
+  facet_wrap(~ONTOLOGY)
+dev.off()
+```
+
+### Downregulated
+```{r}
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+
+enrich_down <- enrichGO(gene = subset(scramble_vs_background, scramble_vs_background$pvalue < 0.05 & scramble_vs_background$log2FoldChange < 0)$entrezgene_id,
+            universe = as.character(scramble_vs_background$entrezgene_id),
+            OrgDb = org.Mm.eg.db,
+            ont = "ALL",
+            pool = TRUE,
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            readable = TRUE)
+
+enrich_down.simple <- clusterProfiler::simplify(enrich_down)
+
+write.csv(enrich_down.simple@result, "scramble_vs_background_enrich_down.csv")
+
+pdf("scramble_vs_background_enrich_down.pdf",
+    width = 10,
+    height = 5)
+dotplot(enrich_down.simple, 
+        showCategory=10, 
+        title = paste("GSE GO", "Scramble vs Background", "Downregulated", sep = " "), 
+        font.size = 10,
+        label_format = 50,
+        split = "ONTOLOGY") +
+  facet_wrap(~ONTOLOGY)
+dev.off()
+```
+
+## Actin vs no infect + scramble (MS2)
+```{r, eval = FALSE}
+dir.create("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+setwd("~/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop/batch-2-actin/over_representation_enrichment")
+
+enrich_up <- enrichGO(gene = subset(actin_vs_no_infect_scramble, actin_vs_no_infect_scramble$pvalue < 0.05 & actin_vs_no_infect_scramble$log2FoldChange > 0)$entrezgene_id,
+            universe = as.character(actin_vs_no_infect_scramble$entrezgene_id),
+            OrgDb = org.Mm.eg.db,
+            ont = "ALL",
+            pool = TRUE,
+            keyType = "ENTREZID",
+            pvalueCutoff = 0.1,
+            readable = TRUE)
+
+enrich_up.simple <- clusterProfiler::simplify(enrich_up)
+
+write.csv(enrich_up.simple@result, "actin_vs_no_infect_scramble_enrich_up.csv")
+
+pdf("actin_vs_no_infect_scramble_enrich_up.pdf",
+    width = 10,
+    height = 5)
+dotplot(enrich_up.simple, 
+        showCategory=10, 
+        title = paste("GSE GO", "Actin vs no infect + scramble (MS2)", "Upregulated", sep = " "), 
+        font.size = 10,
+        label_format = 50,
+        split = "ONTOLOGY") +
+  facet_wrap(~ONTOLOGY)
+dev.off()
+```

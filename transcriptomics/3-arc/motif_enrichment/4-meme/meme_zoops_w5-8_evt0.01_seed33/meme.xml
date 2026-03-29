@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!-- Document definition -->
+<!DOCTYPE MEME[
+<!ELEMENT MEME (
+  training_set,
+  model, 
+  motifs, 
+  scanned_sites_summary?
+)>
+<!ATTLIST MEME 
+  version CDATA #REQUIRED
+  release CDATA #REQUIRED
+>
+<!-- Training-set elements -->
+<!ELEMENT training_set (alphabet, ambigs, sequence*, letter_frequencies)>
+<!ATTLIST training_set primary_sequences CDATA #REQUIRED primary_count CDATA #REQUIRED primary_positions CDATA #REQUIRED
+  control_sequences CDATA "" control_count CDATA "" control_positions CDATA "">
+<!ELEMENT alphabet (letter*)>
+<!ATTLIST alphabet name CDATA #REQUIRED>
+<!ELEMENT ambigs (letter*)>
+<!ELEMENT letter EMPTY>
+<!ATTLIST letter id ID #REQUIRED>
+<!ATTLIST letter symbol CDATA #REQUIRED>
+<!ATTLIST letter equals CDATA #IMPLIED>
+<!ATTLIST letter aliases CDATA #IMPLIED>
+<!ATTLIST letter complement CDATA #IMPLIED>
+<!ATTLIST letter name CDATA #IMPLIED>
+<!ATTLIST letter colour CDATA #IMPLIED>
+<!ELEMENT sequence EMPTY>
+<!ATTLIST sequence id ID #REQUIRED
+                   name CDATA #REQUIRED
+                   length CDATA #REQUIRED
+                   weight CDATA #REQUIRED
+>
+<!ELEMENT letter_frequencies (alphabet_array)>
+
+<!-- Model elements -->
+<!ELEMENT model (
+  command_line,
+  host,
+  type,
+  nmotifs,
+  evalue_threshold,
+  object_function,
+  spfun,
+  min_width,
+  max_width,
+  wg,
+  ws,
+  endgaps,
+  minsites,
+  maxsites,
+  wnsites,
+  spmap,
+  spfuzz,
+  prior,
+  beta,
+  maxiter,
+  distance,
+  num_positions,
+  seed,
+  hsfrac,
+  searchsize,
+  maxsize,
+  norand,
+  csites,
+  strands,
+  brief,
+  psp_file,
+  priors_file,
+  reason_for_stopping,
+  background_frequencies
+)>
+<!ELEMENT command_line (#PCDATA)*>
+<!ELEMENT host (#PCDATA)*>
+<!ELEMENT type (#PCDATA)*>
+<!ELEMENT nmotifs (#PCDATA)*>
+<!ELEMENT evalue_threshold (#PCDATA)*>
+<!ELEMENT object_function (#PCDATA)*>
+<!ELEMENT spfun (#PCDATA)*>
+<!ELEMENT min_width (#PCDATA)*>
+<!ELEMENT max_width (#PCDATA)*>
+<!ELEMENT wg (#PCDATA)*>
+<!ELEMENT ws (#PCDATA)*>
+<!ELEMENT endgaps (#PCDATA)*>
+<!ELEMENT minsites (#PCDATA)*>
+<!ELEMENT maxsites (#PCDATA)*>
+<!ELEMENT wnsites (#PCDATA)*>
+<!ELEMENT spmap (#PCDATA)*>
+<!ELEMENT spfuzz (#PCDATA)*>
+<!ELEMENT prior (#PCDATA)*>
+<!ELEMENT beta (#PCDATA)*>
+<!ELEMENT maxiter (#PCDATA)*>
+<!ELEMENT distance (#PCDATA)*>
+<!ELEMENT num_positions (#PCDATA)*>
+<!ELEMENT seed (#PCDATA)*>
+<!ELEMENT hsfrac (#PCDATA)*>
+<!ELEMENT searchsize (#PCDATA)*>
+<!ELEMENT maxsize (#PCDATA)*>
+<!ELEMENT norand (#PCDATA)*>
+<!ELEMENT csites (#PCDATA)*>
+<!ELEMENT strands (#PCDATA)*>
+<!ELEMENT brief (#PCDATA)*>
+<!ELEMENT psp_file (#PCDATA)*>
+<!ELEMENT priors_file (#PCDATA)*>
+<!ELEMENT reason_for_stopping (#PCDATA)*>
+<!ELEMENT background_frequencies (alphabet_array)>
+<!ATTLIST background_frequencies source CDATA #REQUIRED
+		   order CDATA #REQUIRED>
+
+<!-- Motif elements -->
+<!ELEMENT motifs (motif*)>
+<!ELEMENT motif (scores, probabilities, regular_expression?, contributing_sites)>
+<!ATTLIST motif id ID #REQUIRED
+                name CDATA #REQUIRED
+                alt CDATA ""
+                width CDATA #REQUIRED
+                sites CDATA #REQUIRED
+                ic CDATA #REQUIRED
+                re CDATA #REQUIRED
+                llr CDATA #REQUIRED
+                p_value CDATA #REQUIRED
+                e_value CDATA #REQUIRED
+                bayes_threshold CDATA #REQUIRED
+                elapsed_time CDATA #REQUIRED
+                url CDATA ""
+>
+<!ELEMENT scores (alphabet_matrix)>
+<!ELEMENT probabilities (alphabet_matrix)>
+<!ELEMENT regular_expression (#PCDATA)*>
+
+<!-- Contributing site elements -->
+<!-- Contributing sites are motif occurences found during the motif discovery phase -->
+<!ELEMENT contributing_sites (contributing_site*)>
+<!ELEMENT contributing_site (left_flank, site, right_flank)>
+<!ATTLIST contributing_site sequence_id IDREF #REQUIRED
+                          position CDATA #REQUIRED
+                          strand (plus|minus|none) 'none'
+                          pvalue CDATA #REQUIRED
+>
+<!-- The left_flank contains the sequence for 10 bases to the left of the motif start -->
+<!ELEMENT left_flank (#PCDATA)>
+<!-- The site contains the sequence for the motif instance -->
+<!ELEMENT site (letter_ref*)>
+<!-- The right_flank contains the sequence for 10 bases to the right of the motif end -->
+<!ELEMENT right_flank (#PCDATA)>
+
+<!-- Scanned site elements -->
+<!-- Scanned sites are motif occurences found during the sequence scan phase -->
+<!ELEMENT scanned_sites_summary (scanned_sites*)>
+<!ATTLIST scanned_sites_summary p_thresh CDATA #REQUIRED>
+<!ELEMENT scanned_sites (scanned_site*)>
+<!ATTLIST scanned_sites sequence_id IDREF #REQUIRED
+                        pvalue CDATA #REQUIRED
+                        num_sites CDATA #REQUIRED>
+<!ELEMENT scanned_site EMPTY>
+<!ATTLIST scanned_site  motif_id IDREF #REQUIRED
+                        strand (plus|minus|none) 'none'
+                        position CDATA #REQUIRED
+                        pvalue CDATA #REQUIRED>
+
+<!-- Utility elements -->
+<!-- A reference to a letter in the alphabet -->
+<!ELEMENT letter_ref EMPTY>
+<!ATTLIST letter_ref letter_id IDREF #REQUIRED>
+<!-- A alphabet-array contains one floating point value for each letter in an alphabet -->
+<!ELEMENT alphabet_array (value*)>
+<!ELEMENT value (#PCDATA)>
+<!ATTLIST value letter_id IDREF #REQUIRED>
+
+<!-- A alphabet_matrix contains one alphabet_array for each position in a motif -->
+<!ELEMENT alphabet_matrix (alphabet_array*)>
+
+]>
+<!-- Begin document body -->
+<MEME version="5.5.8" release="Thu May 15 15:01:46 2025 -0700">
+<training_set primary_sequences="/data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta" primary_count="69" primary_positions="89643" control_sequences="--none--" control_count="0" control_positions="0">
+<alphabet name="RNA" like="rna">
+<letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
+<letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>
+<letter id="G" symbol="G" name="Guanine" colour="FFB300"/>
+<letter id="U" symbol="U" aliases="T" name="Uracil" colour="008000"/>
+<letter id="N" symbol="N" aliases="X." equals="ACGU" name="Any base"/>
+<letter id="V" symbol="V" equals="ACG" name="Not U"/>
+<letter id="H" symbol="H" equals="ACU" name="Not G"/>
+<letter id="D" symbol="D" equals="AGU" name="Not C"/>
+<letter id="B" symbol="B" equals="CGU" name="Not A"/>
+<letter id="M" symbol="M" equals="AC" name="Amino"/>
+<letter id="R" symbol="R" equals="AG" name="Purine"/>
+<letter id="W" symbol="W" equals="AU" name="Weak"/>
+<letter id="S" symbol="S" equals="CG" name="Strong"/>
+<letter id="Y" symbol="Y" equals="CU" name="Pyrimidine"/>
+<letter id="K" symbol="K" equals="GU" name="Keto"/>
+</alphabet>
+<sequence id="sequence_0" name="ENSMUSG00000047361|transcript:ENSMUST00000114243|strand:+" length="247" weight="1.000000" />
+<sequence id="sequence_1" name="ENSMUSG00000027624|transcript:ENSMUST00000103137|strand:+" length="3396" weight="1.000000" />
+<sequence id="sequence_2" name="ENSMUSG00000027360|transcript:ENSMUST00000028838|strand:-" length="294" weight="1.000000" />
+<sequence id="sequence_3" name="ENSMUSG00000017754|transcript:ENSMUST00000109316|strand:-" length="188" weight="1.000000" />
+<sequence id="sequence_4" name="ENSMUSG00000053475|transcript:ENSMUST00000065927|strand:+" length="715" weight="1.000000" />
+<sequence id="sequence_5" name="ENSMUSG00000023224|transcript:ENSMUST00000111641|strand:-" length="522" weight="1.000000" />
+<sequence id="sequence_6" name="ENSMUSG00000014361|transcript:ENSMUST00000014505|strand:+" length="1227" weight="1.000000" />
+<sequence id="sequence_7" name="ENSMUSG00000026875|transcript:ENSMUST00000172159|strand:-" length="2123" weight="1.000000" />
+<sequence id="sequence_8" name="ENSMUSG00000031343|transcript:ENSMUST00000055966|strand:-" length="1968" weight="1.000000" />
+<sequence id="sequence_9" name="ENSMUSG00000025272|transcript:ENSMUST00000163450|strand:-" length="712" weight="1.000000" />
+<sequence id="sequence_10" name="ENSMUSG00000015340|transcript:ENSMUST00000015484|strand:-" length="2965" weight="1.000000" />
+<sequence id="sequence_11" name="ENSMUSG00000043164|transcript:ENSMUST00000058077|strand:-" length="127" weight="1.000000" />
+<sequence id="sequence_12" name="ENSMUSG00000052415|transcript:ENSMUST00000064257|strand:+" length="1023" weight="1.000000" />
+<sequence id="sequence_13" name="ENSMUSG00000068874|transcript:ENSMUST00000140757|strand:+" length="1228" weight="1.000000" />
+<sequence id="sequence_14" name="ENSMUSG00000001021|transcript:ENSMUST00000001047|strand:+" length="347" weight="1.000000" />
+<sequence id="sequence_15" name="ENSMUSG00000001025|transcript:ENSMUST00000200289|strand:+" length="506" weight="1.000000" />
+<sequence id="sequence_16" name="ENSMUSG00000028476|transcript:ENSMUST00000030198|strand:+" length="1441" weight="1.000000" />
+<sequence id="sequence_17" name="ENSMUSG00000028718|transcript:ENSMUST00000141933|strand:+" length="3928" weight="1.000000" />
+<sequence id="sequence_18" name="ENSMUSG00000029468|transcript:ENSMUST00000100737|strand:+" length="2985" weight="1.000000" />
+<sequence id="sequence_19" name="ENSMUSG00000064280|transcript:ENSMUST00000115245|strand:-" length="331" weight="1.000000" />
+<sequence id="sequence_20" name="ENSMUSG00000029151|transcript:ENSMUST00000031037|strand:-" length="664" weight="1.000000" />
+<sequence id="sequence_21" name="ENSMUSG00000053647|transcript:ENSMUST00000066211|strand:+" length="771" weight="1.000000" />
+<sequence id="sequence_22" name="ENSMUSG00000029504|transcript:ENSMUST00000031478|strand:+" length="2889" weight="1.000000" />
+<sequence id="sequence_23" name="ENSMUSG00000029442|transcript:ENSMUST00000150155|strand:+" length="1228" weight="1.000000" />
+<sequence id="sequence_24" name="ENSMUSG00000040473|transcript:ENSMUST00000054865|strand:-" length="1918" weight="1.000000" />
+<sequence id="sequence_25" name="ENSMUSG00000002930|transcript:ENSMUST00000052827|strand:+" length="1133" weight="1.000000" />
+<sequence id="sequence_26" name="ENSMUSG00000046192|transcript:ENSMUST00000052277|strand:-" length="1192" weight="1.000000" />
+<sequence id="sequence_27" name="ENSMUSG00000030111|transcript:ENSMUST00000032203|strand:+" length="119" weight="1.000000" />
+<sequence id="sequence_28" name="ENSMUSG00000030310|transcript:ENSMUST00000032454|strand:+" length="2123" weight="1.000000" />
+<sequence id="sequence_29" name="ENSMUSG00000029843|transcript:ENSMUST00000031868|strand:-" length="874" weight="1.000000" />
+<sequence id="sequence_30" name="ENSMUSG00000030406|transcript:ENSMUST00000094790|strand:-" length="1307" weight="1.000000" />
+<sequence id="sequence_31" name="ENSMUSG00000030790|transcript:ENSMUST00000033054|strand:+" length="652" weight="1.000000" />
+<sequence id="sequence_32" name="ENSMUSG00000030443|transcript:ENSMUST00000062765|strand:-" length="645" weight="1.000000" />
+<sequence id="sequence_33" name="ENSMUSG00000030862|transcript:ENSMUST00000033149|strand:-" length="1077" weight="1.000000" />
+<sequence id="sequence_34" name="ENSMUSG00000062031|transcript:ENSMUST00000163094|strand:+" length="1301" weight="1.000000" />
+<sequence id="sequence_35" name="ENSMUSG00000036634|transcript:ENSMUST00000187137|strand:-" length="535" weight="1.000000" />
+<sequence id="sequence_36" name="ENSMUSG00000019892|transcript:ENSMUST00000166240|strand:-" length="159" weight="1.000000" />
+<sequence id="sequence_37" name="ENSMUSG00000019850|transcript:ENSMUST00000019997|strand:-" length="1821" weight="1.000000" />
+<sequence id="sequence_38" name="ENSMUSG00000078451|transcript:ENSMUST00000105507|strand:+" length="84" weight="1.000000" />
+<sequence id="sequence_39" name="ENSMUSG00000052837|transcript:ENSMUST00000064922|strand:-" length="485" weight="1.000000" />
+<sequence id="sequence_40" name="ENSMUSG00000031786|transcript:ENSMUST00000058479|strand:+" length="152" weight="1.000000" />
+<sequence id="sequence_41" name="ENSMUSG00000014846|transcript:ENSMUST00000014990|strand:-" length="343" weight="1.000000" />
+<sequence id="sequence_42" name="ENSMUSG00000037572|transcript:ENSMUST00000111790|strand:-" length="801" weight="1.000000" />
+<sequence id="sequence_43" name="ENSMUSG00000037544|transcript:ENSMUST00000178661|strand:-" length="2493" weight="1.000000" />
+<sequence id="sequence_44" name="ENSMUSG00000056296|transcript:ENSMUST00000223583|strand:-" length="2359" weight="1.000000" />
+<sequence id="sequence_45" name="ENSMUSG00000045655|transcript:ENSMUST00000066437|strand:-" length="1724" weight="1.000000" />
+<sequence id="sequence_46" name="ENSMUSG00000010044|transcript:ENSMUST00000193303|strand:+" length="1254" weight="1.000000" />
+<sequence id="sequence_47" name="ENSMUSG00000032359|transcript:ENSMUST00000123320|strand:+" length="1100" weight="1.000000" />
+<sequence id="sequence_48" name="ENSMUSG00000040936|transcript:ENSMUST00000051565|strand:-" length="3867" weight="1.000000" />
+<sequence id="sequence_49" name="ENSMUSG00000036777|transcript:ENSMUST00000040912|strand:-" length="1038" weight="1.000000" />
+<sequence id="sequence_50" name="ENSMUSG00000033491|transcript:ENSMUST00000036426|strand:+" length="2035" weight="1.000000" />
+<sequence id="sequence_51" name="ENSMUSG00000032372|transcript:ENSMUST00000180154|strand:+" length="551" weight="1.000000" />
+<sequence id="sequence_52" name="ENSMUSG00000032514|transcript:ENSMUST00000035100|strand:+" length="119" weight="1.000000" />
+<sequence id="sequence_53" name="ENSMUSG00000020937|transcript:ENSMUST00000128650|strand:-" length="537" weight="1.000000" />
+<sequence id="sequence_54" name="ENSMUSG00000020387|transcript:ENSMUST00000109090|strand:-" length="4156" weight="1.000000" />
+<sequence id="sequence_55" name="ENSMUSG00000032782|transcript:ENSMUST00000123176|strand:-" length="2504" weight="1.000000" />
+<sequence id="sequence_56" name="ENSMUSG00000020878|transcript:ENSMUST00000021251|strand:-" length="61" weight="1.000000" />
+<sequence id="sequence_57" name="ENSMUSG00000035105|transcript:ENSMUST00000039516|strand:-" length="1643" weight="1.000000" />
+<sequence id="sequence_58" name="ENSMUSG00000020591|transcript:ENSMUST00000221049|strand:+" length="317" weight="1.000000" />
+<sequence id="sequence_59" name="ENSMUSG00000002799|transcript:ENSMUST00000075827|strand:-" length="1070" weight="1.000000" />
+<sequence id="sequence_60" name="ENSMUSG00000022602|transcript:ENSMUST00000023268|strand:-" length="1668" weight="1.000000" />
+<sequence id="sequence_61" name="ENSMUSG00000046380|transcript:ENSMUST00000050234|strand:-" length="3460" weight="1.000000" />
+<sequence id="sequence_62" name="ENSMUSG00000054196|transcript:ENSMUST00000067072|strand:+" length="356" weight="1.000000" />
+<sequence id="sequence_63" name="ENSMUSG00000003955|transcript:ENSMUST00000004057|strand:-" length="238" weight="1.000000" />
+<sequence id="sequence_64" name="ENSMUSG00000022969|transcript:ENSMUST00000156133|strand:+" length="2478" weight="1.000000" />
+<sequence id="sequence_65" name="ENSMUSG00000022805|transcript:ENSMUST00000114740|strand:-" length="1456" weight="1.000000" />
+<sequence id="sequence_66" name="ENSMUSG00000001870|transcript:ENSMUST00000001927|strand:+" length="1214" weight="1.000000" />
+<sequence id="sequence_67" name="ENSMUSG00000036533|transcript:ENSMUST00000068958|strand:-" length="998" weight="1.000000" />
+<sequence id="sequence_68" name="ENSMUSG00000103092|transcript:ENSMUST00000192168|strand:+" length="2401" weight="1.000000" />
+<letter_frequencies>
+<alphabet_array>
+<value letter_id="A">0.263</value>
+<value letter_id="C">0.236</value>
+<value letter_id="G">0.229</value>
+<value letter_id="U">0.272</value>
+</alphabet_array>
+</letter_frequencies>
+</training_set>
+<model>
+<command_line>meme /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 6 -minw 5 -maxw 8 -bfile /data/background_models/bfile_order2.meme -evt 0.01 -minsites 8 -seed 33 -oc /data/meme_zoops_w5-8_evt0.01_seed33 </command_line>
+<host>buildkitsandbox</host>
+<type>zoops</type>
+<nmotifs>1000</nmotifs>
+<evalue_threshold>0.01</evalue_threshold>
+<object_function>E-value of product of p-values</object_function>
+<spfun>E-value of product of p-values</spfun>
+<min_width>5</min_width>
+<max_width>8</max_width>
+<wg>11</wg>
+<ws>1</ws>
+<endgaps>yes</endgaps>
+<substring>yes</substring>
+<minsites>8</minsites>
+<maxsites>69</maxsites>
+<wnsites>0.8</wnsites>
+<spmap>uni</spmap>
+<spfuzz>0.5</spfuzz>
+<prior>dirichlet</prior>
+<beta>0.01</beta>
+<maxiter>50</maxiter>
+<distance>1e-05</distance>
+<num_positions>89643</num_positions>
+<seed>33</seed>
+<hsfrac>0</hsfrac>
+<searchsize>89643</searchsize>
+<maxsize>0</maxsize>
+<norand>no</norand>
+<csites>1000</csites>
+<strands>none</strands>
+<brief>1000</brief>
+<psp_file></psp_file>
+<priors_file></priors_file>
+<reason_for_stopping>Stopped because the next motif E-value > 1.00e-02.</reason_for_stopping>
+<background_frequencies source="/data/background_models/bfile_order2.meme" order="2">
+<alphabet_array>
+<value letter_id="A">0.279</value>
+<value letter_id="C">0.221</value>
+<value letter_id="G">0.221</value>
+<value letter_id="U">0.279</value>
+</alphabet_array>
+</background_frequencies>
+</model>
+<motifs>
+</motifs>
+</MEME>

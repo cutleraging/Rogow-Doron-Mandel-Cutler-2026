@@ -1,0 +1,2194 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!-- Document definition -->
+<!-- http://zlab.bu.edu/~phaverty/SupplementalData/CisML/cisml.dtd -->
+<!DOCTYPE cis-element-search[
+<!ELEMENT cis-element-search (program-name, parameters, (pattern | multi-pattern-scan)*)>
+<!ELEMENT program-name (#PCDATA)>
+<!ELEMENT parameters (
+  pattern-file, 
+  sequence-file, 
+  background-seq-file?,
+  pattern-pvalue-cutoff?,
+  sequence-pvalue-cutoff?,
+  site-pvalue-cutoff?,
+  sequence-filtering,
+  ANY*
+ )>
+<!ELEMENT command-line (#PCDATA)>
+<!ELEMENT pattern-file (#PCDATA)>
+<!ELEMENT sequence-file (#PCDATA)>
+<!ELEMENT background-seq-file (#PCDATA)>
+<!ELEMENT pattern-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-pvalue-cutoff (#PCDATA)>
+<!ELEMENT site-pvalue-cutoff (#PCDATA)>
+<!ELEMENT sequence-filtering EMPTY>
+<!ELEMENT multi-pattern-scan (pattern+, ANY*)>
+<!ELEMENT pattern (scanned-sequence+, ANY*)>
+<!ELEMENT scanned-sequence (matched-element*, ANY*)>
+<!ELEMENT matched-element (sequence)>
+<!ELEMENT sequence (#PCDATA)>
+<!ATTLIST cis-element-search
+xmlns:xsi CDATA #IMPLIED
+xmlns:mem CDATA #IMPLIED
+xsi:schemaLocation CDATA #IMPLIED
+>
+<!ATTLIST sequence-filtering
+on-off CDATA #REQUIRED
+type CDATA #IMPLIED
+>
+<!ATTLIST multi-pattern-scan
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+>
+<!ATTLIST pattern
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+pvalue CDATA #IMPLIED
+score CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST scanned-sequence
+accession CDATA #REQUIRED
+name CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+length CDATA #IMPLIED
+db CDATA #IMPLIED
+lsid CDATA #IMPLIED
+>
+<!ATTLIST matched-element
+start CDATA #REQUIRED
+stop CDATA #REQUIRED
+score CDATA #IMPLIED
+pvalue CDATA #IMPLIED
+clusterid CDATA #IMPLIED
+>
+
+]>
+<cis-element-search
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://zlab.bu.edu/schema/cisml cisml.xsd"
+  xmlns="http://zlab.bu.edu/schema/cisml"
+  xmlns:mem="http://noble.gs.washington.edu/meme"
+>
+<program-name>fimo</program-name>
+<parameters>
+<command-line>fimo --verbosity 1 --oc /out --max-stored-scores 500000 --norc /motifs/oRNAment_actb_rbp.meme /seqs/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</command-line>
+<pattern-file>/motifs/oRNAment_actb_rbp.meme</pattern-file>
+<sequence-file>/seqs/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta</sequence-file>
+<site-pvalue-cutoff>0.0001</site-pvalue-cutoff>
+<sequence-filtering on-off="off"/>
+</parameters>
+<pattern accession="ANIA04546" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="44" stop="50" score="9.51479" pvalue="6.1e-05">
+<sequence>AACCTAA</sequence>
+<mem:qvalue>0.385</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="189" stop="195" score="9.51479" pvalue="6.1e-05">
+<sequence>AACCTAA</sequence>
+<mem:qvalue>0.385</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="LmjF354130" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="60" stop="66" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="61" stop="67" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="62" stop="68" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="63" stop="69" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="64" stop="70" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="65" stop="71" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="704" stop="710" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="705" stop="711" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="706" stop="712" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="707" stop="713" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="708" stop="714" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="709" stop="715" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3985" stop="3991" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3986" stop="3992" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3987" stop="3993" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3988" stop="3994" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3989" stop="3995" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="3990" stop="3996" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="4717" stop="4723" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="4718" stop="4724" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+<matched-element start="495" stop="501" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="375" stop="381" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="376" stop="382" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="485" stop="491" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="486" stop="492" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="487" stop="493" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+<matched-element start="488" stop="494" score="11.3889" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0274</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="PABPC4" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="60" stop="66" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="61" stop="67" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="62" stop="68" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="63" stop="69" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="64" stop="70" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="65" stop="71" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="704" stop="710" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="705" stop="711" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="706" stop="712" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="707" stop="713" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="708" stop="714" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="709" stop="715" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3985" stop="3991" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3986" stop="3992" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3987" stop="3993" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3988" stop="3994" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3989" stop="3995" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="3990" stop="3996" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="4717" stop="4723" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="4718" stop="4724" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+<matched-element start="495" stop="501" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="375" stop="381" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="376" stop="382" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="485" stop="491" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="486" stop="492" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="487" stop="493" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+<matched-element start="488" stop="494" score="12.0629" pvalue="6.1e-05">
+<sequence>AAAAAAA</sequence>
+<mem:qvalue>0.0272</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="PUF60_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="11.632" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="gw184451" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="12.1469" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0149</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="Sxl" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="12.3333" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0131</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="BOLL_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+<matched-element start="1962" stop="1968" score="9.92941" pvalue="6.1e-05">
+<sequence>TTATTTT</sequence>
+<mem:qvalue>0.173</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="718" stop="724" score="9.92941" pvalue="6.1e-05">
+<sequence>TTATTTT</sequence>
+<mem:qvalue>0.173</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="728" stop="734" score="9.92941" pvalue="6.1e-05">
+<sequence>TTATTTT</sequence>
+<mem:qvalue>0.173</mem:qvalue>
+</matched-element>
+<matched-element start="1161" stop="1167" score="9.92941" pvalue="6.1e-05">
+<sequence>TTATTTT</sequence>
+<mem:qvalue>0.173</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="TVAG514790" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="11.9301" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0151</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="TIA1_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+<matched-element start="1961" stop="1967" score="11.3706" pvalue="6.1e-05">
+<sequence>TTTATTT</sequence>
+<mem:qvalue>0.224</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="727" stop="733" score="11.3706" pvalue="6.1e-05">
+<sequence>TTTATTT</sequence>
+<mem:qvalue>0.224</mem:qvalue>
+</matched-element>
+<matched-element start="1160" stop="1166" score="11.3706" pvalue="6.1e-05">
+<sequence>TTTATTT</sequence>
+<mem:qvalue>0.224</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="HNRNPC_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="12.2039" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0145</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="ELAVL1_(5)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0154</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="HNRNPCL1_(1)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="10" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0146</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="egw103003671" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="98" stop="104" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="108" stop="114" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="109" stop="115" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="120" stop="126" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="121" stop="127" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="122" stop="128" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="123" stop="129" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="124" stop="130" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="125" stop="131" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="126" stop="132" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="127" stop="133" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="128" stop="134" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="129" stop="135" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="130" stop="136" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="131" stop="137" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="132" stop="138" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="133" stop="139" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="134" stop="140" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="135" stop="141" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="136" stop="142" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="137" stop="143" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="138" stop="144" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="139" stop="145" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="140" stop="146" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="141" stop="147" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="142" stop="148" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="152" stop="158" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="283" stop="289" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="284" stop="290" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="285" stop="291" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="286" stop="292" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="287" stop="293" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="288" stop="294" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="289" stop="295" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="290" stop="296" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="291" stop="297" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="307" stop="313" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="476" stop="482" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="549" stop="555" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="550" stop="556" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="732" stop="738" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="733" stop="739" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="734" stop="740" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="735" stop="741" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="736" stop="742" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+<matched-element start="737" stop="743" score="11.979" pvalue="6.1e-05">
+<sequence>TTTTTTT</sequence>
+<mem:qvalue>0.0158</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="CPEB1" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="99" stop="105" score="12.01" pvalue="6.1e-05">
+<sequence>TTTTTTA</sequence>
+<mem:qvalue>0.139</mem:qvalue>
+</matched-element>
+<matched-element start="110" stop="116" score="12.01" pvalue="6.1e-05">
+<sequence>TTTTTTA</sequence>
+<mem:qvalue>0.139</mem:qvalue>
+</matched-element>
+<matched-element start="143" stop="149" score="12.01" pvalue="6.1e-05">
+<sequence>TTTTTTA</sequence>
+<mem:qvalue>0.139</mem:qvalue>
+</matched-element>
+<matched-element start="308" stop="314" score="12.01" pvalue="6.1e-05">
+<sequence>TTTTTTA</sequence>
+<mem:qvalue>0.139</mem:qvalue>
+</matched-element>
+<matched-element start="477" stop="483" score="12.01" pvalue="6.1e-05">
+<sequence>TTTTTTA</sequence>
+<mem:qvalue>0.139</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="RBM15B_(2)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="514" stop="520" score="11.09" pvalue="6.1e-05">
+<sequence>TTTAATT</sequence>
+<mem:qvalue>0.304</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+<matched-element start="4732" stop="4738" score="11.09" pvalue="6.1e-05">
+<sequence>TTTAATT</sequence>
+<mem:qvalue>0.304</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="HNRNPL_(4)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="675" stop="681" score="10.5325" pvalue="6.1e-05">
+<sequence>ACACAAA</sequence>
+<mem:qvalue>0.258</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="1037" stop="1043" score="10.5325" pvalue="6.1e-05">
+<sequence>ACACAAA</sequence>
+<mem:qvalue>0.258</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+<matched-element start="35" stop="41" score="10.5325" pvalue="6.1e-05">
+<sequence>ACACAAA</sequence>
+<mem:qvalue>0.258</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="IGF2BP2_(5)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="677" stop="683" score="10.1131" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.366</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="1039" stop="1045" score="10.1131" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.366</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="IGF2BP3" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="677" stop="683" score="9.33721" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.365</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="1039" stop="1045" score="9.33721" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.365</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+<pattern accession="IGF2BP2_(2)" name="">
+<scanned-sequence accession="ENSMUSG00000031133|transcript" name="ENSMUSG00000031133|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000029580|transcript" name="ENSMUSG00000029580|transcript">
+<matched-element start="677" stop="683" score="11.79" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.359</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000049791|transcript" name="ENSMUSG00000049791|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000030725|transcript" name="ENSMUSG00000030725|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000032567|transcript" name="ENSMUSG00000032567|transcript">
+<matched-element start="1039" stop="1045" score="11.79" pvalue="6.1e-05">
+<sequence>ACAAACA</sequence>
+<mem:qvalue>0.359</mem:qvalue>
+</matched-element>
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000034379|transcript" name="ENSMUSG00000034379|transcript">
+</scanned-sequence>
+<scanned-sequence accession="ENSMUSG00000023963|transcript" name="ENSMUSG00000023963|transcript">
+</scanned-sequence>
+<mem:has-qvalues>yes</mem:has-qvalues>
+</pattern>
+</cis-element-search>

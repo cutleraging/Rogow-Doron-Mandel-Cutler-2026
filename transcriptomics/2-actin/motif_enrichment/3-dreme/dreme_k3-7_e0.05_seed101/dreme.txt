@@ -1,0 +1,36 @@
+# DREME 5.5.8
+#     command: dreme -dna -p /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -n /data/actin_vs_no_infect_scramble_nonSig_negEnrich_3pSeqs.fasta -mink 3 -maxk 7 -e 0.05 -m 20 -s 101 -norc -png -oc /data/dreme_k3-7_e0.05_seed101 -rna
+#   positives: 7 from /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta (Wed Nov 05 03:04:18 UTC 2025)
+#   negatives: 3600 from /data/actin_vs_no_infect_scramble_nonSig_negEnrich_3pSeqs.fasta (Wed Nov 05 03:07:00 UTC 2025)
+#        host: 842eb43d6db8
+#        when: Wed Nov 05 03:21:25 UTC 2025
+
+MEME version 5.5.8
+
+ALPHABET "RNA" RNA-LIKE
+A "Adenine" CC0000
+C "Cytosine" 0000CC
+G "Guanine" FFB300
+U "Uracil" 008000
+N "Any base" = ACGU
+X = ACGU
+. = ACGU
+V "Not U" = ACG
+H "Not G" = ACU
+D "Not C" = AGU
+B "Not A" = CGU
+M "Amino" = AC
+R "Purine" = AG
+W "Weak" = AU
+S "Strong" = CG
+Y "Pyrimidine" = CU
+K "Keto" = GU
+T = U
+END ALPHABET
+
+Background letter frequencies (from dataset):
+A 0.266 C 0.218 G 0.222 U 0.294
+
+
+# Stopping reason: E-value threshold exceeded
+#    Running time: 22.83 seconds

@@ -1,0 +1,6 @@
+Query_ID	Target_ID	Optimal_offset	p-value	E-value	q-value	Overlap	Query_consensus	Target_consensus	Orientation
+GACAGCAGAU	CISBP_M00815_2.00_1	-3	5.66959e-05	0.0339609	0.0324073	5	GACAGCAGAU	AGCAG	+
+
+# Tomtom (Motif Comparison Tool): Version 5.5.8 compiled on May 16 2025 at 08:52:16
+# The format of this file is described at http://localhost:8080/meme_5.5.8/doc/tomtom-output-format.html.
+# tomtom -no-ssc -dist ed -thresh 0.05 --norc -oc /out /q/motifs_deduplicated.meme /db/cisbp_rna_db.meme
