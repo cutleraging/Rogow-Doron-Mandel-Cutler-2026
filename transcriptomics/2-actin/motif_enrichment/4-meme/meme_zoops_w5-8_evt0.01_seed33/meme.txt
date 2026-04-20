@@ -42,7 +42,7 @@ COMMAND LINE SUMMARY
 This information can also be useful in the event you wish to report a
 problem with the MEME software.
 
-command: meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 6 -minw 5 -maxw 8 -bfile /data/background_models/bfile_order2.meme -evt 0.01 -minsites 8 -seed 33 -oc /data/meme_zoops_w5-8_evt0.01_seed33 
+command: meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 6 -minw 5 -maxw 8 -bfile /data/background_models/bfile_order0.meme -evt 0.01 -minsites 8 -seed 33 -oc /data/meme_zoops_w5-8_evt0.01_seed33 
 
 model:  mod=         zoops    nmotifs=      1000    evt=          0.01
 objective function:           em=       E-value of product of p-values
@@ -58,15 +58,15 @@ sample: seed=           33    hsfrac=          0
         searchsize=  12904    norand=         no    csites=       1000
 Letter frequencies in dataset:
 A 0.283 C 0.214 G 0.214 U 0.289 
-Background letter frequencies (from file /data/background_models/bfile_order2.meme):
-A 0.266 C 0.218 G 0.222 U 0.294 
-Background model order: 2
+Background letter frequencies (from file /data/background_models/bfile_order0.meme):
+A 0.28 C 0.22 G 0.22 U 0.28 
+Background model order: 0
 ********************************************************************************
 
 ********************************************************************************
 Stopped because the next motif E-value > 1.00e-02.
 ********************************************************************************
 
-CPU: ea36afa11363
+CPU: 6b103fe329df
 
 ********************************************************************************

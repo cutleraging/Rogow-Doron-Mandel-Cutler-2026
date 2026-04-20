@@ -1,0 +1,9 @@
+actin_rows=1605
+arc_rows=559
+images=56
+simulations=20
+seed=42
+thresholds_um=0.1
+null_model=shuffle_arc_between_images
+null_model_description=Actin stays in each image while arc coordinates are reassigned by permuting image identities.
+matching=Maximum one-to-one bipartite matching under a 3D Euclidean distance cutoff.

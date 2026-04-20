@@ -209,7 +209,7 @@
 </letter_frequencies>
 </training_set>
 <model>
-<command_line>meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 10 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order2.meme -evt 0.05 -minsites 10 -maxsites 300 -seed 11 -oc /data/meme_zoops_w6-12_seed11 </command_line>
+<command_line>meme /data/actin_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 10 -minw 6 -maxw 12 -bfile /data/background_models/bfile_order0.meme -evt 0.05 -minsites 10 -maxsites 300 -seed 11 -oc /data/meme_zoops_w6-12_seed11 </command_line>
 <host>buildkitsandbox</host>
 <type>zoops</type>
 <nmotifs>1000</nmotifs>
@@ -243,12 +243,12 @@
 <psp_file></psp_file>
 <priors_file></priors_file>
 <reason_for_stopping>Stopped because the next motif E-value > 5.00e-02.</reason_for_stopping>
-<background_frequencies source="/data/background_models/bfile_order2.meme" order="2">
+<background_frequencies source="/data/background_models/bfile_order0.meme" order="0">
 <alphabet_array>
-<value letter_id="A">0.266</value>
-<value letter_id="C">0.218</value>
-<value letter_id="G">0.222</value>
-<value letter_id="U">0.294</value>
+<value letter_id="A">0.28</value>
+<value letter_id="C">0.22</value>
+<value letter_id="G">0.22</value>
+<value letter_id="U">0.28</value>
 </alphabet_array>
 </background_frequencies>
 </model>

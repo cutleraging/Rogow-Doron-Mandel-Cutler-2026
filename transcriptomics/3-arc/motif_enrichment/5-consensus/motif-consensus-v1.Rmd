@@ -158,6 +158,7 @@ cluster_motifs <- function(meme_files,
 setwd(working.dir)
 
 meme_files <- c("meme_anr_w6-12_seed22.txt",
+                "meme_zoops_w6-12_seed11.txt",
                 "streme_w4-8_seed42.txt",
                 "streme_w5-7_stringent_seed44.txt",
                 "streme_w6-10_seed43.txt")

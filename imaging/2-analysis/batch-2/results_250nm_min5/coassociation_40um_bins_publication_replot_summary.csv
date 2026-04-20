@@ -1,0 +1,5 @@
+bin,bin_label,n_images,observed_mean_percent,observed_sem_percent,null_mean_percent,null_ci_low_percent,null_ci_high_percent,p_value_enrichment,significance
+0_40,0-40 um,35,2.69304635250258,0.7948392748967,1.83771843760623,0.8335968275678001,2.9566141265023003,0.0677864427114577,ns
+40_80,40-80 um,21,0.0,0.0,0.0,0.0,0.0,1.0,ns
+80_120,80-120 um,5,0.0,0.0,0.0,0.0,0.0,1.0,ns
+120_160,120-160 um,2,0.0,0.0,0.0,0.0,0.0,1.0,ns

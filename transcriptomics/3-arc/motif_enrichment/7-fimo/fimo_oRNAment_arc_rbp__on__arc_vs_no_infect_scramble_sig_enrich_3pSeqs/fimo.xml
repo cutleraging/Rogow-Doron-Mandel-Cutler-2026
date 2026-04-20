@@ -21,7 +21,7 @@
 <setting name="pseudocount">0.1</setting>
 <setting name="verbosity">1</setting>
 </settings>
-<sequence-data num-sequences="69" num-residues="89643" />
+<sequence-data num-sequences="61" num-residues="79399" />
 <alphabet name="RNA" like="rna">
 <letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
 <letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>

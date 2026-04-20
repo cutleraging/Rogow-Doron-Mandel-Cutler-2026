@@ -1,0 +1,11 @@
+comparison_target=results_100nm_fix_x_permute_yz (threshold 0.1 um)
+external_rows=108
+our_arc_rows=108
+external_unique_keys=108
+our_arc_unique_keys=108
+coord_intersection=108
+external_only=0
+ours_only=0
+jaccard=1.000000
+per_image_mismatch_count=0
+interpretation=External co-association coordinates are an exact match to our matched arc puncta coordinates.

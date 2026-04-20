@@ -1,3 +1,0 @@
-The given ghostscript "/opt/anaconda3/envs/genomics/bin/gs" is not an executable file.
-Warning: Cannot convert EPS file to PNG as no install of Image Magick or Ghostscript is usable.
-Warning: Cannot convert EPS file to PNG as no install of Image Magick or Ghostscript is usable.

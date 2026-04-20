@@ -13,7 +13,7 @@
         "cmd": [
           "meme", "/data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta",
           "-rna", "-mod", "zoops", "-nmotifs", "6", "-minw", "5", "-maxw",
-          "8", "-bfile", "/data/background_models/bfile_order2.meme", "-evt",
+          "8", "-bfile", "/data/background_models/bfile_order0.meme", "-evt",
           "0.01", "-minsites", "8", "-seed", "33", "-oc",
           "/data/meme_zoops_w5-8_evt0.01_seed33"
         ],
@@ -27,11 +27,11 @@
           "minw": 5,
           "maxw": 8,
           "minsites": 8,
-          "maxsites": 69,
+          "maxsites": 61,
           "wnsites": 0.8,
           "spmap": "uni",
           "spfuzz": 0.5,
-          "searchsize": 89643,
+          "searchsize": 79399,
           "maxsize": 0,
           "norand": "no",
           "csites": 1000,
@@ -118,34 +118,26 @@
           ]
         },
         "background": {
-          "source": "/data/background_models/bfile_order2.meme",
-          "order": 2,
+          "source": "/data/background_models/bfile_order0.meme",
+          "order": 0,
           "freqs": [0.279, 0.221, 0.221, 0.279]
         },
         "sequence_db": {
           "primary_source": "/data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta",
-          "primary_count": 69,
-          "primary_positions": 89643,
+          "primary_count": 61,
+          "primary_positions": 79399,
           "control_source": "--none--",
           "control_count": 0,
           "control_positions": 0,
-          "freqs": [0.263, 0.236, 0.229, 0.272],
+          "freqs": [0.266, 0.234, 0.23, 0.27],
           "sequences": [
             {
               "name": "ENSMUSG00000047361|transcript:ENSMUST00000114243|strand:+",
               "length": 247,
               "weight": 1.000000
             }, {
-              "name": "ENSMUSG00000027624|transcript:ENSMUST00000103137|strand:+",
-              "length": 3396,
-              "weight": 1.000000
-            }, {
               "name": "ENSMUSG00000027360|transcript:ENSMUST00000028838|strand:-",
               "length": 294,
-              "weight": 1.000000
-            }, {
-              "name": "ENSMUSG00000017754|transcript:ENSMUST00000109316|strand:-",
-              "length": 188,
               "weight": 1.000000
             }, {
               "name": "ENSMUSG00000053475|transcript:ENSMUST00000065927|strand:+",
@@ -166,10 +158,6 @@
             }, {
               "name": "ENSMUSG00000031343|transcript:ENSMUST00000055966|strand:-",
               "length": 1968,
-              "weight": 1.000000
-            }, {
-              "name": "ENSMUSG00000025272|transcript:ENSMUST00000163450|strand:-",
-              "length": 712,
               "weight": 1.000000
             }, {
               "name": "ENSMUSG00000015340|transcript:ENSMUST00000015484|strand:-",
@@ -212,10 +200,6 @@
               "length": 331,
               "weight": 1.000000
             }, {
-              "name": "ENSMUSG00000029151|transcript:ENSMUST00000031037|strand:-",
-              "length": 664,
-              "weight": 1.000000
-            }, {
               "name": "ENSMUSG00000053647|transcript:ENSMUST00000066211|strand:+",
               "length": 771,
               "weight": 1.000000
@@ -242,10 +226,6 @@
             }, {
               "name": "ENSMUSG00000030111|transcript:ENSMUST00000032203|strand:+",
               "length": 119,
-              "weight": 1.000000
-            }, {
-              "name": "ENSMUSG00000030310|transcript:ENSMUST00000032454|strand:+",
-              "length": 2123,
               "weight": 1.000000
             }, {
               "name": "ENSMUSG00000029843|transcript:ENSMUST00000031868|strand:-",
@@ -288,10 +268,6 @@
               "length": 84,
               "weight": 1.000000
             }, {
-              "name": "ENSMUSG00000052837|transcript:ENSMUST00000064922|strand:-",
-              "length": 485,
-              "weight": 1.000000
-            }, {
               "name": "ENSMUSG00000031786|transcript:ENSMUST00000058479|strand:+",
               "length": 152,
               "weight": 1.000000
@@ -306,10 +282,6 @@
             }, {
               "name": "ENSMUSG00000037544|transcript:ENSMUST00000178661|strand:-",
               "length": 2493,
-              "weight": 1.000000
-            }, {
-              "name": "ENSMUSG00000056296|transcript:ENSMUST00000223583|strand:-",
-              "length": 2359,
               "weight": 1.000000
             }, {
               "name": "ENSMUSG00000045655|transcript:ENSMUST00000066437|strand:-",
@@ -362,10 +334,6 @@
             }, {
               "name": "ENSMUSG00000035105|transcript:ENSMUST00000039516|strand:-",
               "length": 1643,
-              "weight": 1.000000
-            }, {
-              "name": "ENSMUSG00000020591|transcript:ENSMUST00000221049|strand:+",
-              "length": 317,
               "weight": 1.000000
             }, {
               "name": "ENSMUSG00000002799|transcript:ENSMUST00000075827|strand:-",

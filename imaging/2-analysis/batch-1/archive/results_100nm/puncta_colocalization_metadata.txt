@@ -1,0 +1,8 @@
+actin_rows=1605
+arc_rows=559
+images=56
+simulations=2000
+seed=42
+thresholds_um=0.1
+null_model=Within each image and channel, x is fixed while y and z are independently permuted.
+matching=Maximum one-to-one bipartite matching under a 3D Euclidean distance cutoff.

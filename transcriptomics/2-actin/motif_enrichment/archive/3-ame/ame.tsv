@@ -1,4 +1,0 @@
-
-# AME (Analysis of Motif Enrichment): Version 5.5.8 compiled on May 19 2025 at 00:33:44
-# The format of this file is described at https://meme-suite.org/meme/doc/ame-output-format.html.
-# ame --control /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-actin/motif_enrichment/1-extract-seq/log2fc_lessthan_0_genes_3utr.fasta --method fisher --scoring totalhits --evalue-report-threshold 0.1 --oc . /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/analysis/with-virus-and-stem-loop-unique/batch-2-actin/motif_enrichment/1-extract-seq/log2fc_greaterthan_5_genes_3utr.fasta /Users/ronaldcutler/EinsteinMed Dropbox/Ronald Cutler/Vijg-lab/Collaborations/Jackson Rogow/transcriptomics/annotations/motif_databases/CISBP-RNA/Mus_musculus.dna_encoded.meme

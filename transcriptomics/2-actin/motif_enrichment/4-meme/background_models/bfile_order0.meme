@@ -1,0 +1,7 @@
+# 0-order Markov frequencies from file /data/actin_vs_no_infect_scramble_nonSig_negEnrich_3pSeqs.fasta
+# seqs: 3600    min: 10    max: 39397    avg: 2057.5    sum: 7407052    alph: DNA
+# order 0
+A 2.800e-01
+C 2.200e-01
+G 2.200e-01
+T 2.800e-01

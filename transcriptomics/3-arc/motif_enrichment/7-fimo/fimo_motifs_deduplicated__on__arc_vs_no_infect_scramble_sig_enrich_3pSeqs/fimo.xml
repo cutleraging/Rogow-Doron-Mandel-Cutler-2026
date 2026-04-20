@@ -21,7 +21,7 @@
 <setting name="pseudocount">0.1</setting>
 <setting name="verbosity">1</setting>
 </settings>
-<sequence-data num-sequences="69" num-residues="89643" />
+<sequence-data num-sequences="61" num-residues="79399" />
 <alphabet name="RNA" like="rna">
 <letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
 <letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>
@@ -39,23 +39,24 @@
 <letter id="Y" symbol="Y" equals="CU" name="Pyrimidine"/>
 <letter id="K" symbol="K" equals="GU" name="Keto"/>
 </alphabet>
-<motif name="CUUCCU" alt="MEME-1" width="6" best-possible-match="CUUCCU"/>
-<motif name="GGRGDDGGRGG" alt="MEME-2" width="11" best-possible-match="GGGGGGGGAGG"/>
-<motif name="UUUUUUUUUUU" alt="MEME-3" width="11" best-possible-match="UUUUUUUUUUU"/>
-<motif name="MCACMCMCASMC" alt="MEME-4" width="12" best-possible-match="ACACACCCACAC"/>
-<motif name="SCCYRSCYSSC" alt="MEME-5" width="11" best-possible-match="CCCUGCCUGCC"/>
-<motif name="CUCUSYCUBYC" alt="MEME-6" width="11" best-possible-match="CUCUGUCUGUC"/>
-<motif name="SCUGUGGC" alt="MEME-7" width="8" best-possible-match="GCUGUGGC"/>
-<motif name="AAUAAAW" alt="STREME-1" width="7" best-possible-match="AAUAAAU"/>
-<motif name="CGUCAACC" alt="STREME-2" width="8" best-possible-match="CGUCAACC"/>
-<motif name="CGACCAG" alt="STREME-3" width="7" best-possible-match="CGACCAG"/>
-<motif name="CAAGUGCC" alt="STREME-4" width="8" best-possible-match="CAAGUGCC"/>
-<motif name="CCCAAGA" alt="STREME-2" width="7" best-possible-match="CCCAAGA"/>
-<motif name="CAAUYCG" alt="STREME-3" width="7" best-possible-match="CAAUCCG"/>
-<motif name="UCGACUC" alt="STREME-4" width="7" best-possible-match="UCGACUC"/>
-<motif name="CCAGCCAAAC" alt="STREME-2" width="10" best-possible-match="CCAGCCAAAC"/>
-<motif name="CCGAGGCAA" alt="STREME-3" width="9" best-possible-match="CCGAGGCAA"/>
-<motif name="GCCAYGACC" alt="STREME-4" width="9" best-possible-match="GCCAUGACC"/>
+<motif name="CHSWGSCH" alt="MEME-1" width="8" best-possible-match="CUCAGCCU"/>
+<motif name="SCWGSWGN" alt="MEME-2" width="8" best-possible-match="GCUGCUGG"/>
+<motif name="CCUYYCYYCCY" alt="MEME-3" width="11" best-possible-match="CCUUCCUUCCU"/>
+<motif name="AAAAAAAWAAA" alt="MEME-6" width="11" best-possible-match="AAAAAAAAAAA"/>
+<motif name="UGGGGKKGGRGG" alt="MEME-5" width="12" best-possible-match="UGGGGGGGGGGG"/>
+<motif name="GRCCUCAGASGG" alt="MEME-7" width="12" best-possible-match="GACCUCAGAGGG"/>
+<motif name="ACACACACACAC" alt="MEME-8" width="12" best-possible-match="ACACACACACAC"/>
+<motif name="CMCUGSCUBCCC" alt="MEME-1" width="12" best-possible-match="CCCUGGCUGCCC"/>
+<motif name="KGGRGKDGGRGG" alt="MEME-2" width="12" best-possible-match="GGGGGGAGGAGG"/>
+<motif name="GCGUCAAC" alt="STREME-1" width="8" best-possible-match="GCGUCAAC"/>
+<motif name="CAAGUGCC" alt="STREME-2" width="8" best-possible-match="CAAGUGCC"/>
+<motif name="AACGAAUU" alt="STREME-3" width="8" best-possible-match="AACGAAUU"/>
+<motif name="AAAUAAA" alt="STREME-1" width="7" best-possible-match="AAAUAAA"/>
+<motif name="CCGAGGA" alt="STREME-2" width="7" best-possible-match="CCGAGGA"/>
+<motif name="CUGGCCGGA" alt="STREME-4" width="9" best-possible-match="CUGGCCGGA"/>
+<motif name="AGCUGCUSG" alt="STREME-1" width="9" best-possible-match="AGCUGCUGG"/>
+<motif name="UCAAUAAA" alt="STREME-2" width="8" best-possible-match="UCAAUAAA"/>
+<motif name="CRCCUACC" alt="STREME-3" width="8" best-possible-match="CGCCUACC"/>
 <background source="--motif--">
 <value letter="A">0.250</value>
 <value letter="C">0.250</value>

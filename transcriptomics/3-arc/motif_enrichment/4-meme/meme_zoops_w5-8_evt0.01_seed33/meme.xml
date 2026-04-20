@@ -174,7 +174,7 @@
 ]>
 <!-- Begin document body -->
 <MEME version="5.5.8" release="Thu May 15 15:01:46 2025 -0700">
-<training_set primary_sequences="/data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta" primary_count="69" primary_positions="89643" control_sequences="--none--" control_count="0" control_positions="0">
+<training_set primary_sequences="/data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta" primary_count="61" primary_positions="79399" control_sequences="--none--" control_count="0" control_positions="0">
 <alphabet name="RNA" like="rna">
 <letter id="A" symbol="A" name="Adenine" colour="CC0000"/>
 <letter id="C" symbol="C" name="Cytosine" colour="0000CC"/>
@@ -193,85 +193,77 @@
 <letter id="K" symbol="K" equals="GU" name="Keto"/>
 </alphabet>
 <sequence id="sequence_0" name="ENSMUSG00000047361|transcript:ENSMUST00000114243|strand:+" length="247" weight="1.000000" />
-<sequence id="sequence_1" name="ENSMUSG00000027624|transcript:ENSMUST00000103137|strand:+" length="3396" weight="1.000000" />
-<sequence id="sequence_2" name="ENSMUSG00000027360|transcript:ENSMUST00000028838|strand:-" length="294" weight="1.000000" />
-<sequence id="sequence_3" name="ENSMUSG00000017754|transcript:ENSMUST00000109316|strand:-" length="188" weight="1.000000" />
-<sequence id="sequence_4" name="ENSMUSG00000053475|transcript:ENSMUST00000065927|strand:+" length="715" weight="1.000000" />
-<sequence id="sequence_5" name="ENSMUSG00000023224|transcript:ENSMUST00000111641|strand:-" length="522" weight="1.000000" />
-<sequence id="sequence_6" name="ENSMUSG00000014361|transcript:ENSMUST00000014505|strand:+" length="1227" weight="1.000000" />
-<sequence id="sequence_7" name="ENSMUSG00000026875|transcript:ENSMUST00000172159|strand:-" length="2123" weight="1.000000" />
-<sequence id="sequence_8" name="ENSMUSG00000031343|transcript:ENSMUST00000055966|strand:-" length="1968" weight="1.000000" />
-<sequence id="sequence_9" name="ENSMUSG00000025272|transcript:ENSMUST00000163450|strand:-" length="712" weight="1.000000" />
-<sequence id="sequence_10" name="ENSMUSG00000015340|transcript:ENSMUST00000015484|strand:-" length="2965" weight="1.000000" />
-<sequence id="sequence_11" name="ENSMUSG00000043164|transcript:ENSMUST00000058077|strand:-" length="127" weight="1.000000" />
-<sequence id="sequence_12" name="ENSMUSG00000052415|transcript:ENSMUST00000064257|strand:+" length="1023" weight="1.000000" />
-<sequence id="sequence_13" name="ENSMUSG00000068874|transcript:ENSMUST00000140757|strand:+" length="1228" weight="1.000000" />
-<sequence id="sequence_14" name="ENSMUSG00000001021|transcript:ENSMUST00000001047|strand:+" length="347" weight="1.000000" />
-<sequence id="sequence_15" name="ENSMUSG00000001025|transcript:ENSMUST00000200289|strand:+" length="506" weight="1.000000" />
-<sequence id="sequence_16" name="ENSMUSG00000028476|transcript:ENSMUST00000030198|strand:+" length="1441" weight="1.000000" />
-<sequence id="sequence_17" name="ENSMUSG00000028718|transcript:ENSMUST00000141933|strand:+" length="3928" weight="1.000000" />
-<sequence id="sequence_18" name="ENSMUSG00000029468|transcript:ENSMUST00000100737|strand:+" length="2985" weight="1.000000" />
-<sequence id="sequence_19" name="ENSMUSG00000064280|transcript:ENSMUST00000115245|strand:-" length="331" weight="1.000000" />
-<sequence id="sequence_20" name="ENSMUSG00000029151|transcript:ENSMUST00000031037|strand:-" length="664" weight="1.000000" />
-<sequence id="sequence_21" name="ENSMUSG00000053647|transcript:ENSMUST00000066211|strand:+" length="771" weight="1.000000" />
-<sequence id="sequence_22" name="ENSMUSG00000029504|transcript:ENSMUST00000031478|strand:+" length="2889" weight="1.000000" />
-<sequence id="sequence_23" name="ENSMUSG00000029442|transcript:ENSMUST00000150155|strand:+" length="1228" weight="1.000000" />
-<sequence id="sequence_24" name="ENSMUSG00000040473|transcript:ENSMUST00000054865|strand:-" length="1918" weight="1.000000" />
-<sequence id="sequence_25" name="ENSMUSG00000002930|transcript:ENSMUST00000052827|strand:+" length="1133" weight="1.000000" />
-<sequence id="sequence_26" name="ENSMUSG00000046192|transcript:ENSMUST00000052277|strand:-" length="1192" weight="1.000000" />
-<sequence id="sequence_27" name="ENSMUSG00000030111|transcript:ENSMUST00000032203|strand:+" length="119" weight="1.000000" />
-<sequence id="sequence_28" name="ENSMUSG00000030310|transcript:ENSMUST00000032454|strand:+" length="2123" weight="1.000000" />
-<sequence id="sequence_29" name="ENSMUSG00000029843|transcript:ENSMUST00000031868|strand:-" length="874" weight="1.000000" />
-<sequence id="sequence_30" name="ENSMUSG00000030406|transcript:ENSMUST00000094790|strand:-" length="1307" weight="1.000000" />
-<sequence id="sequence_31" name="ENSMUSG00000030790|transcript:ENSMUST00000033054|strand:+" length="652" weight="1.000000" />
-<sequence id="sequence_32" name="ENSMUSG00000030443|transcript:ENSMUST00000062765|strand:-" length="645" weight="1.000000" />
-<sequence id="sequence_33" name="ENSMUSG00000030862|transcript:ENSMUST00000033149|strand:-" length="1077" weight="1.000000" />
-<sequence id="sequence_34" name="ENSMUSG00000062031|transcript:ENSMUST00000163094|strand:+" length="1301" weight="1.000000" />
-<sequence id="sequence_35" name="ENSMUSG00000036634|transcript:ENSMUST00000187137|strand:-" length="535" weight="1.000000" />
-<sequence id="sequence_36" name="ENSMUSG00000019892|transcript:ENSMUST00000166240|strand:-" length="159" weight="1.000000" />
-<sequence id="sequence_37" name="ENSMUSG00000019850|transcript:ENSMUST00000019997|strand:-" length="1821" weight="1.000000" />
-<sequence id="sequence_38" name="ENSMUSG00000078451|transcript:ENSMUST00000105507|strand:+" length="84" weight="1.000000" />
-<sequence id="sequence_39" name="ENSMUSG00000052837|transcript:ENSMUST00000064922|strand:-" length="485" weight="1.000000" />
-<sequence id="sequence_40" name="ENSMUSG00000031786|transcript:ENSMUST00000058479|strand:+" length="152" weight="1.000000" />
-<sequence id="sequence_41" name="ENSMUSG00000014846|transcript:ENSMUST00000014990|strand:-" length="343" weight="1.000000" />
-<sequence id="sequence_42" name="ENSMUSG00000037572|transcript:ENSMUST00000111790|strand:-" length="801" weight="1.000000" />
-<sequence id="sequence_43" name="ENSMUSG00000037544|transcript:ENSMUST00000178661|strand:-" length="2493" weight="1.000000" />
-<sequence id="sequence_44" name="ENSMUSG00000056296|transcript:ENSMUST00000223583|strand:-" length="2359" weight="1.000000" />
-<sequence id="sequence_45" name="ENSMUSG00000045655|transcript:ENSMUST00000066437|strand:-" length="1724" weight="1.000000" />
-<sequence id="sequence_46" name="ENSMUSG00000010044|transcript:ENSMUST00000193303|strand:+" length="1254" weight="1.000000" />
-<sequence id="sequence_47" name="ENSMUSG00000032359|transcript:ENSMUST00000123320|strand:+" length="1100" weight="1.000000" />
-<sequence id="sequence_48" name="ENSMUSG00000040936|transcript:ENSMUST00000051565|strand:-" length="3867" weight="1.000000" />
-<sequence id="sequence_49" name="ENSMUSG00000036777|transcript:ENSMUST00000040912|strand:-" length="1038" weight="1.000000" />
-<sequence id="sequence_50" name="ENSMUSG00000033491|transcript:ENSMUST00000036426|strand:+" length="2035" weight="1.000000" />
-<sequence id="sequence_51" name="ENSMUSG00000032372|transcript:ENSMUST00000180154|strand:+" length="551" weight="1.000000" />
-<sequence id="sequence_52" name="ENSMUSG00000032514|transcript:ENSMUST00000035100|strand:+" length="119" weight="1.000000" />
-<sequence id="sequence_53" name="ENSMUSG00000020937|transcript:ENSMUST00000128650|strand:-" length="537" weight="1.000000" />
-<sequence id="sequence_54" name="ENSMUSG00000020387|transcript:ENSMUST00000109090|strand:-" length="4156" weight="1.000000" />
-<sequence id="sequence_55" name="ENSMUSG00000032782|transcript:ENSMUST00000123176|strand:-" length="2504" weight="1.000000" />
-<sequence id="sequence_56" name="ENSMUSG00000020878|transcript:ENSMUST00000021251|strand:-" length="61" weight="1.000000" />
-<sequence id="sequence_57" name="ENSMUSG00000035105|transcript:ENSMUST00000039516|strand:-" length="1643" weight="1.000000" />
-<sequence id="sequence_58" name="ENSMUSG00000020591|transcript:ENSMUST00000221049|strand:+" length="317" weight="1.000000" />
-<sequence id="sequence_59" name="ENSMUSG00000002799|transcript:ENSMUST00000075827|strand:-" length="1070" weight="1.000000" />
-<sequence id="sequence_60" name="ENSMUSG00000022602|transcript:ENSMUST00000023268|strand:-" length="1668" weight="1.000000" />
-<sequence id="sequence_61" name="ENSMUSG00000046380|transcript:ENSMUST00000050234|strand:-" length="3460" weight="1.000000" />
-<sequence id="sequence_62" name="ENSMUSG00000054196|transcript:ENSMUST00000067072|strand:+" length="356" weight="1.000000" />
-<sequence id="sequence_63" name="ENSMUSG00000003955|transcript:ENSMUST00000004057|strand:-" length="238" weight="1.000000" />
-<sequence id="sequence_64" name="ENSMUSG00000022969|transcript:ENSMUST00000156133|strand:+" length="2478" weight="1.000000" />
-<sequence id="sequence_65" name="ENSMUSG00000022805|transcript:ENSMUST00000114740|strand:-" length="1456" weight="1.000000" />
-<sequence id="sequence_66" name="ENSMUSG00000001870|transcript:ENSMUST00000001927|strand:+" length="1214" weight="1.000000" />
-<sequence id="sequence_67" name="ENSMUSG00000036533|transcript:ENSMUST00000068958|strand:-" length="998" weight="1.000000" />
-<sequence id="sequence_68" name="ENSMUSG00000103092|transcript:ENSMUST00000192168|strand:+" length="2401" weight="1.000000" />
+<sequence id="sequence_1" name="ENSMUSG00000027360|transcript:ENSMUST00000028838|strand:-" length="294" weight="1.000000" />
+<sequence id="sequence_2" name="ENSMUSG00000053475|transcript:ENSMUST00000065927|strand:+" length="715" weight="1.000000" />
+<sequence id="sequence_3" name="ENSMUSG00000023224|transcript:ENSMUST00000111641|strand:-" length="522" weight="1.000000" />
+<sequence id="sequence_4" name="ENSMUSG00000014361|transcript:ENSMUST00000014505|strand:+" length="1227" weight="1.000000" />
+<sequence id="sequence_5" name="ENSMUSG00000026875|transcript:ENSMUST00000172159|strand:-" length="2123" weight="1.000000" />
+<sequence id="sequence_6" name="ENSMUSG00000031343|transcript:ENSMUST00000055966|strand:-" length="1968" weight="1.000000" />
+<sequence id="sequence_7" name="ENSMUSG00000015340|transcript:ENSMUST00000015484|strand:-" length="2965" weight="1.000000" />
+<sequence id="sequence_8" name="ENSMUSG00000043164|transcript:ENSMUST00000058077|strand:-" length="127" weight="1.000000" />
+<sequence id="sequence_9" name="ENSMUSG00000052415|transcript:ENSMUST00000064257|strand:+" length="1023" weight="1.000000" />
+<sequence id="sequence_10" name="ENSMUSG00000068874|transcript:ENSMUST00000140757|strand:+" length="1228" weight="1.000000" />
+<sequence id="sequence_11" name="ENSMUSG00000001021|transcript:ENSMUST00000001047|strand:+" length="347" weight="1.000000" />
+<sequence id="sequence_12" name="ENSMUSG00000001025|transcript:ENSMUST00000200289|strand:+" length="506" weight="1.000000" />
+<sequence id="sequence_13" name="ENSMUSG00000028476|transcript:ENSMUST00000030198|strand:+" length="1441" weight="1.000000" />
+<sequence id="sequence_14" name="ENSMUSG00000028718|transcript:ENSMUST00000141933|strand:+" length="3928" weight="1.000000" />
+<sequence id="sequence_15" name="ENSMUSG00000029468|transcript:ENSMUST00000100737|strand:+" length="2985" weight="1.000000" />
+<sequence id="sequence_16" name="ENSMUSG00000064280|transcript:ENSMUST00000115245|strand:-" length="331" weight="1.000000" />
+<sequence id="sequence_17" name="ENSMUSG00000053647|transcript:ENSMUST00000066211|strand:+" length="771" weight="1.000000" />
+<sequence id="sequence_18" name="ENSMUSG00000029504|transcript:ENSMUST00000031478|strand:+" length="2889" weight="1.000000" />
+<sequence id="sequence_19" name="ENSMUSG00000029442|transcript:ENSMUST00000150155|strand:+" length="1228" weight="1.000000" />
+<sequence id="sequence_20" name="ENSMUSG00000040473|transcript:ENSMUST00000054865|strand:-" length="1918" weight="1.000000" />
+<sequence id="sequence_21" name="ENSMUSG00000002930|transcript:ENSMUST00000052827|strand:+" length="1133" weight="1.000000" />
+<sequence id="sequence_22" name="ENSMUSG00000046192|transcript:ENSMUST00000052277|strand:-" length="1192" weight="1.000000" />
+<sequence id="sequence_23" name="ENSMUSG00000030111|transcript:ENSMUST00000032203|strand:+" length="119" weight="1.000000" />
+<sequence id="sequence_24" name="ENSMUSG00000029843|transcript:ENSMUST00000031868|strand:-" length="874" weight="1.000000" />
+<sequence id="sequence_25" name="ENSMUSG00000030406|transcript:ENSMUST00000094790|strand:-" length="1307" weight="1.000000" />
+<sequence id="sequence_26" name="ENSMUSG00000030790|transcript:ENSMUST00000033054|strand:+" length="652" weight="1.000000" />
+<sequence id="sequence_27" name="ENSMUSG00000030443|transcript:ENSMUST00000062765|strand:-" length="645" weight="1.000000" />
+<sequence id="sequence_28" name="ENSMUSG00000030862|transcript:ENSMUST00000033149|strand:-" length="1077" weight="1.000000" />
+<sequence id="sequence_29" name="ENSMUSG00000062031|transcript:ENSMUST00000163094|strand:+" length="1301" weight="1.000000" />
+<sequence id="sequence_30" name="ENSMUSG00000036634|transcript:ENSMUST00000187137|strand:-" length="535" weight="1.000000" />
+<sequence id="sequence_31" name="ENSMUSG00000019892|transcript:ENSMUST00000166240|strand:-" length="159" weight="1.000000" />
+<sequence id="sequence_32" name="ENSMUSG00000019850|transcript:ENSMUST00000019997|strand:-" length="1821" weight="1.000000" />
+<sequence id="sequence_33" name="ENSMUSG00000078451|transcript:ENSMUST00000105507|strand:+" length="84" weight="1.000000" />
+<sequence id="sequence_34" name="ENSMUSG00000031786|transcript:ENSMUST00000058479|strand:+" length="152" weight="1.000000" />
+<sequence id="sequence_35" name="ENSMUSG00000014846|transcript:ENSMUST00000014990|strand:-" length="343" weight="1.000000" />
+<sequence id="sequence_36" name="ENSMUSG00000037572|transcript:ENSMUST00000111790|strand:-" length="801" weight="1.000000" />
+<sequence id="sequence_37" name="ENSMUSG00000037544|transcript:ENSMUST00000178661|strand:-" length="2493" weight="1.000000" />
+<sequence id="sequence_38" name="ENSMUSG00000045655|transcript:ENSMUST00000066437|strand:-" length="1724" weight="1.000000" />
+<sequence id="sequence_39" name="ENSMUSG00000010044|transcript:ENSMUST00000193303|strand:+" length="1254" weight="1.000000" />
+<sequence id="sequence_40" name="ENSMUSG00000032359|transcript:ENSMUST00000123320|strand:+" length="1100" weight="1.000000" />
+<sequence id="sequence_41" name="ENSMUSG00000040936|transcript:ENSMUST00000051565|strand:-" length="3867" weight="1.000000" />
+<sequence id="sequence_42" name="ENSMUSG00000036777|transcript:ENSMUST00000040912|strand:-" length="1038" weight="1.000000" />
+<sequence id="sequence_43" name="ENSMUSG00000033491|transcript:ENSMUST00000036426|strand:+" length="2035" weight="1.000000" />
+<sequence id="sequence_44" name="ENSMUSG00000032372|transcript:ENSMUST00000180154|strand:+" length="551" weight="1.000000" />
+<sequence id="sequence_45" name="ENSMUSG00000032514|transcript:ENSMUST00000035100|strand:+" length="119" weight="1.000000" />
+<sequence id="sequence_46" name="ENSMUSG00000020937|transcript:ENSMUST00000128650|strand:-" length="537" weight="1.000000" />
+<sequence id="sequence_47" name="ENSMUSG00000020387|transcript:ENSMUST00000109090|strand:-" length="4156" weight="1.000000" />
+<sequence id="sequence_48" name="ENSMUSG00000032782|transcript:ENSMUST00000123176|strand:-" length="2504" weight="1.000000" />
+<sequence id="sequence_49" name="ENSMUSG00000020878|transcript:ENSMUST00000021251|strand:-" length="61" weight="1.000000" />
+<sequence id="sequence_50" name="ENSMUSG00000035105|transcript:ENSMUST00000039516|strand:-" length="1643" weight="1.000000" />
+<sequence id="sequence_51" name="ENSMUSG00000002799|transcript:ENSMUST00000075827|strand:-" length="1070" weight="1.000000" />
+<sequence id="sequence_52" name="ENSMUSG00000022602|transcript:ENSMUST00000023268|strand:-" length="1668" weight="1.000000" />
+<sequence id="sequence_53" name="ENSMUSG00000046380|transcript:ENSMUST00000050234|strand:-" length="3460" weight="1.000000" />
+<sequence id="sequence_54" name="ENSMUSG00000054196|transcript:ENSMUST00000067072|strand:+" length="356" weight="1.000000" />
+<sequence id="sequence_55" name="ENSMUSG00000003955|transcript:ENSMUST00000004057|strand:-" length="238" weight="1.000000" />
+<sequence id="sequence_56" name="ENSMUSG00000022969|transcript:ENSMUST00000156133|strand:+" length="2478" weight="1.000000" />
+<sequence id="sequence_57" name="ENSMUSG00000022805|transcript:ENSMUST00000114740|strand:-" length="1456" weight="1.000000" />
+<sequence id="sequence_58" name="ENSMUSG00000001870|transcript:ENSMUST00000001927|strand:+" length="1214" weight="1.000000" />
+<sequence id="sequence_59" name="ENSMUSG00000036533|transcript:ENSMUST00000068958|strand:-" length="998" weight="1.000000" />
+<sequence id="sequence_60" name="ENSMUSG00000103092|transcript:ENSMUST00000192168|strand:+" length="2401" weight="1.000000" />
 <letter_frequencies>
 <alphabet_array>
-<value letter_id="A">0.263</value>
-<value letter_id="C">0.236</value>
-<value letter_id="G">0.229</value>
-<value letter_id="U">0.272</value>
+<value letter_id="A">0.266</value>
+<value letter_id="C">0.234</value>
+<value letter_id="G">0.23</value>
+<value letter_id="U">0.27</value>
 </alphabet_array>
 </letter_frequencies>
 </training_set>
 <model>
-<command_line>meme /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 6 -minw 5 -maxw 8 -bfile /data/background_models/bfile_order2.meme -evt 0.01 -minsites 8 -seed 33 -oc /data/meme_zoops_w5-8_evt0.01_seed33 </command_line>
+<command_line>meme /data/arc_vs_no_infect_scramble_sig_enrich_3pSeqs.fasta -rna -mod zoops -nmotifs 6 -minw 5 -maxw 8 -bfile /data/background_models/bfile_order0.meme -evt 0.01 -minsites 8 -seed 33 -oc /data/meme_zoops_w5-8_evt0.01_seed33 </command_line>
 <host>buildkitsandbox</host>
 <type>zoops</type>
 <nmotifs>1000</nmotifs>
@@ -285,7 +277,7 @@
 <endgaps>yes</endgaps>
 <substring>yes</substring>
 <minsites>8</minsites>
-<maxsites>69</maxsites>
+<maxsites>61</maxsites>
 <wnsites>0.8</wnsites>
 <spmap>uni</spmap>
 <spfuzz>0.5</spfuzz>
@@ -293,10 +285,10 @@
 <beta>0.01</beta>
 <maxiter>50</maxiter>
 <distance>1e-05</distance>
-<num_positions>89643</num_positions>
+<num_positions>79399</num_positions>
 <seed>33</seed>
 <hsfrac>0</hsfrac>
-<searchsize>89643</searchsize>
+<searchsize>79399</searchsize>
 <maxsize>0</maxsize>
 <norand>no</norand>
 <csites>1000</csites>
@@ -305,7 +297,7 @@
 <psp_file></psp_file>
 <priors_file></priors_file>
 <reason_for_stopping>Stopped because the next motif E-value > 1.00e-02.</reason_for_stopping>
-<background_frequencies source="/data/background_models/bfile_order2.meme" order="2">
+<background_frequencies source="/data/background_models/bfile_order0.meme" order="0">
 <alphabet_array>
 <value letter_id="A">0.279</value>
 <value letter_id="C">0.221</value>
